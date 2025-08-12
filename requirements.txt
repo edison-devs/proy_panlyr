@@ -1,0 +1,35 @@
+# Framework principal
+Django>=4.2,<5.0
+
+# Conector para PostgreSQL
+psycopg2-binary>=2.9
+
+# Manejo de variables de entorno (.env)
+python-decouple>=3.8
+
+# Validaciones y utilidades extra
+django-environ>=0.10.0
+
+# Para trabajar con mapas (más adelante)
+django-leaflet>=0.28.0
+
+# Para manejar direcciones y geolocalización
+geopy>=2.4.0
+
+# Para mejorar la seguridad de contraseñas
+argon2-cffi>=21.3.0
+
+# Para estilos visuales (si usas Jazmín o Bootstrap)
+django-jazzmin>=2.6.0
+
+# Para manejar imágenes (si agregas fotos de productos)
+Pillow>=10.0.0
+
+# Para fechas y zonas horarias
+pytz>=2023.3
+
+# Para trabajar con formularios avanzados (opcional)
+django-crispy-forms>=2.0
+
+# Para futuras pruebas automáticas
+pytest-django>=4.5.2
