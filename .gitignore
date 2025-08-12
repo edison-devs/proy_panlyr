@@ -215,3 +215,5 @@ __marimo__/
 .DS_Store
 Thumbs.db
 
+#No subir base de datos
+.db
