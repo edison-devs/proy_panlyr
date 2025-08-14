@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Pedidos PanLyR{% endblock %}</title>
+  {#<link rel="stylesheet" href="{% static 'Panlyr/css/styles.css' %}"> #}
+</head>
+<body>
+
+<header>
+  {% block header %}  
+
+  <!-- Título del blog siempre en el extremo derecho -->
+  <h2 class="header__title">Pedidos PanLyR base</h2>
+  {% endblock %}
+</header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer>
+    {% block footer %}<p>&copy; 2025 PanLyR</p>{% endblock %}
+  </footer>
+  
+  {# Scripts globales #}
+
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>
+
