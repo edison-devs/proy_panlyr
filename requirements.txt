@@ -2,7 +2,7 @@
 Django>=4.2,<5.0
 
 # Conector para PostgreSQL
-psycopg2-binary>=2.9
+psycopg2-binary>=2.9.9
 
 # Manejo de variables de entorno (.env)
 python-decouple>=3.8
@@ -33,3 +33,18 @@ django-crispy-forms>=2.0
 
 # Para futuras pruebas automáticas
 pytest-django>=4.5.2
+
+# Permite a las aplicaciones Python manejar solicitudes asíncronas y otras comunicaciones de red 
+asgiref==3.8.1
+
+# Permite configurar las bases de datos de Django utilizando una URL de conexión única 
+dj-database-url==3.0.1
+
+#  Su función principal es tomar una cadena de texto SQL y darle un formato legible
+sqlparse==0.5.3
+
+# Contiene funcionalidades del módulo typing de Python
+typing_extensions==4.14.0
+
+# Proporciona los datos de la base de datos de zonas horarias IANA
+tzdata==2025.2
