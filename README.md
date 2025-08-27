@@ -11,6 +11,15 @@ Este sistema está siendo desarrollado con **Python**, **Django** y **PostgreSQL
 
 - El proyecto contiene únicamente la estructura inicial de Django.
 - Incluye la carpeta `config/` con los archivos base (`settings.py`, `urls.py`, etc.).
+
+- Se crearon 3 app (Etapa inicial):
+
+- User_Auth: Para la lógica de usuario.
+
+- Abstract: Para modelos abstractos y campos que se repiten (como nombre y descripción).
+
+-Panlyr: Para la lógica principal de la aplicación (**Por ahora solo se ha trabajado en el borrador del templete de inicio de la aplicación en esta app**).
+
 - Aún no se han definido modelos, vistas ni templates.
 - Se recomienda **no ejecutar migraciones por ahora**, ya que no hay lógica de base de datos implementada.
 - El archivo `.env.example` está disponible para configurar la conexión con PostgreSQL.
