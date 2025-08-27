@@ -1,0 +1,574 @@
+{% extends 'Panlyr/base.html' %}
+{% load static %}
+
+
+{% block header %}
+	<header>
+		<div class="container-hero">
+			<div class="container hero">
+				<div class="customer-support">
+					<i class="fa-solid fa-headset"></i>
+					<div class="content-customer-support">
+						<span class="text">Soporte al cliente</span>
+						<span class="number">123-456-7890</span>
+						</div>
+				</div>
+
+				<div class="container-logo">
+					<i class="fa-solid fa-mug-hot"></i>
+					<h1 class="logo"><a href="/">PanLyR</a></h1>
+				</div>
+
+				<div class="container-user">
+					<i class="fa-solid fa-user"></i>
+					<i class="fa-solid fa-basket-shopping"></i>
+						
+					<div class="content-shopping-cart">
+						<span class="text">Carrito</span>
+						<span class="number">(0)</span>
+					</div>
+				</div>
+			</div>
+		</div>
+
+			<div class="container-navbar">
+				<nav class="navbar container">
+					<i class="fa-solid fa-bars"></i>
+					<ul class="menu">
+						<li><a href="#">Inicio</a></li>
+						<li><a href="#">Productos</a></li>
+						<li><a href="#">Contacto</a></li>
+						<li><a href="#">Sobre Nosotros</a></li>
+						<li><a href="#">Blog</a></li>
+					</ul>
+
+					<form class="search-form">
+						<input type="search" placeholder="Buscar..." />
+						<button class="btn-search">
+							<i class="fa-solid fa-magnifying-glass"></i>
+						</button>
+					</form>
+				</nav>
+			</div>
+	</header>
+
+{% endblock %}
+
+
+{%block content %} 
+<section class="banner">
+	<div class="content-banner">
+		<p>Deliciosos Postres</p>
+		<h2>100% Natural <br /> con gran variedad</h2>
+		<a href="#">Comprar ahora</a>
+	</div>
+</section>
+
+<main class="main-content">
+	<section class="container container-features">
+	<div class="card-feature">
+		<i class="fa-solid fa-plane-up"></i>
+		<div class="feature-content">
+			<span>Envío gratuito a nivel local</span>
+			<p>En pedido superior a 100000 cop</p>
+		</div>
+	</div>
+	<div class="card-feature">
+		<i class="fa-solid fa-wallet"></i>
+		<div class="feature-content">
+			<span>Contrareembolso</span>
+			<p>100% garantía de devolución de dinero</p>
+		</div>
+	</div>
+	<div class="card-feature">
+		<i class="fa-solid fa-gift"></i>
+		<div class="feature-content">
+			<span>Tarjeta regalo especial</span>
+			<p>Ofrece bonos especiales con regalo</p>
+		</div>
+	</div>
+	<div class="card-feature">
+		<i class="fa-solid fa-headset"></i>
+		<div class="feature-content">
+			<span>Servicio al cliente 24/7</span>
+			<p>LLámenos 24/7 al 123-456-7890</p>
+		</div>
+	</div>
+	</section>
+
+	<section class="container top-categories">
+		<h1 class="heading-1">Mejores Categorías</h1>
+		<div class="container-categories">
+			<div class="card-category category-galleta">
+				<p>Galletas</p>
+				<span>Ver más</span>
+			</div>
+			<div class="card-category category-torta">
+				<p>Tortas</p>
+				<span>Ver más</span>
+			</div>
+			<div class="card-category category-pan">
+				<p>Pan</p>
+				<span>Ver más</span>
+			</div>
+		</div>
+	</section>
+
+	<section class="container top-products">
+		<h1 class="heading-1">Mejores Productos</h1>
+
+		<div class="container-options">
+			<span class="active">Destacados</span>
+			<span>Más recientes</span>
+			<span>Mejores Vendidos</span>
+		</div>
+
+		<div class="container-products">
+		{# -- Producto 1 -- #}
+		<div class="card-product">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/golfeados2.jpg' %}" alt="Golfeados" />
+				<span class="discount">-13%</span>
+				<div class="button-group">
+					<span>
+					<i class="fa-regular fa-eye"></i>
+					</span>
+					<span>
+					<i class="fa-regular fa-heart"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-code-compare"></i>
+					</span>
+				</div>
+			</div>
+			
+			<div class="content-card-product">
+				<div class="stars">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-regular fa-star"></i>
+				</div>
+				<h3>Golfeados</h3>
+				<span class="add-cart">
+				<i class="fa-solid fa-basket-shopping"></i>
+				</span>
+				<p class="price">1305 <span>cop1500</span></p>
+			</div>
+		</div>
+					
+		{# -- Producto 2 -- #}
+		<div class="card-product">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/torta_maiz.jpg' %}" alt="Torta de jojoto.jpg"/>
+				<span class="discount">-10%</span>
+				<div class="button-group">
+					<span>
+					<i class="fa-regular fa-eye">	</i>
+					</span>
+					<span>
+					<i class="fa-regular fa-heart"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-code-compare"></i>
+					</span>
+				</div>
+			</div>
+			
+			<div class="content-card-product">
+				<div class="stars">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-regular fa-star"></i>
+					<i class="fa-regular fa-star"></i>
+				</div>
+				
+				<h3>Torta Jojoto</h3>
+				<span class="add-cart">
+				<i class="fa-solid fa-basket-shopping"></i>
+				</span>
+				<p class="price">18000 
+				<span>cop20000</span></p>
+			</div>
+		</div>
+		
+
+		{# <!--  --> #}
+		<div class="card-product">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/almojabanas2.jpg' %}"
+				alt="Almojabanas"/>
+				<div class="button-group">
+					<span>
+					<i class="fa-regular fa-eye"></i>
+					</span>
+					<span>
+					<i class="fa-regular fa-heart"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-code-compare"></i>
+					</span>
+				</div>
+			</div>
+			
+			<div class="content-card-product">
+				<div class="stars">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+				</div>
+				
+				<h3>Almojabanas</h3>
+				<span class="add-cart">
+				<i class="fa-solid fa-basket-shopping"></i>
+				</span>
+				<p class="price">cop 1000</p>
+			</div>
+			
+		</div>
+			
+		{# --  -- #}
+		<div class="card-product">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/pan_tajado.jpg' %}" alt="Pan tajado" />
+				<div class="button-group">
+					<span>
+					<i class="fa-regular fa-eye"></i>
+					</span>
+					<span>
+					<i class="fa-regular fa-heart"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-code-compare"></i>
+					</span>
+				</div>
+			</div>
+			
+			<div class="content-card-product">
+				<div class="stars">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-regular fa-star"></i>
+				</div>
+				
+				<h3>Pan tajado</h3>
+				<span class="add-cart">
+				<i class="fa-solid fa-basket-shopping"></i>
+				</span>
+				<p class="price">cop 12000</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="gallery">
+	<img 
+		src="{% static 'Panlyr/img/torta_con_fresas.jpg' %}" alt="Gallery Img1" class="gallery-img-1"/>
+	<img 
+		src="{% static 'Panlyr/img/torta_fria.jpg' %}" alt="Gallery Img2" class="gallery-img-2"/>
+	<img 
+		src="{% static 'Panlyr/img/torta_porcion2.jpg' %}" alt="Gallery Img3" class="gallery-img-3"/>
+	<img
+		src="{% static 'Panlyr/img/torta_pina.jpg' %}" alt="Gallery Img4"class="gallery-img-4"/>
+	<img
+		src="{% static 'Panlyr/img/pan2.jpg' %}" alt="Gallery Img5" class="gallery-img-5"/>
+</section>
+
+<section class="container specials">
+	<h1 class="heading-1">Especiales</h1>
+
+	<div class="container-products">
+	{# -- Producto 1 -- #}
+		<div class="card-product">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/torta_chocolate.jpg' %}" alt="Torta de chocolate" />
+				<span class="discount">-10%</span>
+				<div class="button-group">
+					<span>
+					<i class="fa-regular fa-eye"></i>
+					</span>
+					<span>
+					<i class="fa-regular fa-heart"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-code-compare"></i>
+					</span>
+				</div>
+			</div>
+			
+			<div class="content-card-product">
+				<div class="stars">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-regular fa-star"></i>
+				</div>
+				<h3>Torta de chocolate</h3>
+				<span class="add-cart">
+				<i class="fa-solid fa-basket-shopping"></i>
+				</span>
+				<p class="price">cop 20000 <span>cop22000</span></p>
+			</div>
+		</div>
+		
+		{# -- Producto 2 -- #}
+		<div class="card-product">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/torta_porcion.jpg' %}" alt="Torta porción"/>
+				<span class="discount">-20%</span>
+				<div class="button-group">
+					<span>
+					<i class="fa-regular fa-eye"></i>
+					</span>
+					<span>
+					<i class="fa-regular fa-heart"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-code-compare"></i>
+					</span>
+				</div>
+			</div>
+			
+			<div class="content-card-product">
+				<div class="stars">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-regular fa-star"></i>
+					<i class="fa-regular fa-star"></i>
+				</div>
+				
+				<h3>Torta Porción</h3>
+				<span class="add-cart">
+				<i class="fa-solid fa-basket-shopping"></i>
+				</span>
+				<p class="price">cop 3000 <span>cop 4000</span></p>
+			</div>
+		</div>
+		
+		{# --  -- #}
+		<div class="card-product">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/pan1.jpg' %}" alt="Pan de arequipe" />
+				<span class="discount">-30%</span>
+				<div class="button-group">
+				<span>
+					<i class="fa-regular fa-eye"></i>
+					</span>
+					<span>
+					<i class="fa-regular fa-heart"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-code-compare"></i>
+					</span>
+				</div>
+			</div>
+			
+			<div class="content-card-product">
+				<div class="stars">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+				</div>
+				
+				<h3>Pan de arequipe</h3>
+				<span class="add-cart">
+				<i class="fa-solid fa-basket-shopping"></i>
+				</span>
+				<p class="price">cop 8400 <span>cop12000</span></p>
+			</div>
+		</div>
+		{# --  --> #}
+		
+		<div class="card-product">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/golfeados.jpg' %}" alt="Golfeados con queso" />
+				<div class="button-group">
+					<span>
+					<i class="fa-regular fa-eye"></i>
+					</span>
+					<span>
+					<i class="fa-regular fa-heart"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-code-compare"></i>
+					</span>
+				</div>
+			</div>
+						
+			<div class="content-card-product">
+				<div class="stars">
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-solid fa-star"></i>
+					<i class="fa-regular fa-star"></i>
+				</div>
+			
+				<h3>Golfeados con queso</h3>
+				<span class="add-cart">
+				<i class="fa-solid fa-basket-shopping"></i>
+				</span>
+				<p class="price">2000 cop</p>
+			</div>
+		</div>
+	</div>
+</section>
+
+<section class="container blogs">
+	<h1 class="heading-1">Últimos Blogs</h1>
+
+	<div class="container-blogs">
+		<div class="card-blog">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/arepas_de_trigo.jpg' %}" alt="Imagen Blog 1" />
+				<div class="button-group-blog">
+					<span>
+					<i class="fa-solid fa-magnifying-glass"></i>
+					</span>
+					<span>
+					<i class="fa-solid fa-link"></i>
+					</span>
+				</div>
+			</div>
+			
+			<div class="content-blog">
+				<h3>Lorem, ipsum dolor sit</h3>
+				<span>20 Agosto 2025</span>
+				<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing
+				elit. Iste, molestiae! Ratione et, dolore ipsum
+				quaerat iure illum reprehenderit non maxime amet dolor voluptas facilis corporis, consequatur eius est sunt suscipit?
+				</p>
+				
+				<div class="btn-read-more">Leer más</div>
+			</div>
+		</div>
+		<div class="card-blog">
+			<div class="container-img">
+				<img src="{% static 'Panlyr/img/almojabanas1.jpg' %}" alt="Imagen Blog 2" />
+				<div class="button-group-blog">
+				<span>
+				<i class="fa-solid fa-magnifying-glass"></i>
+				</span>
+				<span>
+				<i class="fa-solid fa-link"></i>
+				</span>
+			</div>
+		</div>
+		<div class="content-blog">
+			<h3>Lorem, ipsum dolor sit</h3>
+			<span>18 Agosto 2025</span>
+			<p>
+				Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, molestiae! Ratione et, dolore ipsum quaerat iure illum reprehenderit non maxime amet dolor voluptas facilis corporis, consequatur eius est sunt suscipit?
+			</p>
+			<div class="btn-read-more">Leer más</div>
+		</div>
+	</div>
+	
+	<div class="card-blog">
+		<div class="container-img">
+		<img src="{% static 'Panlyr/img/pan_tajado.jpg' %}" alt="Imagen Blog 3" />
+		<div class="button-group-blog">
+			<span>
+			<i class="fa-solid fa-magnifying-glass"></i>
+			</span>
+			<span>
+			<i class="fa-solid fa-link"></i>
+			</span>
+		</div>
+	</div>
+	
+	<div class="content-blog">
+		<h3>Lorem, ipsum dolor sit</h3>
+		<span>19 Agosto 2025</span>
+		<p>
+			Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, molestiae! Ratione et, dolore ipsum quaerat iure illum reprehenderit non maxime amet dolor voluptas facilis corporis, consequatur eius est sunt suscipit?
+		</p>
+		<div class="btn-read-more">Leer más</div>
+		</div>
+		</div>
+	</div>
+	</section>
+</main>
+
+{% endblock%}
+
+
+{% block footer %}
+<footer class="footer">
+	<div class="container container-footer">
+		<div class="menu-footer">
+			<div class="contact-info">
+				<p class="title-footer">Información de Contacto</p>
+				<ul>
+					<li>
+					Dirección: Alberto Grimaldo Bramon municipio Junín
+					</li>
+					<li>Teléfono: 123-456-7890</li>
+					<li>EmaiL: panlyr@support.com</li>
+				</ul>
+				<div class="social-icons">
+					<span class="facebook">
+					<i class="fa-brands fa-facebook-f"></i>
+					</span>
+					<span class="twitter">
+					<i class="fa-brands fa-twitter"></i>
+					</span>
+					<span class="youtube">
+					<i class="fa-brands fa-youtube"></i>
+					</span>
+					<span class="pinterest">
+					<i class="fa-brands fa-pinterest-p"></i>
+					</span>
+					<span class="instagram">
+						<i class="fa-brands fa-instagram"></i>
+					</span>
+				</div>
+			</div>
+
+			<div class="information">
+				<p class="title-footer">Información</p>
+				<ul>
+					<li><a href="#">Acerca de Nosotros</a></li>
+					<li><a href="#">Información Delivery</a></li>
+					<li><a href="#">Politicas de Privacidad</a></li>
+					<li><a href="#">Términos y condiciones</a></li>
+					<li><a href="#">Contactános</a></li>
+				</ul>
+			</div>
+
+			<div class="my-account">
+				<p class="title-footer">Mi cuenta</p>
+
+				<ul>
+					<li><a href="#">Mi cuenta</a></li>
+					<li><a href="#">Historial de ordenes</a></li>
+					<li><a href="#">Lista de deseos</a></li>
+					<li><a href="#">Boletín</a></li>
+					<li><a href="#">Reembolsos</a></li>
+				</ul>
+			</div>
+
+			
+		</div>
+
+		<div class="copyright">
+			<p>
+			Desarrollado por estudiantes de la universidad UPTAI sede Rubio &copy; 2025
+			</p>
+
+			<img src="{% static 'Panlyr/img/payment.png' %}" alt="Pagos">
+		</div>
+	</div>
+</footer>
+{% endblock %}

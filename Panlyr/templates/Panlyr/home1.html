@@ -1,0 +1,167 @@
+{% extends 'Panlyr/base.html' %}
+{% load static %}
+
+{% block title %}Inicio | PanLyR{% endblock %}
+
+{% block header %}
+<!-- Hero / Banner principal -->
+<section class="hero position-relative text-center text-white">
+  <img src="{% static 'Panlyr/img/fondo.png' %}" class="img-fluid w-100" alt="Banner principal PanLyR">
+  <div class="hero-overlay position-absolute top-50 start-50 translate-middle text-center">
+    <h1 class="display-4 fw-bold">Bienvenido a PanLyR</h1>
+    <p class="lead">El mejor pan artesanal directo a tu mesa</p>
+    <a href="#productos" class="btn btn-primary btn-lg mt-3">Ver Productos</a>
+  </div>
+</section>
+{% endblock %}
+
+{% block content %}
+
+<!-- SECCIÓN DE PRODUCTOS DESTACADOS -->
+<section id="productos" class="py-5">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Nuestros Productos</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/pan1.jpg' %}" class="card-img-top" alt="Pan artesanal">
+          <div class="card-body">
+            <h5 class="card-title">Pan Artesanal</h5>
+            <p class="card-text">Hecho con masa madre y horneado con amor.</p>
+            <a href="#" class="btn btn-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/pan_tajado.jpg' %}" class="card-img-top" alt="Galletas caseras">
+          <div class="card-body">
+            <h5 class="card-title">Galletas Caseras</h5>
+            <p class="card-text">Crujientes y dulces, perfectas para acompañar tu café.</p>
+            <a href="#" class="btn btn-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/torta_fria.jpg' %}" class="card-img-top" alt="Pasteles">
+          <div class="card-body">
+            <h5 class="card-title">Tortas</h5>
+            <p class="card-text">Deliciosas tortas con variedad de sabores.</p>
+            <a href="#" class="btn btn-primary">Ver más</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN DE CATEGORÍAS -->
+<section id="categorias" class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Categorías</h2>
+    <div class="row g-4">
+      <div class="col-md-3">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/pan2.jpg' %}" class="card-img-top" alt="Panadería">
+          <div class="card-body">
+            <h5 class="card-title">Panadería</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/torta_porcion1.jpg' %}" class="card-img-top" alt="Repostería">
+          <div class="card-body">
+            <h5 class="card-title">Repostería</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/galletas.jpg' %}" class="card-img-top" alt="Galletas">
+          <div class="card-body">
+            <h5 class="card-title">Galletas</h5>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/almojabanas1.jpg' %}" class="card-img-top" alt="Especialidades">
+          <div class="card-body">
+            <h5 class="card-title">Especialidades</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN DE GALERÍA -->
+<section id="galeria" class="py-5">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Galería</h2>
+    <div class="row g-3">
+      <div class="col-md-3 col-6">
+        <img src="{% static 'Panlyr/img/torta_con_fresas.jpg' %}" class="img-fluid rounded shadow-sm" alt="Galería 1">
+      </div>
+      <div class="col-md-3 col-6">
+        <img src="{% static 'Panlyr/img/torta_chocolate.jpg' %}" class="img-fluid rounded shadow-sm" alt="Galería 2">
+      </div>
+      <div class="col-md-3 col-6">
+        <img src="{% static 'Panlyr/img/torta_porcion2.jpg' %}" class="img-fluid rounded shadow-sm" alt="Galería 3">
+      </div>
+      <div class="col-md-3 col-6">
+        <img src="{% static 'Panlyr/img/pan3.jpg' %}" class="img-fluid rounded shadow-sm" alt="Galería 4">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SECCIÓN DE BLOG -->
+<section id="blog" class="py-5 bg-light">
+  <div class="container text-center">
+    <h2 class="fw-bold mb-4">Últimas Publicaciones</h2>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/golfeados1.jpg' %}" class="card-img-top" alt="Consejos de panadería">
+          <div class="card-body">
+            <h5 class="card-title">Consejos de Panadería</h5>
+            <p class="card-text">Aprende trucos para mejorar tus recetas caseras.</p>
+            <a href="#" class="btn btn-outline-primary">Leer más</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/pan_tajado.jpg' %}" class="card-img-top" alt="Recetas dulces">
+          <div class="card-body">
+            <h5 class="card-title">Recetas Dulces</h5>
+            <p class="card-text">Descubre cómo hacer postres irresistibles.</p>
+            <a href="#" class="btn btn-outline-primary">Leer más</a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card shadow-sm h-100">
+          <img src="{% static 'Panlyr/img/torta_maiz.jpg' %}" class="card-img-top" alt="Historias de PanLyR">
+          <div class="card-body">
+            <h5 class="card-title">Historias de PanLyR</h5>
+            <p class="card-text">Conoce más sobre nuestro emprendimiento.</p>
+            <a href="#" class="btn btn-outline-primary">Leer más</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}
+
+{% block footer %}
+<div class="text-center">
+  <p class="mb-1">&copy; 2025 PanLyR. Todos los derechos reservados.</p>
+  <small>Diseñado con ❤️ usando Django & Bootstrap</small>
+</div>
+{% endblock %}
