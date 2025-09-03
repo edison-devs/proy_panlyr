@@ -24,7 +24,7 @@ from django.conf.urls.static import static # Importa static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('panlyr_app/', include('Panlyr.urls'))
+    path('core/', include('core.urls'))
 ]
 
 

@@ -10,17 +10,17 @@ from django.contrib import messages                      # <- necesario para mos
 # Create your views here.
 def render_home(request):
     try:
-        return render(request, 'Panlyr/home.html')
+        return render(request, 'core/home.html')
     except Exception as e:
         messages.error(request, f'Error al cargar la página principal: {e}')
         # Aún devolvemos la misma plantilla para no romper la navegación
-        return render(request, 'Panlyr/home.html')
+        return render(request, 'core/home.html')
 
 
 def render_home1(request):
     try:
-        return render(request, 'Panlyr/home1.html')
+        return render(request, 'core/home1.html')
     except Exception as e:
         messages.error(request, f'Error al cargar la página principal: {e}')
         # Aún devolvemos la misma plantilla para no romper la navegación
-        return render(request, 'Panlyr/home1.html')
+        return render(request, 'core/home1.html')
