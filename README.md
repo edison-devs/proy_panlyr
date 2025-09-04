@@ -14,10 +14,8 @@ El proyecto está dividido en tres apps principales, siguiendo buenas prácticas
 
 | App           | Propósito                                                                 |
 |---------------|---------------------------------------------------------------------------|
-| auth_users   | Lógica de autenticación y modelo de usuario personalizado  
-               |
-| abcstracts    | Modelos abstractos reutilizables (fechas, borrado suave, etc.)  
-          |
+| auth_user   | Lógica de autenticación y modelo de usuario personalizado                 |
+| abstract    | Modelos abstractos reutilizables (fechas, borrado suave, etc.)            |
 | core        | Lógica principal del negocio (productos, pedidos, interfaz de usuario)    |
 
 ---
