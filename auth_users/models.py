@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from abcstracts.models import TimestampedMixin, SoftDeleteMixin
 
-#Clase 2 modulo 6 jueves 26-6-25
+
 class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True)

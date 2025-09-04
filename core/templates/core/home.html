@@ -6,48 +6,28 @@
 	<header>
 		<div class="container-hero">
 			<div class="container hero">
-				<div class="customer-support">
-					<i class="fa-solid fa-headset"></i>
-					<div class="content-customer-support">
-						<span class="text">Soporte al cliente</span>
-						<span class="number">123-456-7890</span>
-						</div>
-				</div>
 
 				<div class="container-logo">
 					<i class="fa-solid fa-mug-hot"></i>
 					<h1 class="logo"><a href="/">PanLyR</a></h1>
 				</div>
 
-				<div class="container-user">
-					<i class="fa-solid fa-user"></i>
-					<i class="fa-solid fa-basket-shopping"></i>
-						
-					<div class="content-shopping-cart">
-						<span class="text">Carrito</span>
-						<span class="number">(0)</span>
-					</div>
-				</div>
+				
 			</div>
 		</div>
 
 			<div class="container-navbar">
 				<nav class="navbar container">
-					<i class="fa-solid fa-bars"></i>
+					
 					<ul class="menu">
 						<li><a href="#">Inicio</a></li>
-						<li><a href="#">Productos</a></li>
+						<li><a href="#">Catalogos</a></li>
 						<li><a href="#">Contacto</a></li>
 						<li><a href="#">Sobre Nosotros</a></li>
-						<li><a href="#">Blog</a></li>
+						<li><a href="#">Perfil</a></li>
 					</ul>
 
-					<form class="search-form">
-						<input type="search" placeholder="Buscar..." />
-						<button class="btn-search">
-							<i class="fa-solid fa-magnifying-glass"></i>
-						</button>
-					</form>
+					
 				</nav>
 			</div>
 	</header>
@@ -60,42 +40,13 @@
 	<div class="content-banner">
 		<p>Deliciosos Postres</p>
 		<h2>100% Natural <br /> con gran variedad</h2>
-		<a href="#">Comprar ahora</a>
+		<a href="#">Ir al catalogo</a>
 	</div>
 </section>
 
 <main class="main-content">
 	<section class="container container-features">
-	<div class="card-feature">
-		<i class="fa-solid fa-plane-up"></i>
-		<div class="feature-content">
-			<span>Envío gratuito a nivel local</span>
-			<p>En pedido superior a 100000 cop</p>
-		</div>
-	</div>
-	<div class="card-feature">
-		<i class="fa-solid fa-wallet"></i>
-		<div class="feature-content">
-			<span>Contrareembolso</span>
-			<p>100% garantía de devolución de dinero</p>
-		</div>
-	</div>
-	<div class="card-feature">
-		<i class="fa-solid fa-gift"></i>
-		<div class="feature-content">
-			<span>Tarjeta regalo especial</span>
-			<p>Ofrece bonos especiales con regalo</p>
-		</div>
-	</div>
-	<div class="card-feature">
-		<i class="fa-solid fa-headset"></i>
-		<div class="feature-content">
-			<span>Servicio al cliente 24/7</span>
-			<p>LLámenos 24/7 al 123-456-7890</p>
-		</div>
-	</div>
-	</section>
-
+	
 	<section class="container top-categories">
 		<h1 class="heading-1">Mejores Categorías</h1>
 		<div class="container-categories">
@@ -127,7 +78,7 @@
 		{# -- Producto 1 -- #}
 		<div class="card-product">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/golfeados2.jpg' %}" alt="Golfeados" />
+				<img src="{% static 'core/img/golfeados2.jpg' %}" alt="Golfeados" />
 				<span class="discount">-13%</span>
 				<div class="button-group">
 					<span>
@@ -161,7 +112,7 @@
 		{# -- Producto 2 -- #}
 		<div class="card-product">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/torta_maiz.jpg' %}" alt="Torta de jojoto.jpg"/>
+				<img src="{% static 'core/img/torta_maiz.jpg' %}" alt="Torta de jojoto.jpg"/>
 				<span class="discount">-10%</span>
 				<div class="button-group">
 					<span>
@@ -198,7 +149,7 @@
 		{# <!--  --> #}
 		<div class="card-product">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/almojabanas2.jpg' %}"
+				<img src="{% static 'core/img/almojabanas2.jpg' %}"
 				alt="Almojabanas"/>
 				<div class="button-group">
 					<span>
@@ -234,7 +185,7 @@
 		{# --  -- #}
 		<div class="card-product">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/pan_tajado.jpg' %}" alt="Pan tajado" />
+				<img src="{% static 'core/img/pan_tajado.jpg' %}" alt="Pan tajado" />
 				<div class="button-group">
 					<span>
 					<i class="fa-regular fa-eye"></i>
@@ -269,15 +220,15 @@
 
 <section class="gallery">
 	<img 
-		src="{% static 'Panlyr/img/torta_con_fresas.jpg' %}" alt="Gallery Img1" class="gallery-img-1"/>
+		src="{% static 'core/img/torta_con_fresas.jpg' %}" alt="Gallery Img1" class="gallery-img-1"/>
 	<img 
-		src="{% static 'Panlyr/img/torta_fria.jpg' %}" alt="Gallery Img2" class="gallery-img-2"/>
+		src="{% static 'core/img/torta_fria.jpg' %}" alt="Gallery Img2" class="gallery-img-2"/>
 	<img 
-		src="{% static 'Panlyr/img/torta_porcion2.jpg' %}" alt="Gallery Img3" class="gallery-img-3"/>
+		src="{% static 'core/img/torta_porcion2.jpg' %}" alt="Gallery Img3" class="gallery-img-3"/>
 	<img
-		src="{% static 'Panlyr/img/torta_pina.jpg' %}" alt="Gallery Img4"class="gallery-img-4"/>
+		src="{% static 'core/img/torta_pina.jpg' %}" alt="Gallery Img4"class="gallery-img-4"/>
 	<img
-		src="{% static 'Panlyr/img/pan2.jpg' %}" alt="Gallery Img5" class="gallery-img-5"/>
+		src="{% static 'core/img/pan2.jpg' %}" alt="Gallery Img5" class="gallery-img-5"/>
 </section>
 
 <section class="container specials">
@@ -287,7 +238,7 @@
 	{# -- Producto 1 -- #}
 		<div class="card-product">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/torta_chocolate.jpg' %}" alt="Torta de chocolate" />
+				<img src="{% static 'core/img/torta_chocolate.jpg' %}" alt="Torta de chocolate" />
 				<span class="discount">-10%</span>
 				<div class="button-group">
 					<span>
@@ -321,7 +272,7 @@
 		{# -- Producto 2 -- #}
 		<div class="card-product">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/torta_porcion.jpg' %}" alt="Torta porción"/>
+				<img src="{% static 'core/img/torta_porcion.jpg' %}" alt="Torta porción"/>
 				<span class="discount">-20%</span>
 				<div class="button-group">
 					<span>
@@ -356,7 +307,7 @@
 		{# --  -- #}
 		<div class="card-product">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/pan1.jpg' %}" alt="Pan de arequipe" />
+				<img src="{% static 'core/img/pan1.jpg' %}" alt="Pan de arequipe" />
 				<span class="discount">-30%</span>
 				<div class="button-group">
 				<span>
@@ -391,7 +342,7 @@
 		
 		<div class="card-product">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/golfeados.jpg' %}" alt="Golfeados con queso" />
+				<img src="{% static 'core/img/golfeados.jpg' %}" alt="Golfeados con queso" />
 				<div class="button-group">
 					<span>
 					<i class="fa-regular fa-eye"></i>
@@ -425,12 +376,12 @@
 </section>
 
 <section class="container blogs">
-	<h1 class="heading-1">Últimos Blogs</h1>
+	<h1 class="heading-1">Sobre nosotros</h1>
 
 	<div class="container-blogs">
 		<div class="card-blog">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/arepas_de_trigo.jpg' %}" alt="Imagen Blog 1" />
+				<img src="{% static 'core/img/arepas_de_trigo.jpg' %}" alt="Imagen Blog 1" />
 				<div class="button-group-blog">
 					<span>
 					<i class="fa-solid fa-magnifying-glass"></i>
@@ -455,7 +406,7 @@
 		</div>
 		<div class="card-blog">
 			<div class="container-img">
-				<img src="{% static 'Panlyr/img/almojabanas1.jpg' %}" alt="Imagen Blog 2" />
+				<img src="{% static 'core/img/almojabanas1.jpg' %}" alt="Imagen Blog 2" />
 				<div class="button-group-blog">
 				<span>
 				<i class="fa-solid fa-magnifying-glass"></i>
@@ -477,7 +428,7 @@
 	
 	<div class="card-blog">
 		<div class="container-img">
-		<img src="{% static 'Panlyr/img/pan_tajado.jpg' %}" alt="Imagen Blog 3" />
+		<img src="{% static 'core/img/pan_tajado.jpg' %}" alt="Imagen Blog 3" />
 		<div class="button-group-blog">
 			<span>
 			<i class="fa-solid fa-magnifying-glass"></i>
@@ -553,9 +504,7 @@
 				<ul>
 					<li><a href="#">Mi cuenta</a></li>
 					<li><a href="#">Historial de ordenes</a></li>
-					<li><a href="#">Lista de deseos</a></li>
-					<li><a href="#">Boletín</a></li>
-					<li><a href="#">Reembolsos</a></li>
+					
 				</ul>
 			</div>
 
@@ -567,7 +516,6 @@
 			Desarrollado por estudiantes de la universidad UPTAI sede Rubio &copy; 2025
 			</p>
 
-			<img src="{% static 'Panlyr/img/payment.png' %}" alt="Pagos">
 		</div>
 	</div>
 </footer>
