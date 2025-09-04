@@ -36,7 +36,6 @@ Cada colaborador debe crear su propia rama desde release para trabajar de forma 
 
 ---
 
-
 ### 🛠️ Flujo de trabajo en Git
 
 #### 1. Crear una rama desde release
