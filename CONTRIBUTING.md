@@ -8,13 +8,14 @@ Este documento describe la **metodología de trabajo**,flujo de colaboración en
 
 ### 🧭 Metodología de trabajo: Git con dos ramas
 
+
 Usaremos una metodología sencilla basadados **ramas principales**:
 
 | Rama        | Propósito                                                                 |
 |-------------|---------------------------------------------------------------------------|
-| main      | Código limpio, probado y listo para entrega o presentación  
-              |
+| main      | Código limpio, probado y listo para entrega o presentación                |
 | release   | Espacio para desarrollar y probar nuevas funcionalidades                  |
+                |
 
 ---
 
@@ -28,12 +29,11 @@ Cada colaborador debe crear su propia rama desde release para trabajar de forma 
 
 ### 👥 Roles del equipo
 
-| Colaboración     |           Rol principal            |sugerida                  
-|-----------------|------------------------------------|----Colaborador1 **(Kim)** | Backend, modelos, estructura del proyecto          
+| Colaborador     | Rol principal                      | Rama sugerida                  |
+|-----------------|------------------------------------|--------------------------------Colaborador1 **(Kim)** | Backend, modelos, estructura del proyecto | models-core                  |
+| Colaborador2    | Lógica de login (backend)          | auth-login                   |
+| Colaborador3    | Interfaz de login (frontend)       | auth-ui                      |
 
-| Colaborador2         | Lógica de login (backend)   
-                
-| Colaborador3         | Interfaz de login (frontend)
 ---
 
 
