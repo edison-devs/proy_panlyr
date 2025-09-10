@@ -1,4 +1,4 @@
-# URL de app Panlyr
+# URL de app core
 from django.urls import path, include
 from core.views import *
 

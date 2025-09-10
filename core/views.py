@@ -1,4 +1,4 @@
-# View de app Panlyr
+# View de app core lofica principal
 from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin #Para autenticacion de usuario
