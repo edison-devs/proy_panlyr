@@ -3,8 +3,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin #Para autenticacion de usuario
 from django.contrib.auth import authenticate,login, get_user_model,logout
-from django.views import View
+from django.db import IntegrityError
 from django.contrib import messages
+from django.views import View
 from .forms import LoginForm, RegisterForm # Importa el formulario forms.py
 
 #------------------------------------------------------------------
@@ -58,38 +59,41 @@ class UserRegisterView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('home')
-        #Muestra el formulario de registro vacío
         form = RegisterForm()
         return render(request, self.template_name, {'form': form})
-
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('home')
-        # Procesa el envío del formulario de registro}
+
         form = RegisterForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             email = form.cleaned_data['email']
             password = form.cleaned_data['password']
 
-            # Crea el nuevo usuario
-            # Usar create_user() es una buena práctica para manejar contraseñas
-            # o directamente crear y luego set_password()
             User = get_user_model()
-            user = User.objects.create_user(username=username, email=email, password=password)
+            try:
+                user = User.objects.create_user(
+                    username=username,
+                    email=email,
+                    password=password
+                )
+            except IntegrityError:
+                messages.error(request, "⚠️ Ese usuario o correo ya está registrado.")
+                return render(request, self.template_name, {'form': form})
 
-            # Opcional: Iniciar sesión al usuario automáticamente después del registro
-            login(request, user)
+            # Aquí ya NO iniciamos sesión automáticamente
+            messages.success(request, "✅ Tu cuenta fue creada con éxito. Ahora puedes iniciar sesión.")
+            return redirect('login')
+
+        return render(request, self.template_name, {'form': form})
 
 
-            #Redirige a una pagina de exito (ej. el home o el dashboard del usuario)
-            return redirect('login') # Cambia esto a tu pagina de inicio o dashboard
-        
-        # Si el formulario no es valido lo vuelve a mostrar con errores
-        return render(request, self.template_name, {'form':form})   
-    
 
+#------------------------------------------------------------------
+# Logout
+#------------------------------------------------------------------
 #Redirige al home despues de iniciar o cerrar seción
 class UserLogoutView(View):
     def get(self, request, *args, **kwargs):

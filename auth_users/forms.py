@@ -9,12 +9,12 @@ class LoginForm(forms.Form):
 	username = forms.CharField(
 	label= "Nombre de Usuario",
 	max_length=150,
-	widget=forms.TextInput(attrs={'placeholder': 'Tu nombre de usuario'})
+	widget=forms.TextInput(attrs={'placeholder': 'Tu nombre de usuario','class': 'form-control'})
 	)
 
 	password = forms.CharField(
 	label= "Contraseña",
-	widget=forms.PasswordInput(attrs={'placeholder': 'Tu Contraseña'})
+	widget=forms.PasswordInput(attrs={'placeholder': 'Tu Contraseña',  'class': 'form-control'})
 	)
 
 
@@ -22,24 +22,24 @@ class RegisterForm(forms.Form):
 	username = forms.CharField(
 	label= "Nombre de Usuario",
 	max_length=150,
-	widget=forms.TextInput(attrs={'placeholder': 'Define nombre de usuario'})
+	widget=forms.TextInput(attrs={'placeholder': 'Define nombre de usuario',  'class': 'form-control'})
 	)
 
 	email = forms.EmailField(
 		label="correo electrónico",
-		widget=forms.EmailInput(attrs={'placeholder':'tu@gmail.com'})
+		widget=forms.EmailInput(attrs={'placeholder':'tu@gmail.com',  'class': 'form-control'})
 
 	)
 	
 	password = forms.CharField(
         label="Contraseña",
-        widget=forms.PasswordInput(attrs={'placeholder': 'Introduce tu Contraseña'})
+        widget=forms.PasswordInput(attrs={'placeholder': 'Introduce tu Contraseña',  'class': 'form-control'})
     )
 
 	
 	password_confirm = forms.CharField(
         label="Confirmar Contraseña",
-        widget=forms.PasswordInput(attrs={'placeholder': 'Repite tu Contraseña'})
+        widget=forms.PasswordInput(attrs={'placeholder': 'Repite tu Contraseña',  'class': 'form-control'})
     )
 
     
@@ -66,7 +66,7 @@ class RegisterForm(forms.Form):
 		password         = cleaned_data.get('password')
 		password_confirm = cleaned_data.get('password_confirm')
 
-        # Asegúrate de que ambos campos estén presentes y, si no coinciden, lanzar el error
+        # Asegura de que ambos campos estén presentes y, si no coinciden, lanzar el error
 		if password and password_confirm and password != password_confirm:
             # Asignamos el error al campo password_confirm
 			self.add_error('password_confirm', "Las contraseñas no coinciden.")

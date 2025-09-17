@@ -1,0 +1,78 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Iniciar Sesión | PanLyR 🥐{% endblock %}
+
+
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'auth_users/css/styles.css' %}">
+{% endblock %}
+
+{% block header %}
+<header class="py-3 text-center header-water">
+  <h2 class="fw-bold mb-0">🧁 PanLyR</h2>
+</header>
+{% endblock %}
+
+{% block content %}
+<section class="login-section d-flex flex-column flex-md-row align-items-center justify-content-center"
+         style="background-image: url('{% static 'auth_users/img/fondo_panaderia.png' %}');">
+  <!-- Formulario -->
+  <div class="login-form-container p-4 w-100 w-md-50">
+    <h2 class="mb-4 text-center text-white">Inicia sesión</h2>
+
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+
+      {% include "partials/form_field.html" with field=form.username icon="fa-solid fa-user" %}
+      {% include "partials/form_field.html" with field=form.password icon="fa-solid fa-lock" %}
+      
+      
+      {% if error_message %}
+        <div class="alert alert-danger small">{{ error_message }}</div>
+      {% endif %}
+      
+      <button type="submit" class="btn btn-warning w-100">Iniciar sesión</button>
+    </form>
+
+    <p class="mt-3 text-center text-white">
+      ¿No tienes cuenta?
+      <a href="{% url 'register' %}" class="text-warning fw-bold text-decoration-none">Regístrate aquí</a>
+    </p>
+  </div>
+
+  <!-- Imagen lateral a la derecha -->
+  <div class="login-image p-4 w-100 w-md-50 text-center">
+    <img src="{% static 'auth_users/img/logo.jpg' %}" alt="Logo PanLyR"
+         class="img-fluid rounded shadow">
+  </div>
+</section>
+{% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+   
