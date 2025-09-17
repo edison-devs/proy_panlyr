@@ -21,7 +21,8 @@ from django.conf import settings
 from django.conf.urls.static import static # Importa static
 
 urlpatterns = [
-    path('', include('core.urls'))
+    path('', include('core.urls')),
+    path('auth_users/', include('auth_users.urls'))
 ]
 
 if settings.DEBUG:

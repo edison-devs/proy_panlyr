@@ -32,6 +32,76 @@ El proyecto está dividido en tres apps principales, siguiendo buenas prácticas
 
 ---
 
+---
+
+📝 Actualización de Formularios (Login & Register)
+
+📌 Cambios realizados
+
+1. **Actualización de forms.py** en la app auth_users:
+Se añadieron widgets con la clase form-control en los campos (username, email, password, etc.).
+
+- Esto fue necesario porque, al usar Django, cuando se renderizan los formularios automáticamente con {{ form.as_p }} o {{ form }}, los inputs HTML generados no traen las clases de Bootstrap.
+
+- Sin la clase form-control, los inputs no se muestran con el estilo visual de Bootstrap (bordes redondeados, colores de focus, etc.).
+
+- Con form-control aplicado desde los widgets, aseguramos que los formularios se vean consistentes con el resto del diseño.
+
+
+Ejemplo:
+
+username = forms.CharField(
+    label="Nombre de Usuario",
+    max_length=150,
+    widget=forms.TextInput(attrs={
+        'placeholder': 'Define nombre de usuario',
+        'class': 'form-control'
+    })
+)
+
+
+2. **Creación de una carpeta templates/ global en el proyecto**
+
+Dentro se añadió el archivo:
+
+templates/partials/form_field.html
+
+Este archivo permite controlar de forma centralizada el estilo de los campos de formulario, evitando duplicar código en cada app.
+
+
+Ejemplo de uso en un template:
+
+{% include "partials/form_field.html" with field=form.username %}
+
+Código del archivo form_field.html:
+
+{# partials/form_field.html
+   Renderiza un campo de formulario con su label y mensaje de error.
+   Uso recomendado: {% include 'partials/form_field.html' with field=form.username %}
+#}
+
+<div class="mb-3">
+  {{ field.label_tag }}
+  {{ field }}
+  {% if field.errors %}
+    <div class="form-text text-danger small">{{ field.errors.0 }}</div>
+  {% endif %}
+</div>
+
+
+
+🎯 Propósito de esta implementación
+
+- Mantener la consistencia visual entre formularios de Login y Register usando Bootstrap.
+
+- Evitar que Django modifique los estilos al renderizar los inputs.
+
+- Facilitar la colaboración en equipo, centralizando la lógica de estilos en un único archivo (form_field.html) en lugar de replicarlo en cada app.
+
+- Mejorar la mantenibilidad: cualquier cambio de estilo en los formularios se hace en un solo lugar.
+
+---
+
 ### 🚀 Tecnologías utilizadas
 
 - Backend: Django 5.2.4
