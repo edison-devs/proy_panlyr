@@ -216,7 +216,14 @@ __marimo__/
 Thumbs.db
 
 #No subir base de datos
-.db
+db.panlyr
+# Ignorar cualquier archivo con extensión .db
+*.db
+# "" que comienze con extensión "db"
+db*
+# Ignorar archivos .db en cualquier subcarpeta
+**/*.db
+
 
 # Ignorar archivos locales de bootstrap
 # Ignorar archivos CSS 
