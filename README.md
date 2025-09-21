@@ -112,6 +112,8 @@ Código del archivo form_field.html:
 
 ---
 
+### Se agregaron los Modelos al admin.py en app core y auth_users
+
 ### 📂 Instalación del proyecto
 
 1. Clonar el repositorio:
