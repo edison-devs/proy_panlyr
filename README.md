@@ -89,7 +89,6 @@ Código del archivo form_field.html:
 </div>
 
 
-
 🎯 Propósito de esta implementación
 
 - Mantener la consistencia visual entre formularios de Login y Register usando Bootstrap.
@@ -208,3 +207,4 @@ Este proyecto se irá actualizando progresivamente con:
 -Cualquier duda sobre como clonar el proyecto ver el archivo **guia_instalacion.md**
 
 -Para dudas en la metodologia de trabajo con git ver **CONTRIBUTING.md**
+
