@@ -41,6 +41,66 @@ INSTALLED_APPS = [
     'core'
 ]
 
+
+JAZZMIN_SETTINGS = {
+    # Titulo de la ventana
+    "site_title": "PanLyR",
+    # Para el nombre del menu
+    "site_brand": "PanLyR",
+    "site_logo" : "/auth_users/img/logo.jpg",
+    "login_logo" : "/auth_users/img/logo.jpg",
+    # Clase css que se aplica al logotipo de arriba
+    "site_logo_classes": "img-circle",
+    # Testo de bienvenida en la pantalla de inicio de seción
+    "welcome_sign": "Es un gusto tenerte de nuevo aqui!!!",
+    "copyright" : "Presentado como proyecto para la universidad",
+    #continuar en casa personalizar login... imagen dip 9
+
+    "search_model": ["auth_users.User", "core.Product", "core.Delivery"],
+    # cambiar los iconos de las apps y modelos en la barra lateral ya jazzmin los tiene incorporados
+    "icons": {
+        "auth_users.User": "fas fa-solid fa-user", #revisar
+        "core.Product": "fas fa-solid fa-store",
+    },
+
+    "show_ui_builder": True #Para tema claro y oscuro
+}
+
+JAZZMIN_UI_TWEAKS = {
+    "navbar_small_text": False,
+    "footer_small_text": True,
+    "body_small_text": False,
+    "brand_small_text": False,
+    "brand_colour": "navbar-warning",
+    "accent": "accent-navy",
+    "navbar": "navbar-light",
+    "no_navbar_border": False,
+    "navbar_fixed": True,
+    "layout_boxed": False,
+    "footer_fixed": False,
+    "sidebar_fixed": True,
+    "sidebar": "sidebar-light-warning",
+    "sidebar_nav_small_text": False,
+    "sidebar_disable_expand": False,
+    "sidebar_nav_child_indent": False,
+    "sidebar_nav_compact_style": False,
+    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_flat_style": True,
+    "theme": "materia",
+    "dark_mode_theme": "solar",
+    "button_classes": {
+        "primary": "btn-primary",
+        "secondary": "btn-secondary",
+        "info": "btn-info",
+        "warning": "btn-warning",
+        "danger": "btn-danger",
+        "success": "btn-success"
+    }
+}
+
+
+
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
