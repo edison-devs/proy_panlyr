@@ -30,6 +30,7 @@ El proyecto está dividido en tres apps principales, siguiendo buenas prácticas
   - TimeStampedModel: para manejar fechas de creación y actualización.
   - SoftDeleteModel: para implementar borrado lógico (no destructivo).
 
+- ✅ Se añadio la libreria jazmin al setting para configurar los estilos del admin de django
 ---
 
 ---
@@ -87,6 +88,7 @@ Código del archivo form_field.html:
     <div class="form-text text-danger small">{{ field.errors.0 }}</div>
   {% endif %}
 </div>
+
 
 
 🎯 Propósito de esta implementación

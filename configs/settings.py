@@ -29,6 +29,7 @@ ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 # Application definition
 
 INSTALLED_APPS = [
+    'jazzmin', #agregando libreria jazmin  27-9-25
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
