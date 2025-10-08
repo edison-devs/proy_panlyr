@@ -1,52 +1,87 @@
-from django.core.management.base import BaseCommand
-from core.models import Product, Category
+# core/management/commands/seeder_products.py
 
+from django.core.management.base import BaseCommand
+from core.models import Category, Product
+from django.db import transaction
 
 class Command(BaseCommand):
-    help = 'Seed initial data for products only if they do not exist'
+    help = "Seeder para poblar la tabla de productos de ejemplo"
 
-    def handle(self, *args, **kwargs):
-        self.seed_products()
+    @transaction.atomic  # Garantiza que si algo falla, no se guarda nada en BD
+    def handle(self, *args, **options):
+        try:
+            # Lista de productos de ejemplo
+            products_data = [
+                {
+                    "category": "Panadería",
+                    "name": "Pan Andino",
+                    "price": 1.50,
+                    "description": "Pan tradicional de la región andina.",
+                    "stock": 50,
+                },
+                {
+                    "category": "Panadería",
+                    "name": "Baguette",
+                    "price": 2.00,
+                    "description": "Clásico pan francés crujiente.",
+                    "stock": 30,
+                },
+                {
+                    "category": "Repostería",
+                    "name": "Torta de Chocolate",
+                    "price": 10.00,
+                    "description": "Bizcocho húmedo de chocolate con cobertura cremosa.",
+                    "stock": 10,
+                },
+                {
+                    "category": "Repostería",
+                    "name": "Galletas de Avena",
+                    "price": 3.50,
+                    "description": "Galletas caseras con avena y pasas.",
+                    "stock": 40,
+                },
+                {
+                    "category": "Bebidas",
+                    "name": "Café Negro",
+                    "price": 1.00,
+                    "description": "Café recién molido servido caliente.",
+                    "stock": 100,
+                },
+            ]
 
-    def seed_products(self):
-        products = [
-            {"name": "Pan Francés", "description": "Pan tradicional crujiente", "price": 0.50, "category": "Pan", "stock": 100},
-            {"name": "Galleta de Chocolate", "description": "Clásica galleta con chispas de chocolate", "price": 0.30, "category": "Galleta", "stock": 200},
-            {"name": "Torta de Vainilla", "description": "Repostería esponjosa con glaseado", "price": 5.00, "category": "Repostería", "stock": 15},
-            {"name": "Croissant", "description": "Delicioso croissant de mantequilla", "price": 1.20, "category": "Pan", "stock": 50},
-            {"name": "Donas Glaseadas", "description": "Suaves donas con glaseado de azúcar", "price": 0.80, "category": "Repostería", "stock": 40},
-        ]
+            created_count = 0
 
-        for entry in products:
-            category = Category.objects.filter(name=entry["category"]).first()
-            if not category:
-                self.stdout.write(
-                    self.style.ERROR(f'⚠️ No existe la categoría "{entry["category"]}", omitiendo "{entry["name"]}"')
-                )
-                continue
+            for data in products_data:
+                try:
+                    # Buscar categoría por nombre
+                    category = Category.objects.get(name=data["category"])
 
-            existing = Product.objects.filter(name=entry["name"]).first()
-            if existing:
-                if (
-                    existing.description == entry["description"]
-                    and existing.price == entry["price"]
-                    and existing.category == category
-                ):
+                    # Crear producto si no existe
+                    product, created = Product.objects.get_or_create(
+                        category=category,
+                        name=data["name"],
+                        defaults={
+                            "price": data["price"],
+                            "description": data["description"],
+                            "stock": data["stock"],
+                            "image": None,  # Imagen nula (puedes subirla desde el CRUD)
+                        },
+                    )
+
+                    if created:
+                        created_count += 1
+                        self.stdout.write(self.style.SUCCESS(f"Producto creado: {product.name}"))
+                    else:
+                        self.stdout.write(self.style.WARNING(f"Ya existía: {product.name}"))
+
+                except Category.DoesNotExist:
                     self.stdout.write(
-                        self.style.WARNING(f'Producto "{entry["name"]}" ya existe con datos coincidentes')
+                        self.style.ERROR(f"No existe la categoría: {data['category']}")
                     )
-                else:
-                    self.stdout.write(
-                        self.style.ERROR(f'Producto "{entry["name"]}" existe pero con campos distintos')
-                    )
-            else:
-                Product.objects.create(
-                    name=entry["name"],
-                    description=entry["description"],
-                    price=entry["price"],
-                    stock=entry["stock"],
-                    category=category
-                )
-                self.stdout.write(
-                    self.style.SUCCESS(f'✔️ Producto creado "{entry["name"]}"')
-                    )
+
+            self.stdout.write(
+                self.style.SUCCESS(f"Seeder finalizado. Productos nuevos: {created_count}")
+            )
+
+        except Exception as e:
+            self.stdout.write(self.style.ERROR(f"Error al ejecutar seeder: {str(e)}"))

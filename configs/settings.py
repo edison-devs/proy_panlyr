@@ -44,7 +44,8 @@ INSTALLED_APPS = [
 
 JAZZMIN_SETTINGS = {
     # Titulo de la ventana
-    "site_title": "PanLyR",
+    "site_title": "PanLyR Admin",
+    "site_header": "🍞 PanLyR",
     # Para el nombre del menu
     "site_brand": "PanLyR",
     "site_logo" : "/auth_users/img/logo.jpg",
@@ -53,8 +54,9 @@ JAZZMIN_SETTINGS = {
     "site_logo_classes": "img-circle",
     # Testo de bienvenida en la pantalla de inicio de seción
     "welcome_sign": "Es un gusto tenerte de nuevo aqui!!!",
+    "custom_css": "admin/css/custom.css",  # archivo de estilos para admin
     "copyright" : "Presentado como proyecto para la universidad",
-    #continuar en casa personalizar login... imagen dip 9
+
 
     "search_model": ["auth_users.User", "core.Product", "core.Delivery"],
     # cambiar los iconos de las apps y modelos en la barra lateral ya jazzmin los tiene incorporados
@@ -62,6 +64,11 @@ JAZZMIN_SETTINGS = {
         "auth_users.User": "fas fa-solid fa-user", #revisar
         "core.Product": "fas fa-solid fa-store",
     },
+
+
+    
+    
+    
 
     "show_ui_builder": True #Para tema claro y oscuro
 }
@@ -184,6 +191,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / "core" / "static"]
+
 
 MEDIA_URL = '/media/' 
 MEDIA_ROOT = BASE_DIR / 'media'

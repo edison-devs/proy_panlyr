@@ -31,6 +31,11 @@ El proyecto está dividido en tres apps principales, siguiendo buenas prácticas
   - SoftDeleteModel: para implementar borrado lógico (no destructivo).
 
 - ✅ Se añadio la libreria jazmin al setting para configurar los estilos del admin de django
+
+- ✅ Ruta del admin cambiada
+
+- ✅ Se hizo un crud base con estilos basicos USA BOOTSTRAP ya esta enlazado al view.py **falta configurar los botones para que el login reconozca los roles de los usuarios**
+
 ---
 
 ---
@@ -102,6 +107,41 @@ Código del archivo form_field.html:
 - Mejorar la mantenibilidad: cualquier cambio de estilo en los formularios se hace en un solo lugar.
 
 ---
+
+## 🗂️ Administración con Borrado Suave (Soft Delete)
+
+Este proyecto implementa un sistema de borrado suave para proteger los datos y permitir restauraciones desde el panel de administración. A continuación se detallan los componentes clave y cómo se aplican:
+
+### 🔧 Mixins utilizados
+- `SoftDeleteMixin`: agrega el campo `deleted_at` y métodos `.soft_delete()` y `.restore()` a los modelos.
+- `TimestampedMixin`: agrega `created_at` y `updated_at` con etiquetas en español.
+- `SoftDeleteAdminMixin`: añade acciones de borrado suave, restauración y borrado definitivo al panel de Django.
+- `DeletedAtFilterMixin`: permite filtrar visualmente entre registros borrados y activos.
+
+### 🧑‍💻 Cómo se aplica en el admin
+- Los modelos que usan `SoftDeleteMixin` deben heredar `SoftDeleteAdminMixin` en su clase `ModelAdmin`.
+- Se recomienda mostrar `deleted_at` en `list_display` y en `readonly_fields`.
+- Se puede usar `get_queryset()` para mostrar solo los registros activos por defecto.
+- Las acciones disponibles en el panel son:
+  - `Borrado suave de seleccionados`
+  - `Restaurar seleccionados`
+  - `Borrado definitivo de seleccionados`
+
+### 🔒 Seguridad en el modelo User
+- El campo `_is_active` controla si el usuario puede iniciar sesión.
+- La propiedad `is_active` combina `_is_active` y `deleted_at` para bloquear el acceso si el usuario fue eliminado suavemente.
+
+### 🎨 Visualización
+- Se pueden mostrar íconos o etiquetas como “🗑️ Eliminado”, “✅ Activo”, “⛔ Inactivo” en el panel para mayor claridad.
+
+### 📁 Archivos relevantes
+- `abcstracts/models.py` → Mixins de borrado y timestamps
+- `abcstracts/mixin.py` → Acciones y filtros para el admin
+- `core/admin.py` → Aplicación de los mixins en modelos de negocio
+- `auth_users/admin.py` → Configuración avanzada del modelo `User`
+
+---
+
 
 ### 🚀 Tecnologías utilizadas
 

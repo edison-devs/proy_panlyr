@@ -16,11 +16,14 @@ Including another URLconf
 """
 
 # URL principal configuration for config project.
+from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings 
 from django.conf.urls.static import static # Importa static
 
 urlpatterns = [
+    #Ruta personalizada
+    path("panlyr-admin/", admin.site.urls, name="panlyr_admin"),
     path('', include('core.urls')),
     path('auth_users/', include('auth_users.urls'))
 ]

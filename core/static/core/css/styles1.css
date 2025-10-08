@@ -1071,3 +1071,43 @@ html {
 	
 }
 
+/*estilos personalizados crud productos
+*/
+
+
+/* Marrón cálido */
+.text-brown {
+  color: #6f4e37;
+}
+
+/* Botón marrón */
+.btn-brown {
+  background-color: #6f4e37;
+  color: white;
+}
+
+.btn-brown:hover {
+  background-color: #5a3e2b;
+  color: #fff;
+}
+
+
+/* Borde marrón para inputs */
+.border-brown {
+  border: 1px solid #6f4e37;
+}
+
+/* Textos y botones en marrón */
+.text-brown {
+  color: #6f4e37;
+}
+
+.btn-brown {
+  background-color: #6f4e37;
+  color: #fff;
+}
+
+.btn-brown:hover {
+  background-color: #5a3e2b;
+  color: #fff;
+}

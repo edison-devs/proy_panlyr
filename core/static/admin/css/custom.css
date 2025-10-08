@@ -1,0 +1,58 @@
+:root {
+  --panlyr-bg: #fffaf3;       /* Fondo cálido */
+  --panlyr-accent: #f4a261;   /* Naranja miel */
+  --panlyr-primary: #e76f51;  /* Rojo canela */
+  --panlyr-dark: #264653;     /* Azul oscuro */
+}
+
+body {
+  background-color: var(--panlyr-bg);
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Navbar y sidebar */
+.navbar, .sidebar {
+  background-color: var(--panlyr-accent) !important;
+}
+
+.navbar-brand {
+  color: var(--panlyr-dark) !important;
+  font-weight: bold;
+}
+
+/* Botones */
+.btn-primary {
+  background-color: var(--panlyr-primary) !important;
+  border-color: var(--panlyr-primary) !important;
+}
+
+/* Tablas */
+.table th {
+  background-color: var(--panlyr-accent) !important;
+  color: white !important;
+}
+
+/*Estilos para el login*/
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background: linear-gradient(135deg, #f4a261, #e9c46a);
+}
+
+.login-box {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  text-align: center;
+}
+
+.login-box .logo {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
+}

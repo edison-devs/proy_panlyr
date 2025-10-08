@@ -1,0 +1,24 @@
+{% extends "core/base_local.html" %}
+{% load static %}
+
+{% block title %}Formulario Producto{% endblock %}
+
+{% block header %}
+  {% include 'core/includes/navbar_crud.html' %}
+{% endblock %}
+
+{% block content %}
+<div class="container my-4">
+  <div class="card shadow-sm p-4">
+    <h3 class="mb-4 text-brown">Formulario de Producto</h3>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+      {{ form.as_p }}
+
+      <button type="submit" class="btn btn-warning">Guardar</button>
+      <a href="{% url 'product_catalog' %}" class="btn btn-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}
