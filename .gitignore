@@ -237,3 +237,12 @@ Panlyr/static/Panlyr/js/bootstrap*.map
 
 #ignorar archivo base_local.html
 core/templates/core/base_local.html
+
+# Excluir carpeta media
+media/
+# Excluir todos los archivos en cualquier directorio
+**/media/
+# Excluir todos los archivos dentro de un directorio especifico
+/media/*
+
+media/core/products
