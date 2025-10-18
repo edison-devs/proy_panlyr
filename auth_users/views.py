@@ -17,37 +17,33 @@ class UserLoginView(View):
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('home')
-        #Muestra el formulario del login vacio
-        form=LoginForm()
-        return render(request, self.template_name, {'form':form})
+        form = LoginForm()
+        return render(request, self.template_name, {'form': form})
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             return redirect('home')
-        #Procesa el envio de formulario del login
+
         form = LoginForm(request.POST)
         if form.is_valid():
             username = form.cleaned_data['username']
             password = form.cleaned_data['password']
-
-            #Intenta autenticar el usuario
             user = authenticate(request, username=username, password=password)
 
+            # Redirige según el Rol
             if user is not None:
-                #Si las credenciales son validas inicia seción
                 login(request, user)
-                #Redirige a una pagina de exito (ej. La lista de secciones o el home.)
-                return redirect('home') # Cambia esto a tu pagina de inicio deseada
+                if user.is_superuser:
+                    return redirect('superadmin_dashboard')
+                elif user.is_staff:
+                    return redirect('admin_dashboard')
+                else:
+                    return redirect('client_dashboard')
 
-            else:
-                #Si las credenciales no son validas, Muestra un mensaje de error
-                return render(request, self.template_name, {
-                    'form':form,
-                    'error_message': 'Nombre de usuario o contraseña incorrectos. '
-                    })
-
-        #Si es formulario no es valido (ej. campos vacios), lo vuelve a mostrar con errores
-        return render(request, self.template_name, {'form': form})
+        return render(request, self.template_name, {
+            'form': form,
+            'error_message': 'Nombre de usuario o contraseña incorrectos.'
+        })
 
 
 #------------------------------------------------------------------
@@ -97,5 +93,6 @@ class UserRegisterView(View):
 #Redirige al home despues de iniciar o cerrar seción
 class UserLogoutView(View):
     def get(self, request, *args, **kwargs):
+        is_super = request.user.is_superuser
         logout(request)
-        return redirect('home')
+        return redirect('login' if is_super else 'home')

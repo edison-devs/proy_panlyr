@@ -22,6 +22,33 @@ El proyecto está dividido en tres apps principales, siguiendo buenas prácticas
 
 ### 🛠️ Avance actual
 
+- ✅ El login redirige correctamente al panel según el rol del usuario (superadmin, admin, cliente).
+
+- ✅ Se usó Bootstrap para lograr un diseño responsivo en todos los paneles.
+
+- ✅ Se creó el archivo styles1.css con comentarios por sección para facilitar mantenimiento.
+
+⚠️ Recomendación: mantener un solo archivo de estilos para rendimiento, pero bien comentado.
+
+- ✅ Se creó la carpeta includes/ dentro de core/templates para reutilizar fragmentos de código.
+
+📌 ¿Qué es un include? Es una forma de insertar un bloque HTML en múltiples templates sin duplicar código.
+
+- ✅ Se creó la carpeta admin/ dentro de core/templates y core/static para personalizar el panel de Django.
+
+- ✅ Se creó un logout.html en templates/admin/ para forzar redirección al login personalizado al cerrar sesión desde el admin (🔧 aún no funcional).
+
+- ✅ Se creó la carpeta placeholders/ en core/templates con HTMLs genéricos para probar redirecciones y lógica futura (reportes, pedidos, papelera, carrito).
+
+- ✅ El panel de usuario se muestra según el rol, con diseño profesional y accesos personalizados.
+
+- ✅ El panel de Django ya tiene íconos personalizados y estilos adaptados.
+
+- ✅ El modelo User permite elegir el rol desde el admin y ya maneja borrado suave.
+
+
+### 🛠️ Avance anterior
+
 - ✅ Se creó el template de inicio (home.html) dentro de la app core, con diseño inicial.
 
 - ✅ Se definió el modelo de usuario personalizado en auth_user/models.py.
@@ -37,6 +64,55 @@ El proyecto está dividido en tres apps principales, siguiendo buenas prácticas
 - ✅ Se hizo un crud base con estilos basicos USA BOOTSTRAP ya esta enlazado al view.py **falta configurar los botones para que el login reconozca los roles de los usuarios**
 
 ---
+
+
+✅ Checklist de tareas completadas
+
+[x] Redirección por rol desde el login
+
+[x] Paneles personalizados por tipo de usuario
+
+[x] Bootstrap integrado en templates
+
+[x] Archivo único de estilos comentado (styles1.css)
+
+[x] Includes para reutilización de código
+
+[x] Personalización visual del Django Admin
+
+[x] Borrado suave en modelo User
+
+[x] Íconos personalizados en el admin
+
+[x] Base de datos migrada a MySQL
+
+
+🧁 Cosas por hacer
+
+[ ] Investigar cómo redirigir correctamente desde el Django Admin al login personalizado (logout.html)
+
+[ ] Desarrollar lógica de borrado suave para productos
+
+[ ] Implementar lógica de pedidos (crear, listar, cancelar)
+
+[ ] Desarrollar lógica del carrito (agregar, eliminar, confirmar)
+
+[ ] Estilizar el Django Admin con la paleta de colores de PanLyR
+
+[ ] Crear lógica para desactivar permisos según el rol (checkbox dinámico en el admin)
+
+
+📌 Prioridades sugeridas
+
+🛒 Lógica del carrito (flujo de compra)
+
+📦 Lógica de pedidos (gestión y visualización)
+
+🧹 Borrado suave para productos
+
+🎨 Estilizar el Django Admin con colores PanLyR
+
+
 
 ---
 
@@ -145,8 +221,9 @@ Este proyecto implementa un sistema de borrado suave para proteger los datos y p
 
 ### 🚀 Tecnologías utilizadas
 
+
 - Backend: Django 5.2.4
-- Base de datos: PostgreSQL
+- Base de datos: MySQL
 - Frontend: HTML, CSS, Bootstrap (en proceso de integración)
 - Control de versiones: Git + GitHub
 - Gestión de entorno: python-decouple, dj-database-url
@@ -182,8 +259,8 @@ Este proyecto implementa un sistema de borrado suave para proteger los datos y p
 | Nombre         | Rol principal                      |
 |----------------|------------------------------------|
 | Kim (Colab1) | Backend, modelos, estructura del proyecto |
-| Colab2         | Lógica de login (backend)          |
-| Colab3         | Interfaz de login (frontend)       |
+| Colab2         | Lógica de pedidos  (backend)          |
+| Colab3         | Interfaz de las templates (frontend)       |
   
 ---
 

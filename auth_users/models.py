@@ -4,10 +4,10 @@ from abcstracts.models import TimestampedMixin, SoftDeleteMixin
 
 class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
     email = models.EmailField(unique=True)
-    phone_number = models.CharField(max_length=15, blank=True, null=True)
-    address = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    country = models.CharField(max_length=100, blank=True, null=True)
+    phone_number = models.CharField(max_length=15, blank=True, null=True, verbose_name='Teléfono')
+    address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Dirección')
+    city = models.CharField(max_length=100, blank=True, null=True, verbose_name='Ciudad')
+    country = models.CharField(max_length=100, blank=True, null=True, verbose_name='País')
     
     USERNAME_FIELD = 'username'  # Ya viene de AbstractUser
     REQUIRED_FIELDS = ['email']  # Se mantiene como campo obligatorio
@@ -21,6 +21,24 @@ class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
     default=False,
     verbose_name="¿Es súper administrador?"
     )
+
+
+    ROLE_CHOICES = [
+        ('superadmin', 'Super Administrador'),
+        ('admin', 'Administrador'),
+        ('cliente', 'Cliente'),
+    ]
+    
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='cliente')
+
+    def is_superadmin(self):
+        return self.role == 'superadmin'
+
+    def is_admin(self):
+        return self.role == 'admin'
+
+    def is_cliente(self):
+        return self.role == 'cliente'
 
     # Campo real editable en el admin
     _is_active = models.BooleanField(default=True, verbose_name="¿Está activo?")

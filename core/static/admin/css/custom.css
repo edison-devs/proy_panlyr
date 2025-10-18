@@ -1,58 +1,82 @@
 :root {
-  --panlyr-bg: #fffaf3;       /* Fondo cálido */
-  --panlyr-accent: #f4a261;   /* Naranja miel */
-  --panlyr-primary: #e76f51;  /* Rojo canela */
-  --panlyr-dark: #264653;     /* Azul oscuro */
+  --panlyr-bg: #f5e1c0;         /* Fondo cálido */
+  --panlyr-accent: #b5651d;     /* Naranja tostado */
+  --panlyr-dark: #6f4e37;       /* Marrón chocolate */
+  --panlyr-light: #fffaf3;      /* Fondo claro */
+  --panlyr-input: #fff8ec;      /* Fondo de input */
 }
 
+/* Fondo general */
 body {
-  background-color: var(--panlyr-bg);
+  background-color: var(--panlyr-light);
   font-family: 'Nunito', sans-serif;
 }
 
-/* Navbar y sidebar */
-.navbar, .sidebar {
-  background-color: var(--panlyr-accent) !important;
-}
-
-.navbar-brand {
-  color: var(--panlyr-dark) !important;
-  font-weight: bold;
-}
-
-/* Botones */
-.btn-primary {
-  background-color: var(--panlyr-primary) !important;
-  border-color: var(--panlyr-primary) !important;
-}
-
-/* Tablas */
-.table th {
-  background-color: var(--panlyr-accent) !important;
+/* Navbar con efecto agua */
+.navbar {
+  background: linear-gradient(270deg, var(--panlyr-dark), var(--panlyr-accent), var(--panlyr-dark)) !important;
+  background-size: 600% 600%;
+  animation: waterFlow 12s ease infinite;
   color: white !important;
 }
 
-/*Estilos para el login*/
-
-.login-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  background: linear-gradient(135deg, #f4a261, #e9c46a);
+@keyframes waterFlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 
-.login-box {
-  background: white;
-  padding: 2rem;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  text-align: center;
+/* Footer */
+footer {
+  background-color: var(--panlyr-dark) !important;
+  color: white !important;
 }
 
-.login-box .logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
-  margin-bottom: 1rem;
+/* Botones personalizados */
+.btn-primary {
+  background-color: var(--panlyr-accent) !important;
+  border-color: var(--panlyr-accent) !important;
+  color: white !important;
+}
+
+.btn-success {
+  background-color: #2a9d8f !important;
+  border-color: #2a9d8f !important;
+  color: white !important;
+}
+
+.btn-danger {
+  background-color: #e63946 !important;
+  border-color: #e63946 !important;
+  color: white !important;
+}
+
+.btn-secondary {
+  background-color: var(--panlyr-dark) !important;
+  border-color: var(--panlyr-dark) !important;
+  color: white !important;
+}
+
+/* Cajas de búsqueda */
+input[type="search"],
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select {
+  background-color: var(--panlyr-input) !important;
+  border: 1px solid var(--panlyr-accent) !important;
+  color: #333 !important;
+  border-radius: 6px;
+  padding: 0.5rem;
+}
+
+/* Nombres de apps en sidebar */
+.sidebar .nav-link {
+  color: var(--panlyr-accent) !important;
+  font-weight: bold;
+}
+
+/* Evita que el naranja se vea escandaloso */
+.sidebar .nav-link:hover {
+  background-color: rgba(181, 101, 29, 0.1) !important;
 }

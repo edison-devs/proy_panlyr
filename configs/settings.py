@@ -61,8 +61,22 @@ JAZZMIN_SETTINGS = {
     "search_model": ["auth_users.User", "core.Product", "core.Delivery"],
     # cambiar los iconos de las apps y modelos en la barra lateral ya jazzmin los tiene incorporados
     "icons": {
-        "auth_users.User": "fas fa-solid fa-user", #revisar
-        "core.Product": "fas fa-solid fa-store",
+    "auth_users.User": "fas fa-user-shield",       # Usuario
+    "core.Product": "fas fa-bread-slice",          # Productos
+    "core.Category": "fas fa-tags",                # Categorías
+    "core.PaymentMethod": "fas fa-credit-card",    # Métodos de pago
+    "core.CartStatus": "fas fa-shopping-basket",   # Estado de carrito
+    "core.OrderType": "fas fa-list-alt",           # Tipo de pedido
+    "core.DeliveryStatus": "fas fa-truck",         # Estado de entrega
+    "core.OutputReason": "fas fa-exclamation",     # Motivo de salida
+    "core.Cart": "fas fa-shopping-cart",           # Carrito
+    "core.CartProduct": "fas fa-box-open",         # Producto en carrito
+    "core.Payment": "fas fa-money-bill-wave",      # Pagos
+    "core.Delivery": "fas fa-shipping-fast",       # Entregas
+    "core.Order": "fas fa-clipboard-list",         # Pedidos
+    "core.Input": "fas fa-arrow-down",             # Entradas
+    "core.Output": "fas fa-arrow-up",
+    "auth.Group": "fas fa-users",  # 👈 icono para grupos 
     },
 
 
@@ -73,25 +87,26 @@ JAZZMIN_SETTINGS = {
     "show_ui_builder": True #Para tema claro y oscuro
 }
 
+
 JAZZMIN_UI_TWEAKS = {
     "navbar_small_text": False,
-    "footer_small_text": True,
+    "footer_small_text": False,
     "body_small_text": False,
     "brand_small_text": False,
     "brand_colour": "navbar-warning",
     "accent": "accent-navy",
-    "navbar": "navbar-light",
-    "no_navbar_border": False,
+    "navbar": "navbar-dark",
+    "no_navbar_border": True,
     "navbar_fixed": True,
     "layout_boxed": False,
     "footer_fixed": False,
     "sidebar_fixed": True,
-    "sidebar": "sidebar-light-warning",
+    "sidebar": "sidebar-light-primary",
     "sidebar_nav_small_text": False,
     "sidebar_disable_expand": False,
     "sidebar_nav_child_indent": False,
     "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": True,
+    "sidebar_nav_legacy_style": False,
     "sidebar_nav_flat_style": True,
     "theme": "materia",
     "dark_mode_theme": "solar",
@@ -123,7 +138,7 @@ ROOT_URLCONF = 'configs.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / "templates"], #folder templates global
+        'DIRS': [BASE_DIR / 'templates'], #folder templates global
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -182,10 +197,11 @@ TIME_ZONE = 'America/Caracas'  # Ajusta según tu ubicación
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
@@ -203,3 +219,4 @@ MEDIA_ROOT = BASE_DIR / 'media'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'auth_users.User'
+

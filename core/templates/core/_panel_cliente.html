@@ -1,0 +1,35 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Panel Cliente - PanLyR{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/styles1.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card panel-card shadow-sm">
+    <div class="card-header bg-light-brown text-white d-flex align-items-center">
+      <i class="fa-solid fa-user me-2"></i>
+      <h5 class="m-0">Panel del Cliente</h5>
+    </div>
+
+    <div class="card-body bg-light">
+      <p class="text-muted mb-3">Bienvenido a PanLyR. Desde aquí puedes gestionar tus pedidos y carrito.</p>
+
+      <div class="d-grid gap-3">
+        <a href="{% url 'home' %}" class="form-field">
+          <i class="fa-solid fa-house"></i> Ir al Home
+        </a>
+        <a href="{% url 'carrito' %}" class="form-field">
+          <i class="fa-solid fa-cart-shopping"></i> Mi Carrito
+        </a>
+        <a href="{% url 'mis_pedidos' %}" class="form-field">
+          <i class="fa-solid fa-clipboard-check"></i> Mis Pedidos
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

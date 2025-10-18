@@ -20,10 +20,12 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings 
 from django.conf.urls.static import static # Importa static
+from django.contrib.auth.views import LogoutView
 
 urlpatterns = [
     #Ruta personalizada
     path("panlyr-admin/", admin.site.urls, name="panlyr_admin"),
+    path('admin/logout/', LogoutView.as_view(next_page='/auth/login/') ), #Ruta para al cerrar super admin me redirija al login personalizado NO FUNCIONA AUN
     path('', include('core.urls')),
     path('auth_users/', include('auth_users.urls'))
 ]

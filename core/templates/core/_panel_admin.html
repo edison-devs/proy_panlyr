@@ -1,0 +1,39 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Panel Administrador - PanLyR{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/styles1.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card panel-card shadow-sm">
+    <div class="card-header bg-orange text-white d-flex align-items-center">
+      <i class="fa-solid fa-user-tie me-2"></i>
+      <h5 class="m-0">Panel Administrador</h5>
+    </div>
+
+    <div class="card-body bg-light">
+      <p class="text-muted mb-3">Gestión de productos y pedidos. Borrado suave habilitado.</p>
+
+      <div class="d-grid gap-3">
+        <a href="{% url 'product_catalog' %}" class="form-field">
+          <i class="fa-solid fa-box-open"></i> CRUD Productos
+        </a>
+        <a href="{% url 'pedidos_list' %}" class="form-field">
+          <i class="fa-solid fa-clipboard-list"></i> Ver Pedidos
+        </a>
+        <a href="{% url 'reportes' %}" class="form-field">
+          <i class="fa-solid fa-chart-line"></i> Reportes
+        </a>
+
+        <a href="{% url 'client_dashboard' %}" class="form-field">
+          <i class="fa-solid fa-users"></i> Panel de Clientes
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

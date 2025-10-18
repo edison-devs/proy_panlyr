@@ -48,3 +48,6 @@ typing_extensions==4.14.0
 
 # Proporciona los datos de la base de datos de zonas horarias IANA
 tzdata==2025.2
+
+# Mysql client para trabajar con base de datos Mysql
+mysqlclient==2.2.0

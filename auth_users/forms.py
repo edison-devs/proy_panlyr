@@ -2,6 +2,9 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.contrib.auth.forms import UserChangeForm, UserCreationForm
+
+
 
 User = get_user_model() #Obtiene el modelo de usuario activo (tu usuario personalizado)
 
@@ -72,3 +75,26 @@ class RegisterForm(forms.Form):
 			self.add_error('password_confirm', "Las contraseñas no coinciden.")
         
 		return cleaned_data
+
+
+# -------------------------
+# Formulario para Admin (edición de usuarios)
+# -------------------------
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = "__all__"
+
+    def clean(self):
+        cleaned_data = super().clean()
+        role = cleaned_data.get("role")
+
+        # 🔒 Lógica de roles → aplicar directamente al objeto
+        if role == "cliente":
+            self.instance.is_staff = False
+            self.instance.is_superuser = False
+        elif role == "admin":
+            self.instance.is_superuser = False
+
+        return cleaned_data
+

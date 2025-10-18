@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin #Para autenticacion de usuario
 from django.contrib.auth import authenticate,login, get_user_model,logout
+from django.contrib.auth.decorators import login_required
 from django.views import View
 from django.core.paginator import Paginator
 from django.contrib import messages                      # <- necesario para mostrar mensajes
@@ -10,6 +11,60 @@ from .models import *
 from .forms import ProductForm
 
 # Create your views here.
+
+#placeholder vistas sencillas para mas adelante estilizar:
+
+@login_required
+def product_catalog(request):
+    return render(request, 'core/catalogo.html')
+
+@login_required
+def pedidos_list(request):
+    return render(request, 'core/placeholders/pedidos_list.html')
+
+@login_required
+def papelera(request):
+    return render(request, 'core/placeholders/papelera.html')
+
+@login_required
+def carrito(request):
+    return render(request, 'core/placeholders/carrito.html')
+
+@login_required
+def mis_pedidos(request):
+    return render(request, 'core/placeholders/mis_pedidos.html')
+
+@login_required
+def reportes(request):
+    return render(request, 'core/placeholders/reportes.html')
+
+
+#Logica para ver el panel segun el rol del usuario
+@login_required
+def panel_view(request):
+    return render(request, 'core/includes/panel.html')
+
+
+@login_required
+def superadmin_dashboard(request):
+    if not request.user.is_superadmin():
+        return redirect('home')
+    return render(request, 'core/_panel_superadmin.html')
+
+@login_required
+def admin_dashboard(request):
+    if not request.user.is_admin() and not request.user.is_superadmin():
+        return redirect('home')
+    return render(request, 'core/_panel_admin.html')
+
+@login_required
+def client_dashboard(request):
+    if not request.user.is_cliente() and not request.user.is_superadmin():
+        return redirect('home')
+    return render(request, 'core/_panel_cliente.html')
+
+
+#Redirige al home
 def render_home(request):
     try:
         return render(request, 'core/home.html')
