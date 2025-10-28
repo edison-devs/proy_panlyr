@@ -50,4 +50,4 @@ typing_extensions==4.14.0
 tzdata==2025.2
 
 # Mysql client para trabajar con base de datos Mysql
-mysqlclient==2.2.0
+mysqlclient

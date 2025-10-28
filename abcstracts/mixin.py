@@ -13,35 +13,43 @@ class DeletedAtFilterMixin(SimpleListFilter):
             ('yes', 'Borrados'),
         )
 
-    def value(self):
-        return super().value()
-
     def queryset(self, request, queryset):
         if self.value() == 'no':
             return queryset.filter(deleted_at__isnull=True)
         elif self.value() == 'yes':
             return queryset.filter(deleted_at__isnull=False)
-        return queryset  # Sin filtro = todos
-
+        return queryset
 
 #----------------------------------------------------------------------------------------------------
 
 class SoftDeleteActionsAdminMixin():
-    actions = ['action_soft_delete', 'action_hard_delete', 'action_restore']
+    actions = ['action_soft_delete', 'action_restore']
 
     def get_actions(self, request):
         actions = super().get_actions(request)
-        actions.pop('delete_selected', None)
-
+        
         opts = self.model._meta
-        perm_codename = f"{opts.app_label}.delete_{opts.model_name}"
-
-        if not (request.user.is_superuser or request.user.has_perm(perm_codename)):
-            for action_name in ['action_soft_delete', 'action_hard_delete', 'action_restore']:
-                actions.pop(action_name, None)
+        
+        # Verificar si este modelo hereda de SoftDeleteMixin (no SoftDeleteModel)
+        is_softdelete_model = any(
+            base.__name__ == 'SoftDeleteMixin' for base in self.model.__mro__
+        )
+        
+        if is_softdelete_model:
+            # Usar permisos específicos de soft delete
+            if not (request.user.is_superuser or 
+                    request.user.has_perm(f"{opts.app_label}.soft_delete_{opts.model_name}")):
+                actions.pop('action_soft_delete', None)
+            
+            if not (request.user.is_superuser or 
+                    request.user.has_perm(f"{opts.app_label}.restore_{opts.model_name}")):
+                actions.pop('action_restore', None)
+        else:
+            # Si no es soft delete model, ocultar las acciones
+            actions.pop('action_soft_delete', None)
+            actions.pop('action_restore', None)
 
         return actions
-
 
     def action_soft_delete(self, request, queryset):
         updated = 0
@@ -51,14 +59,6 @@ class SoftDeleteActionsAdminMixin():
                 updated += 1
         self.message_user(request, f"{updated} objeto(s) borrado(s) suavemente.")
     action_soft_delete.short_description = "Borrado suave de seleccionados"
-
-    def action_hard_delete(self, request, queryset):
-        deleted = 0
-        for obj in queryset:
-            obj.delete()
-            deleted += 1
-        self.message_user(request, f"{deleted} objeto(s) borrado(s) definitivamente.")
-    action_hard_delete.short_description = "Borrado definitivo de seleccionados"
 
     def action_restore(self, request, queryset):
         restored = 0
@@ -73,3 +73,15 @@ class SoftDeleteActionsAdminMixin():
 
 class SoftDeleteAdminMixin(SoftDeleteActionsAdminMixin):
     list_filter = [DeletedAtFilterMixin]
+    
+    def get_list_filter(self, request):
+        list_filter = super().get_list_filter(request)
+        
+        opts = self.model._meta
+        if not (request.user.is_superuser or 
+                request.user.has_perm(f"{opts.app_label}.restore_{opts.model_name}")):
+            # Si no tiene permiso de RESTORE, quitar el filtro de borrado
+            if list_filter and DeletedAtFilterMixin in list_filter:
+                list_filter = [f for f in list_filter if f != DeletedAtFilterMixin]
+        
+        return list_filter

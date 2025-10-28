@@ -33,5 +33,12 @@ class SoftDeleteMixin(models.Model):
     @property
     def is_deleted(self):
         return self.deleted_at is not None
-
+    
+    @classmethod
+    def get_softdelete_permission_name(cls):
+        return f"soft_delete_{cls._meta.model_name}"
+    
+    @classmethod  
+    def get_restore_permission_name(cls):
+        return f"restore_{cls._meta.model_name}"
 

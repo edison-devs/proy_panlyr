@@ -7,7 +7,7 @@ from .models import (
 )
 
 # Mixins para borrado suave y filtro visual
-from abcstracts.mixin import SoftDeleteAdminMixin, DeletedAtFilterMixin
+from abcstracts.mixin import SoftDeleteAdminMixin
 
 # -------------------------
 # ModelAdmin para modelos sin SoftDeleteMixin
@@ -84,12 +84,6 @@ class ProductAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at", "deleted_at", "stock")
     list_per_page = 2
 
-    # Mostrar por defecto solo los no eliminados en la lista del admin
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(deleted_at__isnull=True)
-
-
 # -------------------------
 # Cart puede necesitar borrado suave si lo marcaste en el modelo
 # -------------------------
@@ -100,10 +94,6 @@ class CartAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
     ordering = ("-id",)
     readonly_fields = ("deleted_at",)
     list_per_page = 2
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        return qs.filter(deleted_at__isnull=True)
 
 
 # -------------------------
@@ -119,9 +109,6 @@ class PaymentAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at", "deleted_at")
     list_per_page = 2
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(deleted_at__isnull=True)
-
 
 @admin.register(Delivery)
 class DeliveryAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
@@ -130,9 +117,6 @@ class DeliveryAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
     list_filter = SoftDeleteAdminMixin.list_filter
     readonly_fields = ("created_at", "updated_at", "deleted_at")
     list_per_page = 2
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(deleted_at__isnull=True)
 
 
 @admin.register(Order)
@@ -143,9 +127,6 @@ class OrderAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at", "deleted_at")
     list_per_page = 2
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(deleted_at__isnull=True)
-
 
 @admin.register(Input)
 class InputAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
@@ -154,9 +135,6 @@ class InputAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
     list_filter = SoftDeleteAdminMixin.list_filter
     readonly_fields = ("created_at", "updated_at", "deleted_at")
     list_per_page = 2
-
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(deleted_at__isnull=True)
 
 
 @admin.register(Output)
@@ -167,8 +145,6 @@ class OutputAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
     readonly_fields = ("created_at", "updated_at", "deleted_at")
     list_per_page = 2
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).filter(deleted_at__isnull=True)
 
 
 # Registra el modelo User en el admin usando esta clase personalizada
