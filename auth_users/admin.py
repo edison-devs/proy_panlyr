@@ -25,14 +25,14 @@ class CustomUserAdmin(SoftDeleteAdminMixin, BaseUserAdmin):
     # Columnas que se verán en la lista de usuarios
     list_display = (
         "id", "username", "email", "phone_number",
-        "is_active", "is_staff", "is_superuser", "role",
+        "is_active", "is_staff", "is_superuser",
         "created_at", "updated_at", "deleted_at"
     )
     list_display_links = ("id", "username")
     search_fields = ("username", "email", "phone_number")
     # Combinamos filtros del mixin con filtros de permisos y ubicación
     list_filter = SoftDeleteAdminMixin.list_filter + [
-        "_is_active", "is_staff", "is_superuser", "role", "city", "country"
+        "_is_active", "is_staff", "is_superuser", "city", "country"
     ]
      # Orden por defecto; ajusta si quieres por fecha de creación en lugar de date_joined
     ordering = ("-date_joined",)
@@ -44,7 +44,7 @@ class CustomUserAdmin(SoftDeleteAdminMixin, BaseUserAdmin):
     fieldsets = (
         ("Credenciales", {"fields": ("username", "password")}),
         ("Información personal", {"fields": ("first_name", "last_name", "email", "phone_number", "address", "city", "country")}),
-        ("Permisos", {"fields": ("_is_active", "is_staff", "is_superuser", "role", "groups", "user_permissions")}),
+        ("Permisos", {"fields": ("_is_active", "is_staff", "is_superuser", "groups", "user_permissions")}),
         ("Fechas", {"fields": ("last_login", "date_joined", "created_at", "updated_at", "deleted_at")}),
     )
 
@@ -55,7 +55,7 @@ class CustomUserAdmin(SoftDeleteAdminMixin, BaseUserAdmin):
             "fields": (
                 "username", "email", "password1", "password2",
                 "phone_number", "address", "city", "country",
-                "_is_active", "is_staff", "is_superuser", "role"
+                "_is_active", "is_staff", "is_superuser"
             ),
         }),
     )

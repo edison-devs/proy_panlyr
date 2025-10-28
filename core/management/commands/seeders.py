@@ -11,5 +11,8 @@ class Command(BaseCommand):
         
         call_command('seeders_categories')
         call_command('seeders_products')
+        call_command('seeders_permisions')
+        call_command('seeders_groups')
+        call_command('seeder_user')
         
         self.stdout.write(self.style.SUCCESS('✅ Todos los seeders ejecutados correctamente'))

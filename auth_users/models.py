@@ -8,37 +8,19 @@ class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
     address = models.CharField(max_length=255, blank=True, null=True, verbose_name='Dirección')
     city = models.CharField(max_length=100, blank=True, null=True, verbose_name='Ciudad')
     country = models.CharField(max_length=100, blank=True, null=True, verbose_name='País')
-    
+
     USERNAME_FIELD = 'username'  # Ya viene de AbstractUser
     REQUIRED_FIELDS = ['email']  # Se mantiene como campo obligatorio
 
     is_staff = models.BooleanField(
-    default=False,
-    verbose_name="¿Es administrador?"
+        default=False,
+        verbose_name="¿Es administrador?"
     )
-    
+
     is_superuser = models.BooleanField(
-    default=False,
-    verbose_name="¿Es súper administrador?"
+        default=False,
+        verbose_name="¿Es súper administrador?"
     )
-
-
-    ROLE_CHOICES = [
-        ('superadmin', 'Super Administrador'),
-        ('admin', 'Administrador'),
-        ('cliente', 'Cliente'),
-    ]
-    
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='cliente')
-
-    def is_superadmin(self):
-        return self.role == 'superadmin'
-
-    def is_admin(self):
-        return self.role == 'admin'
-
-    def is_cliente(self):
-        return self.role == 'cliente'
 
     # Campo real editable en el admin
     _is_active = models.BooleanField(default=True, verbose_name="¿Está activo?")
@@ -59,13 +41,3 @@ class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
 
     def __str__(self):
         return f"{self.username} ({self.email})"
-
-
-# ✅ Flujo esperado
-# 1-Creas un usuario → puede iniciar sesión.
-
-# 2-Le haces borrado suave desde el admin → deleted_at se llena → ya no puede iniciar sesión.
-
-# 3-Lo restauras → deleted_at vuelve a None → puede iniciar sesión otra vez.
-
-# 4-Si lo marcas como inactivo (_is_active=False) → tampoco podrá iniciar sesión aunque no esté borrado
