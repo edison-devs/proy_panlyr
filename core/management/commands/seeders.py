@@ -7,7 +7,7 @@ class Command(BaseCommand):
     help = 'Ejecuta todos los seeders'
 
     def handle(self, *args, **options):
-        self.stdout.write('🚀 Ejecutando seeders...')
+        self.stdout.write(' Ejecutando seeders...')
         
         call_command('seeders_categories')
         call_command('seeders_products')
@@ -15,4 +15,4 @@ class Command(BaseCommand):
         call_command('seeders_groups')
         call_command('seeder_user')
         
-        self.stdout.write(self.style.SUCCESS('✅ Todos los seeders ejecutados correctamente'))
+        self.stdout.write(self.style.SUCCESS('Todos los seeders ejecutados correctamente'))
