@@ -518,17 +518,21 @@ html {
 }
 
 .add-cart {
-	justify-self: start;
-	border: 2px solid var(--primary-color);
-	padding: 1rem;
-	border-radius: 50%;
-	cursor: pointer;
-	transition: all 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-	display: flex;
-	align-items: center;
-	justify-content: center;
+  aspect-ratio: 1 / 1;
+  padding: 1rem;
+  border-radius: 50%;
+  border: 2px solid var(--primary-color);
+  cursor: pointer;
+  transition: all 0.4s ease;
+
+  max-width: 4rem;
 }
+
+
 
 .add-cart:hover {
 	background-color: var(--primary-color);
