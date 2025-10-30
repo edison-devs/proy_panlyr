@@ -7,6 +7,8 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.views import View
 from .forms import LoginForm, RegisterForm # Importa el formulario forms.py
+from django.contrib.admin.views.decorators import staff_member_required #Para manejar el cierre de secion del superadmin
+from django.utils.decorators import method_decorator
 
 #------------------------------------------------------------------
 # Login
@@ -96,3 +98,17 @@ class UserLogoutView(View):
         is_super = request.user.is_superuser
         logout(request)
         return redirect('login' if is_super else 'home')
+
+
+
+#------------------------------------------------------------------
+# Logout del superadmin (para el panel Django)
+#------------------------------------------------------------------
+
+class AdminLogoutRedirectView(View):
+    """Cierra la sesión del superadmin y redirige al login personalizado."""
+    @method_decorator(staff_member_required)
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect('login')
+
