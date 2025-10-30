@@ -60,6 +60,7 @@ class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
     def str(self):
         return f"{self.username} ({self.email})"
 
+    
     # 🚧 Lógica temporal para sincronizar banderas internas con el rol del usuario
     # ------------------------------------------------------------
     # Esta parte del código es provisional.
@@ -68,7 +69,6 @@ class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
     #   - is_superuser
     #   - is_staff
     #
-    # 🔸 La asignación automática del rol inicial se hace desde signals.py
     # 🔸 Este método solo asegura que al modificar el rol manualmente, las banderas se actualicen también.
     # 🔸 Más adelante se reemplazará por una implementación más limpia.
     # ------------------------------------------------------------
