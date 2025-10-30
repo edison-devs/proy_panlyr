@@ -2,6 +2,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from core.views import *
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -23,5 +24,6 @@ urlpatterns = [
     path('reportes/', reportes, name='reportes'),
       # otras rutas existentes... 
     path('products/trash/', ProductTrashView.as_view(), name='product_trash'), #Trabajar en otro momento
+    path('pedido/', views.realizar_pedido, name='realizar_pedido'),
 
 ]
