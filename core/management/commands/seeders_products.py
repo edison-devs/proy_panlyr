@@ -41,10 +41,10 @@ class Command(BaseCommand):
                     "stock": 40,
                 },
                 {
-                    "category": "Bebidas",
-                    "name": "Café Negro",
+                    "category": "Repostería",
+                    "name": "cupcake",
                     "price": 1.00,
-                    "description": "Café recién molido servido caliente.",
+                    "description": "Ponques de chocolate.",
                     "stock": 100,
                 },
             ]

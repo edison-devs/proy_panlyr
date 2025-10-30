@@ -15,7 +15,7 @@ class Command(BaseCommand):
     def handle(self, *args, **kwargs):
         self.seed_data(Category, [
             {"name": "Galleta", "description": "Dulces horneados, diferentes sabores"},
-            {"name": "Pan", "description": ""},
+            {"name": "Panadería", "description": ""},
             {"name": "Repostería", "description": "Tortas, pasteles y postres"},
         ], "Categorías")
 
