@@ -1,0 +1,26 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Realizar Pedido - PanLyR{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/styles1.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="card shadow-sm">
+    <div class="card-header bg-light-brown text-white">
+      <h5 class="m-0">Realizar Pedido</h5>
+    </div>
+
+    <div class="card-body bg-light">
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary mt-3">Confirmar Pedido</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -2,13 +2,14 @@
 from django.contrib import admin
 from django.urls import path, include
 from core.views import *
+from . import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('panel/', panel_view, name='panel'),
     path('panel/superadmin/', superadmin_dashboard, name='superadmin_dashboard'),
-	path('panel/admin/', admin_dashboard, name='admin_dashboard'),
-	path('panel/cliente/', client_dashboard, name='client_dashboard'),
+	  path('panel/admin/', admin_dashboard, name='admin_dashboard'),
+	  path('panel/cliente/', client_dashboard, name='client_dashboard'),
     path('', render_home, name='home'),
     path('home1', render_home1, name='home1'),
     path('products/', ProductListView.as_view(), name='product_catalog'),
@@ -23,5 +24,6 @@ urlpatterns = [
     path('reportes/', reportes, name='reportes'),
       # otras rutas existentes... 
     path('products/trash/', ProductTrashView.as_view(), name='product_trash'), #Trabajar en otro momento
+    path('pedido/', views.realizar_pedido, name='realizar_pedido'),
 
 ]

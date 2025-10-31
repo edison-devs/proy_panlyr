@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from abcstracts.models import TimestampedMixin, SoftDeleteMixin
 
+
 class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
     email = models.EmailField(unique=True)
     phone_number = models.CharField(max_length=15, blank=True, null=True, verbose_name='Teléfono')
@@ -14,15 +15,14 @@ class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
 
     is_staff = models.BooleanField(
         default=False,
-        verbose_name="¿Es administrador?"
+        verbose_name="¿Puede entrar al administrador?"
     )
 
     is_superuser = models.BooleanField(
         default=False,
-        verbose_name="¿Es súper administrador?"
+        verbose_name="¿Es súper Usuario?"
     )
 
-    # Campo real editable en el admin
     _is_active = models.BooleanField(default=True, verbose_name="¿Está activo?")
 
     @property
@@ -39,5 +39,14 @@ class User(AbstractUser, TimestampedMixin, SoftDeleteMixin):
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
 
-    def __str__(self):
+    def str(self):
         return f"{self.username} ({self.email})"
+
+# ✅ Flujo esperado
+# 1-Creas un usuario → puede iniciar sesión.
+
+# 2-Le haces borrado suave desde el admin → deleted_at se llena → ya no puede iniciar sesión.
+
+# 3-Lo restauras → deleted_at vuelve a None → puede iniciar sesión otra vez.
+
+# 4-Si lo marcas como inactivo (_is_active=False) → tampoco podrá iniciar sesión aunque no esté borrado

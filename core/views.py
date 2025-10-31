@@ -9,6 +9,7 @@ from django.core.paginator import Paginator
 from django.contrib import messages                      # <- necesario para mostrar mensajes
 from .models import *
 from .forms import ProductForm
+from .forms import PedidoForm
 
 # Create your views here.
 
@@ -185,3 +186,48 @@ class ProductTrashView(View):
 
         products = Product.objects.filter(deleted_at__isnull=False)
         return render(request, self.template_name, {"products": products})
+    
+
+@login_required
+def realizar_pedido(request):
+    if request.method == "POST":
+        form = PedidoForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            producto = data["producto"]
+            cantidad = data["cantidad"]
+            metodo_pago = data["metodo_pago"]
+            tipo_pedido = data["tipo_pedido"]
+            direccion = data["direccion"]
+
+            estado_carrito = CartStatus.objects.get(name="pendiente")
+            motivo_salida = OutputReason.objects.get(name="pedido")
+
+            precio_total = producto.price * cantidad
+            carrito = Cart.objects.create(status=estado_carrito, quantity=cantidad, price=precio_total)
+            CartProduct.objects.create(cart=carrito, product=producto, quantity=cantidad)
+            entrega = Delivery.objects.create(user=request.user, secondary_address=direccion)
+
+            pedido = Order.objects.create(
+                user=request.user,
+                cart=carrito,
+                order_type=tipo_pedido,
+                payment_method=metodo_pago,
+                delivery=entrega
+            )
+
+            Output.objects.create(
+                product=producto,
+                order=pedido,
+                reason=motivo_salida,
+                quantity=cantidad,
+                description="Salida por pedido"
+            )
+
+            messages.success(request, "Pedido realizado exitosamente.")
+            return redirect("mis_pedidos")
+    else:
+        form = PedidoForm()
+
+    return render(request, "core/realizar_pedido.html", {"form": form})
+
