@@ -12,12 +12,7 @@ from .forms import ProductForm
 from .forms import PedidoForm
 
 # Create your views here.
-
 #placeholder vistas sencillas para mas adelante estilizar:
-
-@login_required
-def product_catalog(request):
-    return render(request, 'core/catalogo.html')
 
 @login_required
 def pedidos_list(request):
@@ -39,12 +34,10 @@ def mis_pedidos(request):
 def reportes(request):
     return render(request, 'core/placeholders/reportes.html')
 
-
 #Logica para ver el panel segun el rol del usuario
 @login_required
 def panel_view(request):
     return render(request, 'core/includes/panel.html')
-
 
 @login_required
 def superadmin_dashboard(request):
@@ -64,7 +57,6 @@ def client_dashboard(request):
         return redirect('home')
     return render(request, 'core/_panel_cliente.html')
 
-
 #Redirige al home
 def render_home(request):
     try:
@@ -73,7 +65,6 @@ def render_home(request):
         messages.error(request, f'Error al cargar la página principal: {e}')
         # Aún devolvemos la misma plantilla para no romper la navegación
         return render(request, 'core/home.html')
-
 
 def render_home1(request):
     try:
@@ -87,16 +78,12 @@ def render_home1(request):
 def dashboard(request):
         return render(request, 'core/sidebar/index.html')
 
+# --------------------------------------------------------------------------------------------
+# INDEX PRODUCT
+# --------------------------------------------------------------------------------------------
 
-
-
-# -----------------------
-# 📌 Lista de productos
-# -----------------------
-
-# 📌 Listado con búsqueda y paginación
 class ProductListView(View):
-    template_name = "core/catalogo.html"
+    template_name = "core/sidebar/products/index.html"
 
     def get(self, request):
         query = request.GET.get("q", "").strip() # búsqueda
@@ -123,9 +110,12 @@ class ProductListView(View):
         return render(request, self.template_name, context)
 
 
-# 📌 Crear producto
+# --------------------------------------------------------------------------------------------
+# CREATE PRODUCT
+# --------------------------------------------------------------------------------------------
+
 class ProductCreateView(View):
-    template_name = "core/product_form.html"
+    template_name = "core/sidebar/products/create.html"
 
     def get(self, request):
         form = ProductForm()
@@ -136,16 +126,18 @@ class ProductCreateView(View):
         try:
             if form.is_valid():
                 form.save()
-                messages.success(request, "Producto creado exitosamente.")
-                return redirect("product_catalog")
+                return redirect("product-create")
         except Exception as e:
             messages.error(request, f"Ocurrió un error al crear el producto: {e}")
         return render(request, self.template_name, {"form": form})
 
 
-# 📌 Editar producto
+# --------------------------------------------------------------------------------------------
+# DELETE PRODUCT
+# --------------------------------------------------------------------------------------------
+
 class ProductUpdateView(View):
-    template_name = "core/product_form.html"
+    template_name = "core/sidebar/products/update.html"
 
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
@@ -159,13 +151,16 @@ class ProductUpdateView(View):
             if form.is_valid():
                 form.save()
                 messages.success(request, "Producto actualizado correctamente.")
-                return redirect("product_catalog")
+                return redirect("product-index")
         except Exception as e:
             messages.error(request, f"Ocurrió un error al actualizar: {e}")
         return render(request, self.template_name, {"form": form})
 
 
-# 📌 Eliminar producto
+# --------------------------------------------------------------------------------------------
+# DELETE PRODUCT
+# --------------------------------------------------------------------------------------------
+
 class ProductDeleteView(LoginRequiredMixin, View):
     template_name = "core/confirm_delete.html"
 
@@ -176,7 +171,7 @@ class ProductDeleteView(LoginRequiredMixin, View):
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
         product.delete()
-        return redirect("product_catalog")
+        return redirect("product-index")
 
 
 
@@ -187,7 +182,7 @@ class ProductTrashView(View):
     def get(self, request):
         if not request.user.is_superuser:
             messages.error(request, "Acceso denegado.")
-            return redirect("product_catalog")
+            return redirect("product-index")
 
         products = Product.objects.filter(deleted_at__isnull=False)
         return render(request, self.template_name, {"products": products})

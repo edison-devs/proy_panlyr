@@ -12,10 +12,13 @@ urlpatterns = [
 	  path('panel/cliente/', client_dashboard, name='client_dashboard'),
     path('', render_home, name='home'),
     path('home1', render_home1, name='home1'),
-    path('products/', ProductListView.as_view(), name='product_catalog'),
-    path('products/create/', ProductCreateView.as_view(), name='product_create'),
-    path('products/<int:pk>/update/', ProductUpdateView.as_view(), name='product_update'),
-    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='product_delete'),
+    
+    #CRUD DE PRODUCTOS
+    path('products/', ProductListView.as_view(), name='product-index'),
+    path('products/create/', ProductCreateView.as_view(), name='product-create'),
+    path('products/<int:pk>/update/', ProductUpdateView.as_view(), name='product-update'),
+    path('products/<int:pk>/delete/', ProductDeleteView.as_view(), name='product-delete'),
+    
       # otras rutas existentes...
     path('pedidos/', pedidos_list, name='pedidos_list'),
     path('papelera/',papelera, name='papelera'),

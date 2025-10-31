@@ -1,0 +1,17 @@
+{% extends 'core/layout.html' %}
+{% block title %}Products{% endblock %}
+
+{% block dashboard_content %}
+<div class="container my-4">
+    <div class="card shadow-sm p-4">
+    <h3 class="mb-4 text-brown">Crear de Producto</h3>
+
+    <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+        {{ form.as_p }}
+
+    <button type="submit" class="btn btn-warning">Guardar</button>
+    <a class="btn btn-secondary">Cancelar</a>
+    </form>
+</div>
+{% endblock %}

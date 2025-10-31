@@ -1,0 +1,74 @@
+{% extends 'core/layout.html' %}
+{% block title %}Lista de productos{% endblock %}
+
+{% block dashboard_content %}
+
+<div class="container my-4">
+  
+  {% if not user.is_authenticated %}
+    <script>window.location.href = "{% url 'home' %}";</script>
+  {% endif %}
+
+
+  <!-- Barra de búsqueda -->
+  <form method="get" class="d-flex justify-content-end mb-3">
+    <input type="text" name="q" class="form-control w-25 me-2" placeholder="Buscar productos o categorías..." value="{{ query }}">
+    <button class="btn btn-outline-dark" type="submit"><i class="fa fa-search"></i></button>
+  </form>
+
+  <!-- Productos -->
+  <div class="row">
+    {% if query %}
+      <div class="alert alert-light border text-center">
+        Resultados para "<strong>{{ query }}</strong>": {{ result_count }}
+      </div>
+    {% endif %}
+
+    {% for product in page_obj %}
+    <div class="col-md-4 mb-4">
+      <div class="card shadow-sm h-100">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+        {% comment %} {% else %}
+        <img class="card-img-top" alt="Sin imagen"> {% endcomment %}
+        {% endif %}
+
+        <div class="card-body">
+          <h5 class="card-title">{{ product.name }}</h5>
+          <p class="card-text text-muted">{{ product.category.name }}</p>
+          <p class="fw-bold text-brown">${{ product.price }}</p>
+          <p class="small">{{ product.description|truncatewords:15 }}</p>
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{% url 'product-update' product.pk %}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
+            <a href="{% url 'product-delete' product.pk %}" class="btn btn-sm btn-danger">
+            <i class="fa fa-trash"></i>
+            </a>
+
+          </form>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p class="text-center text-muted">No se encontraron productos.</p>
+    {% endfor %}
+  </div>
+
+  <!-- Paginación -->
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Anterior</a></li>
+      {% endif %}
+
+      <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+
+      {% if page_obj.has_next %}
+      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Siguiente</a></li>
+      {% endif %}
+    </ul>
+  </nav>
+</div>
+
+{% endblock %}

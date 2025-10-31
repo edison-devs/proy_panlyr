@@ -1,7 +1,7 @@
 {% extends "core/base.html" %}
 {% load static %}
 
-{% block title %}Formulario Producto{% endblock %}
+{% block title %}Actualizar Producto{% endblock %}
 
 {% block header %}
   {% include 'core/includes/navbar_crud.html' %}
@@ -17,7 +17,7 @@
       {{ form.as_p }}
 
       <button type="submit" class="btn btn-warning">Guardar</button>
-      <a href="{% url 'product_catalog' %}" class="btn btn-secondary">Cancelar</a>
+      <a href={% url 'product-index' %}  class="btn btn-secondary">Cancelar</a>
     </form>
   </div>
 </div>

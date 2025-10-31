@@ -10,7 +10,7 @@
       <ul class="navbar-nav">
         {% if user.is_authenticated %}
           <li class="nav-item">
-            <a class="nav-link btn btn-outline-warning me-2" href="{% url 'product_create' %}">➕ Crear Producto</a>
+            <a href="{% url 'product-create' %}" class="nav-link btn btn-outline-warning me-2" >➕ Crear Producto</a>
           </li>
           <li class="nav-item">
             <span class="nav-link fw-semibold text-dark">Hola, {{ user.username }}</span>

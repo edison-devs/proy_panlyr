@@ -11,16 +11,17 @@
                 PRODUCTS <span class="badge bg-secondary">▸</span>
             </a>
             <div class="collapse" id="menuProducts">
-                {% comment %} <ul class="nav flex-column ms-3">
+                <ul class="nav flex-column ms-3">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'products' %}">Ver</a>
+                        <a  href="{% url 'product-index' %}" class="nav-link text-white">Ver</a>
                     </li>
+                    
                     {% if user|has_any_group:"admin,employed" %}
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'products' %}?action=new">Nuevo</a>
+                        <a class="nav-link text-white" href="{% url 'product-create' %}?action=new">Nuevo</a>
                     </li>
                     {% endif %}
-                </ul> {% endcomment %}
+                </ul>
             </div>
         </li>
         {% endif %}
