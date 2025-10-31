@@ -1,0 +1,40 @@
+{% extends 'core/layout.html' %}
+{% block title %}categorias de producto{% endblock %}
+{% block dashboard_content %}
+
+<div class="container mt-4">
+    <h2>Crear Nueva</h2>
+    
+    {% include 'core/partials/messages.html' %}
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="mb-3">
+            <label for="{{ form.name.id_for_label }}">{{ form.name.label }}</label>
+            {{ form.name }}
+            {% if form.name.errors %}
+                <div class="text-danger">
+                    {% for error in form.name.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="text-danger">
+                    {% for error in form.description.errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+
+        <button type="submit" class="btn btn-primary">Crear Categoría</button>
+    </form>
+</div>
+{% endblock %}

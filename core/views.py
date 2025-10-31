@@ -83,6 +83,11 @@ def render_home1(request):
         # Aún devolvemos la misma plantilla para no romper la navegación
         return render(request, 'core/home1.html')
 
+@login_required
+def dashboard(request):
+        return render(request, 'core/sidebar/index.html')
+
+
 
 
 # -----------------------

@@ -35,12 +35,7 @@ class UserLoginView(View):
             # Redirige según el Rol
             if user is not None:
                 login(request, user)
-                if user.is_superuser:
-                    return redirect('superadmin_dashboard')
-                elif user.is_staff:
-                    return redirect('admin_dashboard')
-                else:
-                    return redirect('client_dashboard')
+                return redirect('home')
 
         return render(request, self.template_name, {
             'form': form,
@@ -77,6 +72,7 @@ class UserRegisterView(View):
                     email=email,
                     password=password
                 )
+                
             except IntegrityError:
                 messages.error(request, "⚠️ Ese usuario o correo ya está registrado.")
                 return render(request, self.template_name, {'form': form})
@@ -97,7 +93,7 @@ class UserLogoutView(View):
     def get(self, request, *args, **kwargs):
         is_super = request.user.is_superuser
         logout(request)
-        return redirect('login' if is_super else 'home')
+        return redirect('home')
 
 
 

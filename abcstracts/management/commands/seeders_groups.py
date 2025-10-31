@@ -16,19 +16,19 @@ class Command(BaseCommand):
         self.stdout.write(self.style.SUCCESS('Default groups created successfully!'))
 
     def create_admin_group(self):
-        """Create Admin group with all permissions"""
-        group, created = Group.objects.get_or_create(name='Admin')
+        """Create admin group with all permissions"""
+        group, created = Group.objects.get_or_create(name='admin')
         if created:
             all_permissions = Permission.objects.all()
             group.permissions.set(all_permissions)
-            self.stdout.write(self.style.SUCCESS('Admin group created with all permissions'))
+            self.stdout.write(self.style.SUCCESS('admin group created with all permissions'))
         else:
-            self.stdout.write(self.style.WARNING('Admin group already exists'))
+            self.stdout.write(self.style.WARNING('admin group already exists'))
         return group
 
     def create_employee_group(self):
-        """Create Employee group with limited permissions"""
-        group, created = Group.objects.get_or_create(name='Employee')
+        """Create employed group with limited permissions"""
+        group, created = Group.objects.get_or_create(name='employed')
         if created:
             permissions = Permission.objects.filter(
                 codename__in=[
@@ -46,18 +46,18 @@ class Command(BaseCommand):
                 ]
             )
             group.permissions.set(permissions)
-            self.stdout.write(self.style.SUCCESS('Employee group created with operational permissions'))
+            self.stdout.write(self.style.SUCCESS('employed group created with operational permissions'))
         else:
-            self.stdout.write(self.style.WARNING('Employee group already exists'))
+            self.stdout.write(self.style.WARNING('employed group already exists'))
         return group
 
     def create_viewer_group(self):
-        """Create Viewer group with read-only permissions"""
-        group, created = Group.objects.get_or_create(name='Viewer')
+        """Create viewer group with read-only permissions"""
+        group, created = Group.objects.get_or_create(name='viewer')
         if created:
             permissions = Permission.objects.filter(codename__startswith='view_')
             group.permissions.set(permissions)
-            self.stdout.write(self.style.SUCCESS('Viewer group created with view-only permissions'))
+            self.stdout.write(self.style.SUCCESS('viewer group created with view-only permissions'))
         else:
-            self.stdout.write(self.style.WARNING('Viewer group already exists'))
+            self.stdout.write(self.style.WARNING('viewer group already exists'))
         return group

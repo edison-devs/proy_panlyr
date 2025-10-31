@@ -1,0 +1,91 @@
+{% extends 'core/layout.html' %}
+{% block title %}Categorías{% endblock %}
+
+{% block dashboard_content %}
+<div class="container mt-4">
+    {% include 'core/partials/messages.html' %}
+
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <form method="get">
+                <div class="input-group">
+                    <input type="text" name="q" class="form-control" placeholder="Buscar categorías..." value="{{ query }}">
+                    <button class="btn btn-outline-secondary" type="submit">Buscar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+    {% else %}
+        {% if query %}
+            <p class="text-muted">Se encontraron {{ result_count }} categorías para "{{ query }}"</p>
+        {% endif %}
+
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Descripción</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for category in page_obj %}
+                    <tr>
+                        <td>{{ category.name }}</td>
+                        <td>{{ category.description|default:"-" }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-warning">Editar</a>
+                            <a class="btn btn-sm btn-danger">Eliminar</a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="3" class="text-center">
+                            {% if query %}
+                                No se encontraron categorías para "{{ query }}"
+                            {% else %}
+                                No hay categorías registradas
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if page_obj.has_other_pages %}
+        <nav aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1{% if query %}&q={{ query }}{% endif %}">Primera</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Anterior</a>
+                    </li>
+                {% endif %}
+
+                <li class="page-item active">
+                    <span class="page-link">
+                        Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}
+                    </span>
+                </li>
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Siguiente</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}{% if query %}&q={{ query }}{% endif %}">Última</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+        {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

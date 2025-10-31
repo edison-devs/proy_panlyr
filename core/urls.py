@@ -25,5 +25,5 @@ urlpatterns = [
       # otras rutas existentes... 
     path('products/trash/', ProductTrashView.as_view(), name='product_trash'), #Trabajar en otro momento
     path('pedido/', views.realizar_pedido, name='realizar_pedido'),
-
+    path('dashboard/', views.dashboard, name='dashboard'),
 ]

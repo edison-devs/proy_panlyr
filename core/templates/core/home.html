@@ -1,4 +1,5 @@
 {% extends 'core/base.html' %}
+{% load groups %}
 {% load static %}
 
 {% block extra_css %}
@@ -27,6 +28,9 @@
         {% if user.is_authenticated %}
           <li class="nav-item"><a class="nav-link" href="#perfil">Perfil</a></li>
         {% endif %}
+        {% if user|has_any_group:"admin,employed,viewer" %}
+          <li class="nav-item"><a href="{% url 'dashboard' %}" class="nav-link">Panel</a></li>
+        {% endif %} 
       </ul>
 
       <!-- Botones derecha -->

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    {% load static %}
+
+    <link rel="stylesheet" href="{% static 'core/boostrap/css/bootstrap.min.css' %}">
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <header>
+        {% block header %}{% endblock %}
+    </header>
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        {% block footer %}{% endblock %}
+    </footer>
+
+    <script src="{% static 'core/boostrap/js/bootstrap.bundle.min.js' %}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
