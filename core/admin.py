@@ -2,8 +2,7 @@
 from django.contrib import admin
 # Importa todos los modelos que administra esta app
 from .models import (
-    Category, PaymentMethod, CartStatus, OrderType, DeliveryStatus,
-    OutputReason, Product, Cart, Payment, Delivery, Order, Input, Output
+    Category, PaymentMethod, CartStatus, OrderType, DeliveryStatus, Product, Cart, Payment, Delivery, Order
 )
 
 # Mixins para borrado suave y filtro visual
@@ -59,13 +58,6 @@ class DeliveryStatusAdmin(admin.ModelAdmin):
     list_per_page = 2
 
 
-@admin.register(OutputReason)
-class OutputReasonAdmin(admin.ModelAdmin):
-    list_display = ("id", "name", "description")
-    search_fields = ("name",)
-    list_per_page = 2
-
-
 # -------------------------
 # Product usa SoftDeleteMixin: aplicamos el mixin en el admin
 # - mostramos deleted_at en la lista
@@ -74,14 +66,14 @@ class OutputReasonAdmin(admin.ModelAdmin):
 # -------------------------
 @admin.register(Product)
 class ProductAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
-    list_display = ("id", "name", "category", "price", "stock", "created_at", "updated_at", "deleted_at")
+    list_display = ("id", "name", "category", "price", "created_at", "updated_at", "deleted_at")
     list_display_links = ("name",)
     search_fields = ("name", "category__name", "description")
     # list_filter combinado: primero el filtro del mixin, luego filtros propios
     list_filter = SoftDeleteAdminMixin.list_filter + ["category"]
     ordering = ("-created_at",)
-    list_editable = ("price", "stock")
-    readonly_fields = ("created_at", "updated_at", "deleted_at", "stock")
+    list_editable = ("price",)
+    readonly_fields = ("created_at", "updated_at", "deleted_at")
     list_per_page = 2
 
 # -------------------------
@@ -126,25 +118,6 @@ class OrderAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
     list_filter = SoftDeleteAdminMixin.list_filter
     readonly_fields = ("created_at", "updated_at", "deleted_at")
     list_per_page = 2
-
-
-@admin.register(Input)
-class InputAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
-    list_display = ("id", "product", "quantity", "created_at", "updated_at", "deleted_at")
-    search_fields = ("product__name",)
-    list_filter = SoftDeleteAdminMixin.list_filter
-    readonly_fields = ("created_at", "updated_at", "deleted_at")
-    list_per_page = 2
-
-
-@admin.register(Output)
-class OutputAdmin(SoftDeleteAdminMixin, admin.ModelAdmin):
-    list_display = ("id", "product", "order", "reason", "quantity", "created_at", "deleted_at")
-    search_fields = ("product__name", "reason__name")
-    list_filter = SoftDeleteAdminMixin.list_filter
-    readonly_fields = ("created_at", "updated_at", "deleted_at")
-    list_per_page = 2
-
 
 
 # Registra el modelo User en el admin usando esta clase personalizada

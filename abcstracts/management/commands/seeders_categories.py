@@ -4,8 +4,7 @@ from core.models import (
     PaymentMethod,
     CartStatus,
     OrderType,
-    DeliveryStatus,
-    OutputReason
+    DeliveryStatus
 )
 
 
@@ -40,12 +39,6 @@ class Command(BaseCommand):
             {"name": "Domicilio", "description": "Repartidor salió con el pedido"},
             {"name": "Entregado", "description": "El cliente recibió el pedido"},
         ], "Estados de entrega")
-
-        self.seed_data(OutputReason, [
-            {"name": "Vendido", "description": "Producto vendido a un cliente"},
-            {"name": "Consumo de la casa", "description": "Consumido dentro de la panadería"},
-            {"name": "Mal estado", "description": "Producto dañado o vencido"},
-        ], "Motivos de salida")
 
     def seed_data(self, model, data, label):
         """

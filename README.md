@@ -3,7 +3,7 @@
 # 🥐 Proyecto PanLyR
 
 **PanLyR** es un emprendimiento dedicado a la creación de productos de panadería y repostería.  
-Este sistema está siendo desarrollado con **Python**, **Django** y **MySQL**, y tiene como objetivo gestionar productos, pedidos, stock y más funcionalidades relacionadas con el negocio.
+Este sistema está siendo desarrollado con **Python**, **Django** y **MySQL**, y tiene como objetivo gestionar productos, pedidos y más funcionalidades relacionadas con el negocio.
 
 ---
 
@@ -384,7 +384,7 @@ Este proyecto se irá actualizando progresivamente con:
 
 - Lógica de modelos (productos,clientes, pedidos)
 - Templates y vistas
-- Funcionalidades de stock, auditoría y gestión
+- Funcionalidades de auditoría y gestión
 
 ---
 

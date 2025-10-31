@@ -17,35 +17,30 @@ class Command(BaseCommand):
                     "name": "Pan Andino",
                     "price": 1.50,
                     "description": "Pan tradicional de la región andina.",
-                    "stock": 50,
                 },
                 {
                     "category": "Panadería",
                     "name": "Baguette",
                     "price": 2.00,
                     "description": "Clásico pan francés crujiente.",
-                    "stock": 30,
                 },
                 {
                     "category": "Repostería",
                     "name": "Torta de Chocolate",
                     "price": 10.00,
                     "description": "Bizcocho húmedo de chocolate con cobertura cremosa.",
-                    "stock": 10,
                 },
                 {
                     "category": "Repostería",
                     "name": "Galletas de Avena",
                     "price": 3.50,
                     "description": "Galletas caseras con avena y pasas.",
-                    "stock": 40,
                 },
                 {
                     "category": "Repostería",
                     "name": "cupcake",
                     "price": 1.00,
                     "description": "Ponques de chocolate.",
-                    "stock": 100,
                 },
             ]
 
@@ -63,7 +58,6 @@ class Command(BaseCommand):
                         defaults={
                             "price": data["price"],
                             "description": data["description"],
-                            "stock": data["stock"],
                             "image": None,  # Imagen nula (puedes subirla desde el CRUD)
                         },
                     )

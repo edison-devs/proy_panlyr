@@ -71,26 +71,12 @@ class DeliveryStatus(models.Model):
         return self.name
 
 
-class OutputReason(models.Model):
-    name = models.CharField(max_length=100, verbose_name="Nombre")
-    description = models.TextField(blank=True, default="",verbose_name="Descripción")
-
-    class Meta:
-        db_table = "output_reasons"
-        verbose_name = "Motivo de la salida"
-        verbose_name_plural = "Motivos de la salida"
-
-    def __str__(self):
-        return self.name
-
-
 # Dependent models
 class Product(TimestampedMixin, SoftDeleteMixin, models.Model):
     category = models.ForeignKey(Category, on_delete=models.PROTECT, related_name="products")
     name = models.CharField(max_length=100, verbose_name="Nombre")
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio")
     description = models.TextField(blank=True, null= True, verbose_name="Descripción")
-    stock = models.IntegerField(default=0, verbose_name="Inventario")
     image = models.ImageField(
         upload_to="core/products/",
         validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "webp"])],
@@ -176,36 +162,6 @@ class Order(TimestampedMixin, SoftDeleteMixin, models.Model):
 
     def __str__(self):
         return f"{self.user} - {self.delivery}"
-
-
-class Input(TimestampedMixin, SoftDeleteMixin, models.Model):
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name="Producto")
-    quantity = models.IntegerField(default=0, verbose_name="Cantidad")
-    description = models.TextField(blank=True, null=True,verbose_name="Descripción")
-
-    class Meta:
-        db_table = "inputs"
-        verbose_name = "Entrada"
-        verbose_name_plural = "Entradas"
-
-    def __str__(self):
-        return f"{self.product}: {self.quantity}"
-
-
-class Output(TimestampedMixin, SoftDeleteMixin, models.Model):
-    product = models.ForeignKey(Product, on_delete=models.PROTECT, verbose_name="Producto")
-    order = models.ForeignKey(Order, on_delete=models.PROTECT, verbose_name="Pedido")
-    reason = models.ForeignKey(OutputReason, on_delete=models.PROTECT, verbose_name="Motivo de salida")
-    quantity = models.IntegerField(default=0, verbose_name="Cantidad")
-    description = models.TextField(blank=True, null=True,verbose_name="Descripción")
-
-    class Meta:
-        db_table = "outputs"
-        verbose_name = "Salida"
-        verbose_name_plural = "Salidas"
-
-    def __str__(self):
-        return f"{self.product}: {self.reason}"
 
 
 """
