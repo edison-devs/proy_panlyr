@@ -1,4 +1,5 @@
 {% extends 'core/layout.html' %}
+{% load groups %}
 {% block title %}Lista de productos{% endblock %}
 
 {% block dashboard_content %}
@@ -41,8 +42,10 @@
         </div>
 
         <div class="card-footer d-flex justify-content-between">
+          {% if user|has_any_group:"admin" %}
             <a href="{% url 'product-update' product.pk %}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
             <a href="{% url 'product-delete' product.pk %}" class="btn btn-sm btn-danger">
+          {% endif %}
             <i class="fa fa-trash"></i>
             </a>
 
