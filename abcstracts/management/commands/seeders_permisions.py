@@ -1,4 +1,4 @@
-# core/management/commands/seed_softdelete_permissions.py
+# abcstracts/management/commands/seed_softdelete_permissions.py
 from django.core.management.base import BaseCommand
 from django.apps import apps
 from django.contrib.auth.models import Permission

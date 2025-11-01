@@ -20,9 +20,332 @@ El proyecto está dividido en tres apps principales, siguiendo buenas prácticas
 
 ---
 
-### 🛠️ Avance actual
 
-- ✅ El login redirige correctamente al panel según el rol del usuario (superadmin, admin, cliente) con una implementación temporal.
+📘 Gestión de Roles, Permisos y Datos Iniciales (Seeders)
+
+🧩 Estructura general
+
+El sistema utiliza una serie de comandos personalizados de Django (management commands) para crear automáticamente:
+
+-Usuarios base (como el usuario root),
+
+-Roles o grupos de usuario (admin, employed, viewer),
+
+-Permisos especiales (incluyendo los de Soft Delete),
+Y datos iniciales de las tablas descriptivas como categorías, métodos de pago y estados del sistema.
+
+
+-Estos comandos se encuentran en la app abstracts dentro de la carpeta:
+
+abstracts/management/commands/
+
+
+---
+
+⚙️ Seeders principales
+
+1️⃣ seed_root_user.py
+
+Crea el usuario root (superusuario) con credenciales:
+
+usuario: root
+contraseña: root123
+correo: root@panlyr.com
+
+Además, si ya existe el grupo “Admin”, lo asocia automáticamente a este usuario.
+
+> 💡 Este se ejecuta solo una vez. Si el usuario ya existe, el sistema lo omite.
+
+
+
+
+---
+
+2️⃣ seeders.py
+
+Es el archivo principal que ejecuta todos los seeders en orden:
+
+-python manage.py seeders
+
+Dentro llama a otros seeders:
+
+-seeders_categories
+
+-seeders_permissions
+
+-seeders_groups
+
+-seeder_user
+
+
+Esto asegura que el sistema tenga todos los datos base antes de iniciar desarrollo o pruebas.
+
+
+---
+
+3️⃣ seeders_categories.py
+
+Crea los datos iniciales de:
+
+Categorías (Panadería, Repostería, Galletas)
+
+Métodos de pago (Efectivo, Transferencia)
+
+Estados del carrito y del pedido
+
+Estados de entrega
+
+
+> ✅ Este seeder solo crea los datos si no existen, evitando duplicados.
+
+
+
+
+---
+
+4️⃣ seed_groups.py
+
+Crea los grupos predeterminados del sistema:
+
+Grupo Descripción Permisos
+
+admin Control total del sistema Todos los permisos
+employed Operaciones básicas (productos, pedidos, carritos) CRUD limitado
+viewer Solo visualización view_
+
+
+> 💡 Este sistema de grupos permite una estructura clara para administrar usuarios con diferentes niveles de acceso.
+
+
+
+
+---
+
+5️⃣ seed_softdelete_permissions.py
+
+Crea permisos especiales para todos los modelos que hereden de SoftDeleteMixin.
+Agrega automáticamente permisos:
+
+soft_delete_modelo
+
+restore_modelo
+
+
+> ⚙️ Esto facilita un sistema de “borrado suave”, donde los registros no se eliminan realmente de la base de datos, sino que se marcan como inactivos.
+
+
+
+
+---
+
+🧱 Gestión de grupos en templates
+
+Archivo:
+abstracts/templates_tags/groups.py
+
+Permite usar filtros en los templates HTML de Django para verificar el rol del usuario:
+
+{% if user|has_group:"admin" %}
+   <p>Bienvenido, administrador</p>
+{% endif %}
+
+También incluye funciones como:
+
+has_any_group → verifica si pertenece a uno de varios grupos.
+
+get_groups → obtiene todos los grupos del usuario autenticado.
+
+
+
+---
+
+📍 Ubicación de archivos estáticos
+
+Todos los archivos static (CSS, JS, imágenes) se manejan en la app:
+
+core/static/
+
+De esta manera se centralizan los recursos visuales del proyecto.
+
+
+---
+
+---
+
+# 🧁 — Panel Administrativo por Vistas
+
+Este documento explica la nueva estructura base del panel administrativo que reemplaza el panel de Django. El objetivo es mantener un entorno simple, limpio y completamente en español, ideal para continuar el desarrollo de la lógica de pedidos y gestión de productos.
+
+---
+
+## 🧩 Estructura General del Proyecto
+
+El sistema ahora se organiza de forma modular, utilizando Bootstrap 5 y vistas personalizadas.
+
+### 📂 core/templates/sidebar/
+Carpeta principal del panel administrativo.
+
+| Archivo / Carpeta | Descripción |
+|--------------------|-------------|
+| index.html | Vista principal (dashboard de bienvenida). |
+| grupos.html | Gestión de roles o grupos de usuario. |
+| pedidos.html | Módulo inicial para pedidos. |
+| reportes.html | Módulo de reportes y estadísticas. |
+| user.html | Vista para gestión de usuarios. |
+| products/ | CRUD de productos: index.html, create.html, update.html. |
+| category_products/ | CRUD de categorías de producto: index.html, create.html. |
+
+---
+
+## 🧱 Base de la Interfaz: base_simple.html
+
+Archivo principal que define la estructura base del sitio y que heredan todas las vistas del panel.  
+Incluye integración con Bootstrap 5.3.3, bloques personalizables y carga dinámica de contenido.
+
+
+- 📌 También se añadió una carpeta en core/static con Bootstrap local para pruebas sin conexión.
+
+
+---
+
+
+---
+
+👥 Manejo de Roles
+
+-Los roles serán gestionados manualmente desde las vistas, sin el panel Django.
+
+-Esto permitirá un flujo más controlado, totalmente personalizable y 100% en español.
+
+
+Roles definidos:
+
+-admin → Acceso completo al panel.
+
+-employee → Gestión de productos y pedidos.
+
+-viewer → Solo lectura.
+
+sin rol (cliente) → Acceso restringido al panel, solo puede realizar pedidos desde la parte pública.
+
+
+> 🔐 El sistema validará el rol antes de permitir el acceso a cada vista.
+
+
+
+⚙️ Cambios Principales en esta Versión
+
+🧩 1. Refactorización del Módulo core/models.py
+
+Se eliminaron los modelos relacionados con inventario (entradas y salidas) y se reestructuró el módulo para enfocarse únicamente en la gestión de productos, carritos, pedidos, entregas y pagos.
+
+
+✅ Nuevos modelos activos
+
+Modelo Descripción
+
+-Category Clasifica los productos (panes, tortas, galletas, etc.).
+
+-Product Define productos con imagen, precio, descripción y categoría.
+
+-Cart / CartProduct / CartStatus Manejan el carrito de compras y sus estados.
+
+-Order / OrderType Representan los pedidos realizados por los usuarios.
+
+-Payment / PaymentMethod Registran los métodos y montos de pago.
+
+-Delivery / DeliveryStatus Administran la información de entrega del cliente.
+
+
+🧠 Buenas prácticas aplicadas:
+
+-on_delete=models.PROTECT → evita el borrado accidental de datos con relaciones.
+
+-SoftDeleteMixin y TimestampedMixin → agregan borrado suave y seguimiento temporal al admin django.
+
+-Eliminación del campo role en el modelo User, reemplazado por el sistema nativo de permisos y grupos de Django.
+
+-Código modular y fácil de escalar.
+
+
+
+---
+
+🧭 2. Actualización del Módulo core/views.py
+
+El módulo views se simplificó para trabajar sin inventario, incorporando un CRUD limpio para productos, una vista centralizada de dashboard y lógica inicial para el flujo de pedidos.
+
+🔑 Principales vistas:
+
+-render_home → redirige a la página principal.
+
+-dashboard → nuevo panel administrativo unificado.
+
+-ProductListView, ProductCreateView, ProductUpdateView, ProductDeleteView → CRUD completo de productos con paginación y manejo de mensajes.
+
+-ProductTrashView → muestra los productos eliminados mediante soft delete.
+
+-realizar_pedido → lógica en desarrollo para que usuarios autenticados generen pedidos.
+
+
+💡 Detalles técnicos:
+
+Estructura basada en Class-Based Views.
+
+Manejo de errores y mensajes con django.contrib.messages.
+
+Paginación con Paginator.
+
+Separación clara entre lógica y presentación (templates).
+
+
+
+---
+
+🧰 3. Cambios en core/forms.py
+
+Se simplificaron los formularios al eliminar toda lógica relacionada con stock o control de existencias.
+
+📋 Formularios activos:
+
+-ProductForm → Permite crear y editar productos.
+
+-Campos: category, name, price, description, image.
+
+-Uso de widgets personalizados para mantener coherencia visual con Bootstrap.
+
+
+-PedidoForm → Gestiona el proceso de pedido del cliente.
+
+-Campos: producto, cantidad, metodo_pago, tipo_pedido, direccion.
+
+-Integración con modelos PaymentMethod y OrderType.
+
+
+---
+
+
+🎨 4. Estructura de Templates (core/templates/partials/)
+
+Se añadió una carpeta partials para componentes reutilizables que mejoran la organización y mantenibilidad del frontend.
+
+---
+
+🚧 Estado Actual del Proyecto
+
+
+- ✅ Base visual y estructural completa.
+- ✅ Rutas configuradas y plantillas enlazadas.
+- ⚙️ En desarrollo: lógica de roles y permisos.
+- 🛒 Próximo paso: implementar la lógica de pedidos (carrito, registro y gestión básica).
+
+
+
+---
+
+
+
+### 🛠️ Avance actual
 
 - ✅ Se usó Bootstrap para lograr un diseño responsivo en todos los paneles.
 
@@ -36,15 +359,7 @@ El proyecto está dividido en tres apps principales, siguiendo buenas prácticas
 
 - ✅ Se creó la carpeta admin/ dentro de core/templates y core/static para personalizar el panel de Django.
 
-- ✅ Se creó un logout.html en templates/admin/ para forzar redirección al login personalizado al cerrar sesión desde el admin (🔧 aún no funcional).
 
-- ✅ Se creó la carpeta placeholders/ en core/templates con HTMLs genéricos para probar redirecciones y lógica futura (reportes, pedidos, papelera, carrito).
-
-- ✅ El panel de usuario se muestra según el rol, con diseño profesional y accesos personalizados.
-
-- ✅ El panel de Django ya tiene íconos personalizados y estilos adaptados.
-
-- ✅ El modelo User permite elegir el rol desde el admin y ya maneja borrado suave.
 
 
 ### 

@@ -1,4 +1,4 @@
-# core/management/commands/seeder_products.py
+# abcstracts/management/commands/seeder_products.py
 
 from django.core.management.base import BaseCommand
 from core.models import Category, Product

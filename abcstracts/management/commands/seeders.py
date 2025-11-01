@@ -1,4 +1,4 @@
-# core/management/commands/seeders.py
+# abcstracts/management/commands/seeders.py
 from django.core.management.base import BaseCommand
 from django.core.management import call_command
 
