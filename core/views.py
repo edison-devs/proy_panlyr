@@ -12,50 +12,7 @@ from .forms import ProductForm
 from .forms import PedidoForm
 
 # Create your views here.
-#placeholder vistas sencillas para mas adelante estilizar:
 
-@login_required
-def pedidos_list(request):
-    return render(request, 'core/placeholders/pedidos_list.html')
-
-@login_required
-def papelera(request):
-    return render(request, 'core/placeholders/papelera.html')
-
-@login_required
-def carrito(request):
-    return render(request, 'core/placeholders/carrito.html')
-
-@login_required
-def mis_pedidos(request):
-    return render(request, 'core/placeholders/mis_pedidos.html')
-
-@login_required
-def reportes(request):
-    return render(request, 'core/placeholders/reportes.html')
-
-#Logica para ver el panel segun el rol del usuario
-@login_required
-def panel_view(request):
-    return render(request, 'core/includes/panel.html')
-
-@login_required
-def superadmin_dashboard(request):
-    if not request.user.is_superadmin():
-        return redirect('home')
-    return render(request, 'core/_panel_superadmin.html')
-
-@login_required
-def admin_dashboard(request):
-    if not request.user.is_admin() and not request.user.is_superadmin():
-        return redirect('home')
-    return render(request, 'core/_panel_admin.html')
-
-@login_required
-def client_dashboard(request):
-    if not request.user.is_cliente() and not request.user.is_superadmin():
-        return redirect('home')
-    return render(request, 'core/_panel_cliente.html')
 
 #Redirige al home
 def render_home(request):
@@ -66,14 +23,9 @@ def render_home(request):
         # Aún devolvemos la misma plantilla para no romper la navegación
         return render(request, 'core/home.html')
 
-def render_home1(request):
-    try:
-        return render(request, 'core/home1.html')
-    except Exception as e:
-        messages.error(request, f'Error al cargar la página principal: {e}')
-        # Aún devolvemos la misma plantilla para no romper la navegación
-        return render(request, 'core/home1.html')
 
+
+#Logica para redirigir al panel de administración
 @login_required
 def dashboard(request):
         return render(request, 'core/sidebar/index.html')
@@ -133,7 +85,7 @@ class ProductCreateView(View):
 
 
 # --------------------------------------------------------------------------------------------
-# DELETE PRODUCT
+# UPDATE PRODUCT
 # --------------------------------------------------------------------------------------------
 
 class ProductUpdateView(View):
@@ -188,6 +140,7 @@ class ProductTrashView(View):
         return render(request, self.template_name, {"products": products})
     
 
+#logica para realizar pedidos aun en desarrollo
 @login_required
 def realizar_pedido(request):
     if request.method == "POST":
@@ -216,13 +169,7 @@ def realizar_pedido(request):
                 delivery=entrega
             )
 
-            Output.objects.create(
-                product=producto,
-                order=pedido,
-                reason=motivo_salida,
-                quantity=cantidad,
-                description="Salida por pedido"
-            )
+            
 
             messages.success(request, "Pedido realizado exitosamente.")
             return redirect("mis_pedidos")

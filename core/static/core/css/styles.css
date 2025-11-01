@@ -93,3 +93,92 @@
   50% { background-position: 100% 50%; }
   100% { background-position: 0% 50%; }
 }
+
+
+/*para panel dashboard*/
+:root {
+  --bs-primary: #E6B980;   /* Caramelo claro */
+  --bs-secondary: #F7C6C7; /* Rosa glaseado */
+  --bs-success: #A8D5BA;   /* Verde menta */
+  --bs-dark: #6F4E37;      /* Café */
+  --bs-light: #FFF8E7;     /* Crema */
+}
+
+
+/*fondo panel*/
+.sidebar {
+  background-color: #F39C12; /* naranja panadería */
+  color: #fff;
+}
+
+.sidebar .nav-link {
+  color: #fff;
+  transition: background-color 0.3s ease;
+}
+
+.sidebar .nav-link:hover {
+  background-color: #E67E22; /* naranja tostado */
+  color: #fff;
+}
+
+.badge {
+  background-color: #E67E22;
+  color: #fff;
+}
+
+
+/*para los iconos fontawesome*/
+.sidebar i {
+  color: #6F4E37; /* Marrón chocolate */
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.sidebar .nav-link:hover i {
+  color: #fff; /* Ícono blanco al hacer hover */
+}
+
+
+/* Toasts */
+.toast {
+  border-radius: 12px;
+  font-weight: 500;
+}
+
+/* Botones estilo “toasty” */
+.btn-toasty {
+  background-color: var(--bs-primary);
+  color: #fff;
+  border-radius: 50px;
+  padding: 0.6rem 1.4rem;
+  font-weight: 600;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-toasty:hover {
+  background-color: #d89a5c;
+  transform: scale(1.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+/*boton de cierre*/
+.btn-close-white {
+  filter: invert(100%) sepia(10%) saturate(300%) hue-rotate(330deg);
+}
+
+.btn-close {
+  background-color: var(--bs-primary);
+  border-radius: 50%;
+  padding: 0.4rem;
+  width: 1.5rem;
+  height: 1.5rem;
+  opacity: 0.9;
+  transition: all 0.3s ease;
+}
+
+.btn-close:hover {
+  background-color: #d89a5c;
+  opacity: 1;
+}
+

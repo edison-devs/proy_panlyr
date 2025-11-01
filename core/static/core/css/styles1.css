@@ -1116,22 +1116,3 @@ html {
   color: #fff;
 }
 
-
-/*17-10-25 estilos del panel de los usuarios segun el rol*/
-.form-field {
-  display: block;
-  background-color: #fff5e6;
-  padding: 12px 20px;
-  border-radius: 10px;
-  font-weight: 600;
-  color: #5a3e2b;
-  text-decoration: none;
-  transition: all 0.3s ease-in-out;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-}
-
-.form-field:hover {
-  background-color: #ffe0b2;
-  color: #3e2723;
-  transform: translateY(-2px);
-}

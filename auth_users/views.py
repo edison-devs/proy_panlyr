@@ -14,7 +14,7 @@ from django.utils.decorators import method_decorator
 # Login
 #------------------------------------------------------------------
 class UserLoginView(View):
-    template_name= 'auth_users/login.html'
+    template_name= 'core/login.html'
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
@@ -47,7 +47,7 @@ class UserLoginView(View):
 # Registro de usuario
 #------------------------------------------------------------------
 class UserRegisterView(View):
-    template_name = 'auth_users/register.html'
+    template_name = 'core/register.html'
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:

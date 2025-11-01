@@ -5,7 +5,7 @@
 
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'auth_users/css/styles.css' %}">
+  <link rel="stylesheet" href="{% static 'core/css/styles.css' %}">
 {% endblock %}
 
 {% block header %}
@@ -16,7 +16,7 @@
 
 {% block content %}
 <section class="login-section d-flex flex-column flex-md-row align-items-center justify-content-center"
-         style="background-image: url('{% static 'auth_users/img/fondo_panaderia.png' %}');">
+         style="background-image: url('{% static 'core/img/fondo_panaderia.png' %}');">
   <!-- Formulario -->
   <div class="login-form-container p-4 w-100 w-md-50">
     <h2 class="mb-4 text-center text-white">Inicia sesión</h2>
@@ -43,7 +43,7 @@
 
   <!-- Imagen lateral a la derecha -->
   <div class="login-image p-4 w-100 w-md-50 text-center">
-    <img src="{% static 'auth_users/img/logo.jpg' %}" alt="Logo PanLyR"
+    <img src="{% static 'core/img/logo.jpg' %}" alt="Logo PanLyR"
          class="img-fluid rounded shadow">
   </div>
 </section>

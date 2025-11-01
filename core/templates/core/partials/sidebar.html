@@ -1,6 +1,6 @@
 {% load groups %}
 
-<nav class="col-md-2 bg-dark text-white min-vh-100 overflow-auto">
+<nav class="col-md-2 sidebar min-vh-100 overflow-auto">
     <h5 class="text-center py-3">{{ user.username }}</h5>
     <ul class="nav flex-column">
         
@@ -8,7 +8,8 @@
         {% if user|has_any_group:"admin,employed,viewer" %}
         <li class="nav-item">
             <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuProducts" role="button" aria-expanded="false" aria-controls="menuProducts">
-                PRODUCTS <span class="badge bg-secondary">▸</span>
+            <span><i class="fa-solid fa-box me-2"></i> PRODUCTOS</span>
+            <span class="badge bg-secondary">▸</span>
             </a>
             <div class="collapse" id="menuProducts">
                 <ul class="nav flex-column ms-3">
@@ -26,10 +27,11 @@
         </li>
         {% endif %}
 
+        <!-- DELIVERY -->
         {% if user|has_any_group:"admin,employed,viewer" %}
         <li class="nav-item">
             <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuPedidos" role="button" aria-expanded="false" aria-controls="menuPedidos">
-                PEDIDOS <span class="badge bg-secondary">▸</span>
+                <span><i class="fa-solid fa-truck me-2"></i> PEDIDOS</span><span class="badge bg-secondary">▸</span>
             </a>
             <div class="collapse" id="menuPedidos">
                 <ul class="nav flex-column ms-3">
@@ -47,58 +49,18 @@
         </li>
         {% endif %}
 
-        <!-- OUTPUTS -->
+       
+        <!-- REPORT -->
         {% if user|has_any_group:"admin,employed,viewer" %}
         <li class="nav-item">
-            <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuOutputs" role="button" aria-expanded="false" aria-controls="menuOutputs">
-                OUTPUTS <span class="badge bg-secondary">▸</span>
+            <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuReportes" role="button" aria-expanded="false" aria-controls="menuReportes">
+            <span><i class="fa-solid fa-chart-line"></i> REPORTES</span>
+            <span class="badge bg-secondary">▸</span>
             </a>
-            <div class="collapse" id="menuOutputs">
+            <div class="collapse" id="menuReportes">
                 {% comment %} <ul class="nav flex-column ms-3">
                     <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'outputs' %}">Ver</a>
-                    </li>
-                    {% if user|has_any_group:"admin,employed" %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'outputs' %}?action=new">Nuevo</a>
-                    </li>
-                    {% endif %}
-                </ul> {% endcomment %}
-            </div>
-        </li>
-        {% endif %}
-
-        <!-- INPUTS -->
-        {% if user|has_any_group:"admin,employed,viewer" %}
-        <li class="nav-item">
-            <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuInputs" role="button" aria-expanded="false" aria-controls="menuInputs">
-                INPUTS <span class="badge bg-secondary">▸</span>
-            </a>
-            <div class="collapse" id="menuInputs">
-                {% comment %} <ul class="nav flex-column ms-3">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'inputs' %}">Ver</a>
-                    </li>
-                    {% if user|has_any_group:"admin,employed" %}
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'inputs' %}?action=new">Nuevo</a>
-                    </li>
-                    {% endif %}
-                </ul> {% endcomment %}
-            </div>
-        </li>
-        {% endif %}
-
-        <!-- INVOICES -->
-        {% if user|has_any_group:"admin,employed,viewer" %}
-        <li class="nav-item">
-            <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuInvoices" role="button" aria-expanded="false" aria-controls="menuInvoices">
-                INVOICES <span class="badge bg-secondary">▸</span>
-            </a>
-            <div class="collapse" id="menuInvoices">
-                {% comment %} <ul class="nav flex-column ms-3">
-                    <li class="nav-item">
-                        <a class="nav-link text-white" href="{% url 'invoices' %}">Ver</a>
+                        <a class="nav-link text-white" href="{% url 'report' %}">Ver</a>
                     </li>
                     {% if user|has_any_group:"admin,employed" %}
                     <li class="nav-item">
@@ -114,7 +76,8 @@
         {% if user|has_any_group:"admin,employed,viewer" %}
         <li class="nav-item">
             <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuCategories" role="button" aria-expanded="false" aria-controls="menuCategories">
-                CATEGORIES <span class="badge bg-secondary">▸</span>
+            <span><i class="fa-solid fa-tags"></i> REPORTES</span>
+            <span class="badge bg-secondary">▸</span>
             </a>
             <div class="collapse" id="menuCategories">
                 {% comment %} <ul class="nav flex-column ms-3">
@@ -135,7 +98,7 @@
         {% if user|has_group:"admin" %}
         <li class="nav-item">
             <a class="nav-link text-white d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#menuUsers" role="button" aria-expanded="false" aria-controls="menuUsers">
-                USERS <span class="badge bg-secondary">▸</span>
+                 <span><i class="fa-solid fa-users me-2"></i> USUARIOS</span<span class="badge bg-secondary">▸</span>
             </a>
             <div class="collapse" id="menuUsers">
                 {% comment %} <ul class="nav flex-column ms-3">
@@ -152,7 +115,7 @@
 
         <!-- LOGOUT -->
         <li class="nav-item">
-            <a class="nav-link text-white" href="{% url 'logout' %}">LOGOUT</a>
+            <a class="nav-link text-white" href="{% url 'logout' %}"> <i class="fa-solid fa-door-open me-2"></i> CERRAR SESIÓN</a>
         </li>
 
         <!-- Debug info (opcional) -->
@@ -165,3 +128,9 @@
         {% endif %}
     </ul>
 </nav>
+
+
+
+
+
+
