@@ -345,7 +345,7 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 
 
 
-### 🛠️ Avance actual
+### 🛠️ Avance Anterior
 
 - ✅ Se usó Bootstrap para lograr un diseño responsivo en todos los paneles.
 
@@ -361,70 +361,7 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 
 
 
-
-### 
-
 ---
-
-## ⚙️ Actualización del Modelo de Usuario (Roles funcionales)
-
-📌 Objetivo:  
-Corregir el problema de que los roles no se asignaban correctamente al crear un usuario desde consola o el panel de administración.
-
-### 🔧 Cambios realizados
-- Se actualizó el método save() del modelo User en auth_users/models.py.
-- Esta actualización sincroniza automáticamente los flags internos de Django (is_staff, is_superuser) con el campo role.
-
-### 📁 Ubicación del cambio
-Ruta del archivo:
-
-proy_panlyr/auth_users/models.py
-
-
-🧠 Explicación
-
-Si el usuario tiene rol superadmin, obtiene permisos de súper usuario (is_superuser=True).
-
-Si tiene rol admin, puede acceder al panel de administración (is_staff=True).
-
-Si es cliente, no tiene permisos de staff ni de súper usuario.
-
-
-⚠️ Nota:
-Esta implementación es provisional, creada para pruebas rápidas del sistema y colaboración entre el equipo.
-En una versión futura se reemplazará por una lógica más segura basada en signals o managers personalizados.
-
-🧾 Verificación
-
-1. Crear un usuario desde consola:
-
-python manage.py createsuperuser
-
-
-2. Revisar la base de datos:
-
-Tabla: users
-
-Campo: role
-
-El nuevo usuario debería tener asignado su rol correctamente según la lógica anterior.
-
-
-
-3. Probar acceso al panel:
-
-superadmin → Acceso total
-
-admin → Solo panel intermedio
-
-cliente → Panel de cliente
-
-
----
-
-✅ Resultado esperado:
-Los roles ahora se asignan correctamente y permiten redirigir al panel correspondiente sin necesidad de configuraciones adicionales en el admin de Django.
-
 
 ---
 
@@ -450,9 +387,6 @@ Los roles ahora se asignan correctamente y permiten redirigir al panel correspon
 
 ✅ Checklist de tareas completadas
 
-[x] Redirección por rol desde el login
-
-[x] Paneles personalizados por tipo de usuario
 
 [x] Bootstrap integrado en templates
 
@@ -470,8 +404,6 @@ Los roles ahora se asignan correctamente y permiten redirigir al panel correspon
 
 
 🧁 Cosas por hacer
-
-[ ] Investigar cómo redirigir correctamente desde el Django Admin al login personalizado (logout.html)
 
 [ ] Desarrollar lógica de borrado suave para productos
 
@@ -660,24 +592,6 @@ Cada colaborador debe crear su propia rama realese/nombre-de-la-tarea para evita
  
 - Usa entornos virtuales para evitar conflictos.
 
-### 🐘 Versión recomendada de PostgreSQL
-
-- El proyecto funciona con PostgreSQL 16 o 17.  
-- Se recomienda usar la versión más estable disponible en tu equipo.  
-- Evita usar funciones exclusivas de PostgreSQL 17 para mantener compatibilidad.
-
-### 📌 Próximos pasos
-
-- Implementar lógica completa de login en auth_user.
-
-- Crear seeders en abcstracts/mixin.py para poblar:
-  - Categorías de productos
-  - Formas de pago
-  - Tipos de entrega
-
-- Desarrollar modelos de productos y pedidos en core.
-
-- Integrar Bootstrap para mejorar la interfaz visual.
 
 ---
 
@@ -692,16 +606,6 @@ html
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 
-
-## 🔄 Actualizaciones futuras
-
-Este proyecto se irá actualizando progresivamente con:
-
-- Lógica de modelos (productos,clientes, pedidos)
-- Templates y vistas
-- Funcionalidades de auditoría y gestión
-
----
 
 ##Nota:
 
