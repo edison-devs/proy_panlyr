@@ -1,0 +1,182 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Mi Carrito - PanLyR{% endblock %}
+
+{% block extra_css %}
+<style>
+  .cart-item {
+    border-bottom: 1px solid #dee2e6;
+    padding: 20px 0;
+  }
+  .cart-item:last-child {
+    border-bottom: none;
+  }
+  .product-image-cart {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .quantity-input {
+    width: 80px;
+    text-align: center;
+  }
+  .cart-summary {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+  }
+  .empty-cart {
+    text-align: center;
+    padding: 60px 20px;
+  }
+</style>
+{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8e1c1;">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-brown" href="{% url 'home' %}">PanLyR</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPanlyr"
+            aria-controls="navbarPanlyr" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarPanlyr">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a></li>
+        <li class="nav-item"><a class="nav-link active" href="{% url 'cart_view' %}">
+          <i class="fas fa-shopping-cart"></i> Carrito
+          {% if cart_items_count > 0 %}
+            <span class="badge bg-danger">{{ cart_items_count }}</span>
+          {% endif %}
+        </a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'mis_pedidos' %}">
+          <i class="fas fa-clipboard-list"></i> Mis Pedidos
+        </a></li>
+      </ul>
+      <div class="d-flex align-items-center">
+        {% if user.is_authenticated %}
+          <span class="me-3 fw-semibold text-dark">Hola, {{ user.username }}</span>
+          <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-dark">Cerrar sesión</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-sm btn-warning me-2">Iniciar sesión</a>
+          <a href="{% url 'register' %}" class="btn btn-sm btn-outline-secondary">Registrarse</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <h1 class="mb-4"><i class="fas fa-shopping-cart"></i> Mi Carrito</h1>
+
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  {% if cart_items %}
+  <div class="row">
+    <!-- Lista de productos -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-body">
+          {% for item in cart_items %}
+          <div class="cart-item">
+            <div class="row align-items-center">
+              <div class="col-md-2">
+                {% if item.product.image %}
+                <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-image-cart">
+                {% else %}
+                <div class="product-image-cart bg-light d-flex align-items-center justify-content-center">
+                  <i class="fas fa-image text-muted"></i>
+                </div>
+                {% endif %}
+              </div>
+              <div class="col-md-4">
+                <h5 class="mb-1">{{ item.product.name }}</h5>
+                <p class="text-muted small mb-0">{{ item.product.category.name }}</p>
+                <p class="text-muted small mb-0">Precio unitario: ${{ item.product.price }}</p>
+              </div>
+              <div class="col-md-3">
+                <form method="post" action="{% url 'update_cart_item' item.id %}" class="d-flex align-items-center gap-2">
+                  {% csrf_token %}
+                  <label for="quantity-{{ item.id }}" class="small">Cantidad:</label>
+                  <input type="number" 
+                         name="quantity" 
+                         id="quantity-{{ item.id }}"
+                         value="{{ item.quantity }}" 
+                         min="1" 
+                         class="form-control quantity-input"
+                         onchange="this.form.submit()">
+                </form>
+              </div>
+              <div class="col-md-2 text-end">
+                <p class="fw-bold mb-1">${{ item.get_subtotal }}</p>
+                <form method="post" action="{% url 'remove_from_cart' item.id %}" class="d-inline">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás seguro de eliminar este producto?')">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="mt-3">
+        <a href="{% url 'catalogo' %}" class="btn btn-outline-secondary">
+          <i class="fas fa-arrow-left"></i> Seguir comprando
+        </a>
+      </div>
+    </div>
+
+    <!-- Resumen del carrito -->
+    <div class="col-md-4">
+      <div class="cart-summary">
+        <h4 class="mb-4">Resumen del Pedido</h4>
+        
+        <div class="d-flex justify-content-between mb-2">
+          <span>Productos:</span>
+          <span>{{ total_quantity }} item(s)</span>
+        </div>
+        
+        <hr>
+        
+        <div class="d-flex justify-content-between mb-3">
+          <strong>Total:</strong>
+          <strong class="text-danger fs-4">${{ total }}</strong>
+        </div>
+
+        {% if cart_items %}
+        <a href="{% url 'realizar_pedido' %}" class="btn btn-warning w-100 btn-lg">
+          <i class="fas fa-check-circle"></i> Realizar Pedido
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <!-- Carrito vacío -->
+  <div class="empty-cart">
+    <i class="fas fa-shopping-cart fa-5x text-muted mb-3"></i>
+    <h3>Tu carrito está vacío</h3>
+    <p class="text-muted">Agrega productos desde el catálogo para comenzar a comprar.</p>
+    <a href="{% url 'catalogo' %}" class="btn btn-warning btn-lg mt-3">
+      <i class="fas fa-store"></i> Ir al Catálogo
+    </a>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}
+

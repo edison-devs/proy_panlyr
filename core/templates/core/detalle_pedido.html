@@ -1,0 +1,265 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Detalle del Pedido #{{ order.id }} - PanLyR{% endblock %}
+
+{% block extra_css %}
+<style>
+  .detail-card {
+    border-left: 4px solid #ffc107;
+  }
+  .detail-card.pendiente {
+    border-left-color: #ffc107;
+  }
+  .detail-card.aprobado {
+    border-left-color: #28a745;
+  }
+  .detail-card.cancelado {
+    border-left-color: #dc3545;
+  }
+  .detail-card.comprobante {
+    border-left-color: #17a2b8;
+  }
+  .product-image-detail {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  .info-section {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .comprobante-image {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+</style>
+{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8e1c1;">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-brown" href="{% url 'home' %}">PanLyR</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPanlyr"
+            aria-controls="navbarPanlyr" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarPanlyr">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a></li>
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart_view' %}">
+            <i class="fas fa-shopping-cart"></i> Carrito
+            {% if cart_items_count > 0 %}
+              <span class="badge bg-danger">{{ cart_items_count }}</span>
+            {% endif %}
+          </a></li>
+          <li class="nav-item"><a class="nav-link active" href="{% url 'mis_pedidos' %}">
+            <i class="fas fa-clipboard-list"></i> Mis Pedidos
+          </a></li>
+        {% endif %}
+      </ul>
+      <div class="d-flex align-items-center">
+        {% if user.is_authenticated %}
+          <span class="me-3 fw-semibold text-dark">Hola, {{ user.username }}</span>
+          <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-dark">Cerrar sesión</a>
+        {% else %}
+          <a href="{% url 'login' %}" class="btn btn-sm btn-warning me-2">Iniciar sesión</a>
+          <a href="{% url 'register' %}" class="btn btn-sm btn-outline-secondary">Registrarse</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1><i class="fas fa-shopping-bag"></i> Pedido #{{ order.id }}</h1>
+    <a href="{% url 'mis_pedidos' %}" class="btn btn-outline-secondary">
+      <i class="fas fa-arrow-left"></i> Volver a Mis Pedidos
+    </a>
+  </div>
+
+  <!-- Estado del pedido -->
+  <div class="alert alert-{% if order.esperando_comprobante %}info{% elif order.is_pendiente %}warning{% elif order.is_aprobado %}success{% else %}danger{% endif %} d-flex justify-content-between align-items-center">
+    <div>
+      <h5 class="mb-0">
+        <i class="fas fa-{% if order.esperando_comprobante %}file-upload{% elif order.is_pendiente %}clock{% elif order.is_aprobado %}check-circle{% else %}times-circle{% endif %}"></i>
+        Estado: <strong>{{ order.order_type.name|title }}</strong>
+      </h5>
+      {% if order.esperando_comprobante %}
+      <p class="mb-0 mt-2">
+        {% if order.tiene_comprobante %}
+          Comprobante de pago recibido. Tu pedido está pendiente de verificación.
+        {% else %}
+          Por favor, sube el comprobante de pago de tu transferencia bancaria para que tu pedido pueda ser procesado.
+        {% endif %}
+      </p>
+      {% elif order.is_pendiente %}
+      <p class="mb-0 mt-2">Tu pedido está pendiente de aprobación. Te notificaremos cuando sea aprobado.</p>
+      {% elif order.is_aprobado %}
+      <p class="mb-0 mt-2">Tu pedido ha sido aprobado y está en proceso de preparación.</p>
+      {% endif %}
+    </div>
+    <span class="badge bg-{% if order.esperando_comprobante %}info{% elif order.is_pendiente %}warning text-dark{% elif order.is_aprobado %}success{% else %}danger{% endif %} fs-6">
+      {{ order.order_type.name|title }}
+    </span>
+  </div>
+
+  <!-- Sección de comprobante de pago -->
+  {% if order.necesita_comprobante %}
+  <div class="card mb-4 {% if order.esperando_comprobante %}border-info{% endif %}">
+    <div class="card-header bg-{% if order.esperando_comprobante %}info text-white{% else %}secondary{% endif %}">
+      <h5 class="mb-0">
+        <i class="fas fa-receipt"></i> Comprobante de Pago
+      </h5>
+    </div>
+    <div class="card-body">
+      {% if order.tiene_comprobante %}
+      <!-- Comprobante ya subido -->
+      <div class="alert alert-success">
+        <i class="fas fa-check-circle"></i> Comprobante de pago recibido.
+      </div>
+      <div class="text-center mb-3">
+        {% if ".pdf" in order.comprobante_pago.name|lower or ".pdf" in order.comprobante_pago.url|lower %}
+        <div class="mb-3">
+          <i class="fas fa-file-pdf fa-5x text-danger mb-3"></i>
+          <p class="mb-2">Comprobante en formato PDF</p>
+        </div>
+        <a href="{{ order.comprobante_pago.url }}" target="_blank" class="btn btn-primary">
+          <i class="fas fa-file-pdf"></i> Ver/Descargar PDF
+        </a>
+        {% else %}
+        <img src="{{ order.comprobante_pago.url }}" alt="Comprobante de pago" class="comprobante-image mb-3">
+        <br>
+        <a href="{{ order.comprobante_pago.url }}" target="_blank" class="btn btn-primary">
+          <i class="fas fa-expand"></i> Ver imagen completa
+        </a>
+        {% endif %}
+      </div>
+      {% else %}
+      <!-- Formulario para subir comprobante -->
+      {% if comprobante_form %}
+      <div class="alert alert-warning">
+        <i class="fas fa-exclamation-triangle"></i> 
+        <strong>Importante:</strong> Sube el comprobante de tu transferencia bancaria para que tu pedido pueda ser procesado.
+      </div>
+      <form method="post" action="{% url 'subir_comprobante' order.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="mb-3">
+          <label for="{{ comprobante_form.comprobante_pago.id_for_label }}" class="form-label">
+            {{ comprobante_form.comprobante_pago.label }}
+          </label>
+          {{ comprobante_form.comprobante_pago }}
+          <small class="form-text text-muted">
+            Formatos permitidos: JPG, PNG, PDF, WEBP. Tamaño máximo recomendado: 5MB
+          </small>
+          {% if comprobante_form.comprobante_pago.errors %}
+          <div class="text-danger small">{{ comprobante_form.comprobante_pago.errors }}</div>
+          {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-upload"></i> Subir Comprobante
+        </button>
+      </form>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="row">
+    <!-- Información del pedido -->
+    <div class="col-md-4 mb-4">
+      <div class="card detail-card {% if order.esperando_comprobante %}comprobante{% elif order.is_pendiente %}pendiente{% elif order.is_aprobado %}aprobado{% else %}cancelado{% endif %}">
+        <div class="card-header bg-warning">
+          <h5 class="mb-0"><i class="fas fa-info-circle"></i> Información del Pedido</h5>
+        </div>
+        <div class="card-body">
+          <div class="info-section">
+            <p class="mb-2"><strong>Fecha de pedido:</strong></p>
+            <p class="mb-3">{{ order.created_at|date:"d/m/Y H:i" }}</p>
+            
+            <p class="mb-2"><strong>Método de pago:</strong></p>
+            <p class="mb-3">{{ order.payment_method.name }}</p>
+            
+            <p class="mb-2"><strong>Dirección de entrega:</strong></p>
+            <p class="mb-0">{{ order.delivery.secondary_address }}</p>
+          </div>
+
+          <div class="info-section">
+            <p class="mb-2"><strong>Total de productos:</strong></p>
+            <p class="mb-3">{{ total_quantity }} item(s)</p>
+            
+            <p class="mb-2"><strong>Total a pagar:</strong></p>
+            <h4 class="text-success mb-0">${{ total }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Productos del pedido -->
+    <div class="col-md-8">
+      <div class="card">
+        <div class="card-header bg-warning">
+          <h5 class="mb-0"><i class="fas fa-box-open"></i> Productos del Pedido</h5>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unitario</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in cart_items %}
+                <tr>
+                  <td>
+                    <div class="d-flex align-items-center">
+                      {% if item.product.image %}
+                      <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}" class="product-image-detail me-3">
+                      {% else %}
+                      <div class="product-image-detail me-3 bg-light d-flex align-items-center justify-content-center">
+                        <i class="fas fa-image text-muted"></i>
+                      </div>
+                      {% endif %}
+                      <div>
+                        <strong>{{ item.product.name }}</strong>
+                        <br>
+                        <small class="text-muted">{{ item.product.category.name }}</small>
+                      </div>
+                    </div>
+                  </td>
+                  <td>{{ item.quantity }}</td>
+                  <td>${{ item.product.price }}</td>
+                  <td><strong>${{ item.get_subtotal }}</strong></td>
+                </tr>
+                {% endfor %}
+              </tbody>
+              <tfoot>
+                <tr>
+                  <th colspan="3" class="text-end">Total:</th>
+                  <th class="text-success">${{ total }}</th>
+                </tr>
+              </tfoot>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

@@ -95,9 +95,10 @@ class Product(TimestampedMixin, SoftDeleteMixin, models.Model):
 
 
 class Cart(SoftDeleteMixin, models.Model):
+    user = models.ForeignKey(User, on_delete=models.PROTECT, related_name="carts", verbose_name="Usuario", null=True, blank=True)
     status = models.ForeignKey(CartStatus, on_delete=models.PROTECT, related_name="carts")
     quantity = models.IntegerField(default=0, verbose_name="Cantidad")
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Precio")
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0, verbose_name="Precio")
 
     class Meta:
         db_table = "carts"
@@ -105,21 +106,43 @@ class Cart(SoftDeleteMixin, models.Model):
         verbose_name_plural = "Carritos"
 
     def __str__(self):
-        return f"{self.quantity} - ${self.price}"
+        user_str = str(self.user) if self.user else "Sin usuario"
+        return f"{user_str} - {self.quantity} - ${self.price}"
+    
+    def calculate_total(self):
+        """Calcula el total del carrito basado en los productos"""
+        total = sum(item.product.price * item.quantity for item in self.cart_products.all())
+        self.price = total
+        self.quantity = sum(item.quantity for item in self.cart_products.all())
+        self.save()
+        return total
+    
+    def get_total(self):
+        """Retorna el total sin guardar"""
+        return sum(item.product.price * item.quantity for item in self.cart_products.all())
+    
+    def get_total_quantity(self):
+        """Retorna la cantidad total de items en el carrito"""
+        return sum(item.quantity for item in self.cart_products.all())
 
 
 class CartProduct(models.Model):
     product = models.ForeignKey(Product, on_delete=models.PROTECT, related_name="cart_products")
-    cart = models.ForeignKey(Cart, on_delete=models.PROTECT, verbose_name="Carrito")
+    cart = models.ForeignKey(Cart, on_delete=models.PROTECT, related_name="cart_products", verbose_name="Carrito")
     quantity = models.IntegerField(default=0, verbose_name="Cantidad")
 
     class Meta:
         db_table = "cart_products"
         verbose_name = "Producto en carrito"
         verbose_name_plural = "Productos en carritos"
+        unique_together = ['cart', 'product']  # Evita duplicados
 
     def __str__(self):
         return f"{self.product}: {self.quantity}"
+    
+    def get_subtotal(self):
+        """Calcula el subtotal de este item (precio * cantidad)"""
+        return self.product.price * self.quantity
 
 
 class Payment(TimestampedMixin, SoftDeleteMixin, models.Model):
@@ -154,14 +177,65 @@ class Order(TimestampedMixin, SoftDeleteMixin, models.Model):
     order_type = models.ForeignKey(OrderType, on_delete=models.PROTECT, verbose_name="Tipo de pedido")
     payment_method = models.ForeignKey(PaymentMethod, on_delete=models.PROTECT, verbose_name="Método de pago")
     delivery = models.ForeignKey(Delivery, on_delete=models.PROTECT, verbose_name="Entrega")
+    comprobante_pago = models.FileField(
+        upload_to="core/comprobantes/",
+        validators=[FileExtensionValidator(allowed_extensions=["jpg", "jpeg", "png", "pdf", "webp"])],
+        blank=True,
+        null=True,
+        verbose_name="Comprobante de pago"
+    )
 
     class Meta:
         db_table = "orders"
         verbose_name = "Pedido"
         verbose_name_plural = "Pedidos"
+        ordering = ['-created_at']  # Ordenar por fecha de creación, más reciente primero
 
     def __str__(self):
-        return f"{self.user} - {self.delivery}"
+        fecha = self.created_at.strftime('%d/%m/%Y') if self.created_at else 'Sin fecha'
+        return f"Pedido #{self.id} - {self.user} - {fecha}"
+    
+    def get_total(self):
+        """Retorna el total del pedido basado en el carrito"""
+        return self.cart.get_total()
+    
+    def get_total_quantity(self):
+        """Retorna la cantidad total de items en el pedido"""
+        return self.cart.get_total_quantity()
+    
+    def get_cart_items(self):
+        """Retorna los items del carrito asociado al pedido"""
+        return self.cart.cart_products.all()
+    
+    def is_pendiente(self):
+        """Verifica si el pedido está pendiente"""
+        if self.order_type:
+            return self.order_type.name.lower() == "pendiente"
+        return False
+    
+    def is_aprobado(self):
+        """Verifica si el pedido está aprobado"""
+        if self.order_type:
+            return self.order_type.name.lower() in ["aprobado", "confirmado", "en proceso", "procesando"]
+        return False
+    
+    def necesita_comprobante(self):
+        """Verifica si el método de pago requiere comprobante (transferencia)"""
+        if self.payment_method:
+            metodo_nombre = self.payment_method.name.lower()
+            return metodo_nombre in ["transferencia", "transferencia bancaria", "pago movil", "pago móvil"]
+        return False
+    
+    def tiene_comprobante(self):
+        """Verifica si el pedido ya tiene comprobante de pago subido"""
+        return bool(self.comprobante_pago)
+    
+    def esperando_comprobante(self):
+        """Verifica si el pedido está esperando comprobante de pago"""
+        if self.order_type:
+            nombre_tipo = self.order_type.name.lower()
+            return nombre_tipo in ["comprobante de pago requerido", "comprobante requerido", "comprobante requerido"]
+        return False
 
 
 """

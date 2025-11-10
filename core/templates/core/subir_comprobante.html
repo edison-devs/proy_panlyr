@@ -1,0 +1,133 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block title %}Subir Comprobante - Pedido #{{ order.id }} - PanLyR{% endblock %}
+
+{% block extra_css %}
+<style>
+  .upload-card {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+</style>
+{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8e1c1;">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-brown" href="{% url 'home' %}">PanLyR</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPanlyr"
+            aria-controls="navbarPanlyr" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarPanlyr">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a></li>
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart_view' %}">
+            <i class="fas fa-shopping-cart"></i> Carrito
+            {% if cart_items_count > 0 %}
+              <span class="badge bg-danger">{{ cart_items_count }}</span>
+            {% endif %}
+          </a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'mis_pedidos' %}">
+            <i class="fas fa-clipboard-list"></i> Mis Pedidos
+          </a></li>
+        {% endif %}
+      </ul>
+      <div class="d-flex align-items-center">
+        {% if user.is_authenticated %}
+          <span class="me-3 fw-semibold text-dark">Hola, {{ user.username }}</span>
+          <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-dark">Cerrar sesión</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card upload-card">
+        <div class="card-header bg-info text-white">
+          <h4 class="mb-0">
+            <i class="fas fa-file-upload"></i> Subir Comprobante de Pago
+          </h4>
+        </div>
+        <div class="card-body">
+          <div class="alert alert-info">
+            <h5 class="alert-heading">Pedido #{{ order.id }}</h5>
+            <p class="mb-0">
+              <strong>Total a pagar:</strong> ${{ order.get_total }}<br>
+              <strong>Método de pago:</strong> {{ order.payment_method.name }}
+            </p>
+          </div>
+
+          {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+          {% endif %}
+
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i>
+            <strong>Importante:</strong> Por favor, sube el comprobante de tu transferencia bancaria. 
+            Asegúrate de que el comprobante sea claro y legible.
+          </div>
+
+          <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="{{ form.comprobante_pago.id_for_label }}" class="form-label">
+                {{ form.comprobante_pago.label }}
+              </label>
+              {{ form.comprobante_pago }}
+              <small class="form-text text-muted">
+                Formatos permitidos: JPG, PNG, PDF, WEBP. Tamaño máximo recomendado: 5MB
+              </small>
+              {% if form.comprobante_pago.errors %}
+              <div class="text-danger small mt-2">{{ form.comprobante_pago.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+              <a href="{% url 'detalle_pedido' order.id %}" class="btn btn-outline-secondary">
+                <i class="fas fa-arrow-left"></i> Cancelar
+              </a>
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-upload"></i> Subir Comprobante
+              </button>
+            </div>
+          </form>
+          <div id="fileWarning" class="alert alert-danger d-none mt-3" role="alert">
+            ⚠️ Debes seleccionar un archivo antes de subir el comprobante.
+          </div>
+          <script>
+            document.getElementById("comprobanteForm").addEventListener("submit", function(event) {
+              const fileInput = document.querySelector("input[type='file']");
+              const tooltipBtn = document.querySelector(".tooltip-btn");
+          
+              if (!fileInput.value) {
+                event.preventDefault();
+                tooltipBtn.classList.add("show-tooltip");
+          
+                // Ocultar automáticamente después de 3 segundos
+                setTimeout(() => {
+                  tooltipBtn.classList.remove("show-tooltip");
+                }, 3000);
+              }
+            });
+          </script>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

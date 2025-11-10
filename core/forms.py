@@ -1,8 +1,6 @@
 # core/forms.py
 from django import forms
-from .models import Product
-from .models import CartProduct, Product
-from .models import Product, PaymentMethod, OrderType
+from .models import Product, PaymentMethod, Order
 
 
 
@@ -24,8 +22,28 @@ class ProductForm(forms.ModelForm):
         #fields = ['product', 'quantity']
 
 class PedidoForm(forms.Form):
-    producto = forms.ModelChoiceField
-    cantidad = forms.IntegerField(min_value=1, label="Cantidad")
-    metodo_pago = forms.ModelChoiceField(queryset=PaymentMethod.objects.all(), label="Método de pago")
-    tipo_pedido = forms.ModelChoiceField(queryset=OrderType.objects.all(), label="Tipo de pedido")
-    direccion = forms.CharField(max_length=255, label="Dirección de entrega")
+    metodo_pago = forms.ModelChoiceField(
+        queryset=PaymentMethod.objects.filter(deleted_at__isnull=True), 
+        label="Método de pago",
+        widget=forms.Select(attrs={"class": "form-select"})
+    )
+    direccion = forms.CharField(
+        max_length=255, 
+        label="Dirección de entrega",
+        widget=forms.TextInput(attrs={"class": "form-control", "placeholder": "Ingrese la dirección de entrega"})
+    )
+
+
+class ComprobantePagoForm(forms.ModelForm):
+    class Meta:
+        model = Order
+        fields = ['comprobante_pago']
+        widgets = {
+            'comprobante_pago': forms.FileInput(attrs={
+                "class": "form-control",
+                "accept": ".jpg,.jpeg,.png,.pdf,.webp"
+            })
+        }
+        labels = {
+            'comprobante_pago': 'Comprobante de pago'
+        }

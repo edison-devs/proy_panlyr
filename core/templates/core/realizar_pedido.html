@@ -4,22 +4,145 @@
 {% block title %}Realizar Pedido - PanLyR{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static 'core/css/styles1.css' %}">
+<style>
+  .cart-summary-table {
+    width: 100%;
+  }
+  .cart-summary-table th {
+    background-color: #f8f9fa;
+  }
+</style>
+{% endblock %}
+
+{% block header %}
+<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8e1c1;">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold text-brown" href="{% url 'home' %}">PanLyR</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPanlyr"
+            aria-controls="navbarPanlyr" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarPanlyr">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'cart_view' %}">
+          <i class="fas fa-shopping-cart"></i> Carrito
+          {% if cart_items_count > 0 %}
+            <span class="badge bg-danger">{{ cart_items_count }}</span>
+          {% endif %}
+        </a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'mis_pedidos' %}">
+          <i class="fas fa-clipboard-list"></i> Mis Pedidos
+        </a></li>
+      </ul>
+      <div class="d-flex align-items-center">
+        {% if user.is_authenticated %}
+          <span class="me-3 fw-semibold text-dark">Hola, {{ user.username }}</span>
+          <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-dark">Cerrar sesión</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>
 {% endblock %}
 
 {% block content %}
-<div class="container py-5">
-  <div class="card shadow-sm">
-    <div class="card-header bg-light-brown text-white">
-      <h5 class="m-0">Realizar Pedido</h5>
+<div class="container my-5">
+  <h1 class="mb-4"><i class="fas fa-shopping-bag"></i> Realizar Pedido</h1>
+
+  {% if messages %}
+    {% for message in messages %}
+    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="row">
+    <!-- Resumen del carrito -->
+    <div class="col-md-5 mb-4">
+      <div class="card">
+        <div class="card-header bg-warning">
+          <h5 class="mb-0"><i class="fas fa-shopping-cart"></i> Resumen del Pedido</h5>
+        </div>
+        <div class="card-body">
+          <table class="table cart-summary-table">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in cart_items %}
+              <tr>
+                <td>{{ item.product.name }}</td>
+                <td>{{ item.quantity }}</td>
+                <td>${{ item.get_subtotal }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+            <tfoot>
+              <tr>
+                <th>Total</th>
+                <th>{{ total_quantity }} item(s)</th>
+                <th class="text-danger">${{ total }}</th>
+              </tr>
+            </tfoot>
+          </table>
+        </div>
+      </div>
+      <a href="{% url 'cart_view' %}" class="btn btn-outline-secondary w-100 mt-2">
+        <i class="fas fa-arrow-left"></i> Volver al Carrito
+      </a>
     </div>
 
-    <div class="card-body bg-light">
+    <!-- Formulario de pedido -->
+    <div class="col-md-7">
+      <div class="card">
+        <div class="card-header bg-warning">
+          <h5 class="mb-0"><i class="fas fa-info-circle"></i> Información del Pedido</h5>
+        </div>
+        <div class="card-body">
       <form method="post">
         {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit" class="btn btn-primary mt-3">Confirmar Pedido</button>
+            
+            <div class="mb-3">
+              <label for="{{ form.metodo_pago.id_for_label }}" class="form-label">
+                {{ form.metodo_pago.label }}
+              </label>
+              {{ form.metodo_pago }}
+              {% if form.metodo_pago.errors %}
+                <div class="text-danger small">{{ form.metodo_pago.errors }}</div>
+              {% endif %}
+            </div>
+
+            <div class="mb-3">
+              <label for="{{ form.direccion.id_for_label }}" class="form-label">
+                {{ form.direccion.label }}
+              </label>
+              {{ form.direccion }}
+              {% if form.direccion.errors %}
+                <div class="text-danger small">{{ form.direccion.errors }}</div>
+              {% endif %}
+            </div>
+            
+            <div class="alert alert-info">
+              <i class="fas fa-info-circle"></i> 
+              <strong>Nota:</strong> Tu pedido será revisado por el administrador y se te notificará cuando sea aprobado.
+            </div>
+
+            <div class="d-grid gap-2">
+              <button type="submit" class="btn btn-warning btn-lg">
+                <i class="fas fa-check-circle"></i> Confirmar Pedido
+              </button>
+            </div>
       </form>
+        </div>
+      </div>
     </div>
   </div>
 </div>

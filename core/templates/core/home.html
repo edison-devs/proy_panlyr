@@ -21,10 +21,21 @@
     <!-- Menú -->
     <div class="collapse navbar-collapse" id="navbarPanlyr">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="#catalogo">Catálogo</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Inicio</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a></li>
         <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
         <li class="nav-item"><a class="nav-link" href="#nosotros">Sobre Nosotros</a></li>
+        {% if user.is_authenticated %}
+          <li class="nav-item"><a class="nav-link" href="{% url 'cart_view' %}">
+            <i class="fas fa-shopping-cart"></i> Carrito
+            {% if cart_items_count > 0 %}
+              <span class="badge bg-danger">{{ cart_items_count }}</span>
+            {% endif %}
+          </a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'mis_pedidos' %}">
+            <i class="fas fa-clipboard-list"></i> Mis Pedidos
+          </a></li>
+        {% endif %}
         {% if user.is_authenticated %}
           <li class="nav-item"><a class="nav-link" href="#perfil">Perfil</a></li>
         {% endif %}
@@ -55,7 +66,7 @@
 	<div class="content-banner">
 		<p>Deliciosos Postres</p>
 		<h2>100% Natural <br /> con gran variedad</h2>
-		<a href="#">Ir al catalogo</a>
+		<a href="{% url 'catalogo' %}">Ir al catálogo</a>
 	</div>
 </section>
 
