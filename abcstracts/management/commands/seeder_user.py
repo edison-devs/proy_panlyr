@@ -28,7 +28,7 @@ class Command(BaseCommand):
             )
             # Agregar al grupo Admin si existe
             try:
-                admin_group = Group.objects.get(name='Admin')
+                admin_group = Group.objects.get(name='admin')
                 root_user.groups.add(admin_group)
             except Group.DoesNotExist:
                 self.stdout.write(self.style.WARNING('Admin group not found, root user created without group'))

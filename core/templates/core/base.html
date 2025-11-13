@@ -26,46 +26,10 @@
 
 
 </head>
+
 <body>
   {% block header %}
-  <nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8e1c1;" data-bs-theme="light">
-    <div class="container-fluid">
-      <a class="navbar-brand fw-bold text-brown" href="#">PanLyR</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPanlyr"
-              aria-controls="navbarPanlyr" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbarPanlyr">
-        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-          <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Inicio</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'catalogo' %}">Catálogo</a></li>
-          <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-          <li class="nav-item"><a class="nav-link" href="#nosotros">Sobre Nosotros</a></li>
-          {% if user.is_authenticated %}
-            <li class="nav-item"><a class="nav-link" href="{% url 'cart_view' %}">
-              <i class="fas fa-shopping-cart"></i> Carrito
-              {% if cart_items_count > 0 %}
-                <span class="badge bg-danger">{{ cart_items_count }}</span>
-              {% endif %}
-            </a></li>
-            <li class="nav-item"><a class="nav-link" href="{% url 'mis_pedidos' %}">
-              <i class="fas fa-clipboard-list"></i> Mis Pedidos
-            </a></li>
-          {% endif %}
-        </ul>
-        <div class="d-flex">
-          {% if user.is_authenticated %}
-            <span class="me-3 fw-semibold text-dark">Hola, {{ user.username }}</span>
-            <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-dark">Cerrar sesión</a>
-          {% else %}
-            <a href="{% url 'login' %}" class="btn btn-sm btn-warning me-2">Iniciar sesión</a>
-            <a href="{% url 'register' %}" class="btn btn-sm btn-outline-secondary">Registrarse</a>
-          {% endif %}
-        </div>
-      </div>
-    </div>
-  </nav>
+  
   {% endblock %}
 
   <main>
