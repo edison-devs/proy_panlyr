@@ -7,7 +7,8 @@ def cart_context(request):
     cart_items_count = 0
     if request.user.is_authenticated:
         try:
-            status_pendiente = CartStatus.objects.filter(name="pendiente").first()
+            # Se usa iexact para evitar bug al filtrar el nombre de la categoria del pedido
+            status_pendiente = CartStatus.objects.filter(name_iexact="pendiente").first()
             if status_pendiente:
                 cart = Cart.objects.filter(
                     user=request.user,
