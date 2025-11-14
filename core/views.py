@@ -151,6 +151,8 @@ class ProductTrashView(View):
 
 """ Buena práctica profesional: Atrapar la excepción, 
     registrar el error y mostrar un mensaje amigable al usuario"""
+
+#Revisar esta linea me carga error 'name' no definido
 logger = logging.getLogger(name)
 
 # --------------------------------------------------------------------------------------------
@@ -520,7 +522,7 @@ class OrderDetailView(LoginRequiredMixin, View):
 
     def get(self, request, order_id, *args, **kwargs):
         try:
-             """Vista para ver los detalles de un pedido específico"""
+            """Vista para ver los detalles de un pedido específico"""
             order = get_object_or_404(Order, pk=order_id, user=request.user, deleted_at__isnull=True)
 
              # Obtener los items del carrito

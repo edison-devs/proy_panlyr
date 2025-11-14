@@ -352,6 +352,13 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 
 
 ---
+📌 Resumen Librería Añadidas Motivo Beneficio
+
+-**logging** Registrar errores y eventos en backend Diagnóstico real, logs profesionales. 
+
+-**reverse** Obtener URLs desde sus nombres Código más mantenible y seguro. 
+
+-**transaction.atomic** Grupo de acciones que deben ejecutarse juntas Base de datos consistente (todo o nada).
 
 ---
 
