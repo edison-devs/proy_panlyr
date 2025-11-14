@@ -1,7 +1,7 @@
 # View de app core logica principal
-import logging
+import logging #Indentificar desde que archivo se origino el error
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse #obtener URLs desde su nombre codigo
 from django.db import transaction
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin #Para autenticacion de usuario
@@ -14,8 +14,13 @@ from .models import *
 from .forms import ProductForm, PedidoForm, ComprobantePagoForm
 
 
-# Create your views here.
 
+
+""" Atrapar la excepción, registrar el error y mostrar un mensaje amigable al usuario"""
+logger = logging.getLogger(__name__)
+
+
+# Create your views here.
 
 #Redirige al home
 def render_home(request):
@@ -148,12 +153,6 @@ class ProductTrashView(View):
 # --------------------------------------------------------------------------------------------
 # CLASS-BASED VIEWS(CBV) PARA CARRITO Y PEDIDOS
 # --------------------------------------------------------------------------------------------
-
-""" Buena práctica profesional: Atrapar la excepción, 
-    registrar el error y mostrar un mensaje amigable al usuario"""
-
-#Revisar esta linea me carga error 'name' no definido
-logger = logging.getLogger(name)
 
 # --------------------------------------------------------------------------------------------
 # Helper (global) - mantener como está
