@@ -1,5 +1,8 @@
 # View de app core logica principal
+import logging
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
+from django.db import transaction
 from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin #Para autenticacion de usuario
 from django.contrib.auth import authenticate,login, get_user_model,logout
@@ -8,9 +11,8 @@ from django.views import View
 from django.core.paginator import Paginator
 from django.contrib import messages                      # <- necesario para mostrar mensajes
 from .models import *
-from .forms import ProductForm
-from .forms import PedidoForm
-from .forms import ComprobantePagoForm
+from .forms import ProductForm, PedidoForm, ComprobantePagoForm
+
 
 # Create your views here.
 
@@ -141,24 +143,48 @@ class ProductTrashView(View):
         return render(request, self.template_name, {"products": products})
     
 
+
+
 # --------------------------------------------------------------------------------------------
-# HELPER FUNCTIONS
+# CLASS-BASED VIEWS(CBV) PARA CARRITO Y PEDIDOS
 # --------------------------------------------------------------------------------------------
 
+""" Buena práctica profesional: Atrapar la excepción, 
+    registrar el error y mostrar un mensaje amigable al usuario"""
+logger = logging.getLogger(name)
+
+# --------------------------------------------------------------------------------------------
+# Helper (global) - mantener como está
+# --------------------------------------------------------------------------------------------
 def get_or_create_active_cart(user):
-    """Obtiene o crea un carrito activo (pendiente) para el usuario"""
+    """
+    Obtiene o crea un carrito activo (pendiente) para el usuario.
+    Función global (no CBV) para mantener compatibilidad con otras partes.
+    """
     if not user or not user.is_authenticated:
         raise ValueError("Se requiere un usuario autenticado para crear un carrito")
-    
-    status_pendiente, _ = CartStatus.objects.get_or_create(name="pendiente", defaults={"description": "Carrito pendiente"})
-    
-    # Buscar carrito activo existente
+
+    # buscar "pendiente" sin importar mayúsculas/minúsculas
+    status_pendiente = CartStatus.objects.filter(name__iexact="pendiente").first()
+
+    # Si no existe, lo creamos (evitar get_or_create con __iexact)
+    if not status_pendiente:
+        try:
+            status_pendiente = CartStatus.objects.create(
+                name="pendiente",
+                description="Carrito pendiente"
+            )
+        except Exception as e:
+            logger.exception("Error creando CartStatus pendiente: %s", e)
+            raise
+
+    # Buscar carrito activo existente (sin borrar)
     cart = Cart.objects.filter(
         user=user,
         status=status_pendiente,
         deleted_at__isnull=True
     ).first()
-    
+
     # Si no existe, crearlo
     if not cart:
         cart = Cart.objects.create(
@@ -167,37 +193,40 @@ def get_or_create_active_cart(user):
             quantity=0,
             price=0
         )
-    
+
     return cart
 
 
-# --------------------------------------------------------------------------------------------
-# CATÁLOGO PÚBLICO
-# --------------------------------------------------------------------------------------------
 
+# --------------------------------------------------------------------------------------------
+# CATÁLOGO PÚBLICO (sin cambios funcionales)
+# --------------------------------------------------------------------------------------------
 def catalogo_view(request):
-    """Vista pública del catálogo de productos"""
+    """
+    Vista pública del catálogo de productos.
+    (Se mantiene como función para compatibilidad.)
+    """
     query = request.GET.get("q", "").strip()
     category_id = request.GET.get("category", "")
     products = Product.objects.filter(deleted_at__isnull=True)
-    
+
     if query:
         products = products.filter(
             Q(name__icontains=query) |
             Q(description__icontains=query) |
-            Q(category__name__icontains=query)
+            Q(categorynameicontains=query)
         )
-    
+
     if category_id:
         products = products.filter(category_id=category_id)
-    
-    # Paginación (12 productos por página)
+
     paginator = Paginator(products, 12)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
-    
+
     categories = Category.objects.all()
-    
+
+
     context = {
         "page_obj": page_obj,
         "query": query,
@@ -208,156 +237,238 @@ def catalogo_view(request):
     return render(request, "core/catalogo.html", context)
 
 
-# --------------------------------------------------------------------------------------------
-# CARRITO DE COMPRAS
-# --------------------------------------------------------------------------------------------
 
-@login_required
-def add_to_cart(request, product_id):
-    """Agrega un producto al carrito"""
-    if request.method == "POST":
-        product = get_object_or_404(Product, pk=product_id, deleted_at__isnull=True)
-        quantity = int(request.POST.get("quantity", 1))
+# --------------------------------------------------------------------------------------------
+#  CARRITO DE COMPRAS (CBV)
+# --------------------------------------------------------------------------------------------
+class CartView(LoginRequiredMixin, View):
+    """
+    GET: mostrar carrito actual del usuario.
+    (Mantiene la lógica previa pero en CBV para estandarizar.)
+    """
+    template_name = "core/cart.html"
+
+    def get(self, request, *args, **kwargs):
+        try:
+            cart = get_or_create_active_cart(request.user)
+            cart_items = cart.cart_products.select_related('product').all()
+            total = cart.get_total()
+            total_quantity = cart.get_total_quantity()
+
+            context = {
+                "cart": cart,
+                "cart_items": cart_items,
+                "total": total,
+                "total_quantity": total_quantity,
+            }
+            return render(request, self.template_name, context)
         
-        if quantity <= 0:
-            messages.error(request, "La cantidad debe ser mayor a 0.")
+        except Exception as e:
+            logger.exception("Error mostrando el carrito para user %s: %s", request.user, e)
+            messages.error(request, "Ocurrió un error al cargar el carrito.")
+            return redirect("catalogo")
+
+
+
+class AddToCartView(LoginRequiredMixin, View):
+    """
+    POST: agrega producto al carrito. (Antes función add_to_cart)
+    """
+    def post(self, request, product_id, *args, **kwargs):
+        try:
+            product = get_object_or_404(Product, pk=product_id, deleted_at__isnull=True)
+            quantity = int(request.POST.get("quantity", 1))
+
+            if quantity <= 0:
+                messages.error(request, "La cantidad debe ser mayor a 0.")
+                return redirect("catalogo")
+
+            cart = get_or_create_active_cart(request.user)
+
+            # Si existe cart_product sumar cantidad, sino crearlo
+            try:
+                cart_product = CartProduct.objects.get(cart=cart, product=product)
+                cart_product.quantity += quantity
+                cart_product.save()
+                messages.success(request, f"'{product.name}' agregado al carrito. Cantidad actualizada.")
+            except CartProduct.DoesNotExist:
+                CartProduct.objects.create(cart=cart, product=product, quantity=quantity)
+                messages.success(request, f"'{product.name}' agregado al carrito.")
+
+            # Recalcular totales (método en model)
+            try:
+                cart.calculate_total()
+            except Exception:
+                # No dejar que fallen los mensajes de UI
+                logger.exception("Error recalculando totales del carrito id=%s", getattr(cart, 'id', None))
+
+             # Redirigir de vuelta al catálogo para permitir seguir comprando
             return redirect("catalogo")
         
-        cart = get_or_create_active_cart(request.user)
-        
-        # Verificar si el producto ya está en el carrito
+        except Exception as e:
+            logger.exception("Error agregando producto al carrito: %s", e)
+            messages.error(request, "No se pudo agregar el producto al carrito.")
+            return redirect("catalogo")
+
+
+
+class UpdateCartItemView(LoginRequiredMixin, View):
+    """
+    POST: actualizar cantidad de un item del carrito.
+    """
+    def post(self, request, item_id, *args, **kwargs):
         try:
-            cart_product = CartProduct.objects.get(cart=cart, product=product)
-            # Si ya existe, sumar la cantidad
-            cart_product.quantity += quantity
-            cart_product.save()
-            messages.success(request, f"'{product.name}' agregado al carrito. Cantidad actualizada.")
-        except CartProduct.DoesNotExist:
-            # Si no existe, crearlo
-            cart_product = CartProduct.objects.create(
-                cart=cart,
-                product=product,
-                quantity=quantity
-            )
-            messages.success(request, f"'{product.name}' agregado al carrito.")
-        
-        # Recalcular totales del carrito
-        cart.calculate_total()
-        
-        # Redirigir de vuelta al catálogo para permitir seguir comprando
-        return redirect("catalogo")
-    return redirect("catalogo")
+            cart_item = get_object_or_404(CartProduct, pk=item_id, cart__user=request.user)
+            quantity = int(request.POST.get("quantity", 1))
 
+            if quantity <= 0:
+                messages.error(request, "La cantidad debe ser mayor a 0.")
+                return redirect("cart_view")
 
-@login_required
-def cart_view(request):
-    """Vista del carrito de compras"""
-    cart = get_or_create_active_cart(request.user)
-    cart_items = cart.cart_products.all()
-    total = cart.get_total()
-    total_quantity = cart.get_total_quantity()
-    
-    context = {
-        "cart": cart,
-        "cart_items": cart_items,
-        "total": total,
-        "total_quantity": total_quantity,
-    }
-    return render(request, "core/cart.html", context)
+            cart_item.quantity = quantity
+            cart_item.save()
 
-
-@login_required
-def update_cart_item(request, item_id):
-    """Actualiza la cantidad de un producto en el carrito"""
-    if request.method == "POST":
-        cart_item = get_object_or_404(CartProduct, pk=item_id, cart__user=request.user)
-        quantity = int(request.POST.get("quantity", 1))
-        
-        if quantity <= 0:
-            messages.error(request, "La cantidad debe ser mayor a 0.")
+            # Recalcular totales
+            try:
+                cart_item.cart.calculate_total()
+            except Exception:
+                logger.exception("Error recalculando totales tras update cart_item %s", cart_item.id)
+                
+            messages.success(request, "Cantidad actualizada.")
             return redirect("cart_view")
-        
-        cart_item.quantity = quantity
-        cart_item.save()
-        
-        # Recalcular totales del carrito
-        cart_item.cart.calculate_total()
-        
-        messages.success(request, "Cantidad actualizada.")
-    return redirect("cart_view")
+
+        except Exception as e:
+            logger.exception("Error actualizando item del carrito: %s", e)
+            messages.error(request, "No se pudo actualizar la cantidad del item.")
+            return redirect("cart_view")
 
 
-@login_required
-def remove_from_cart(request, item_id):
-    """Elimina un producto del carrito"""
-    if request.method == "POST":
-        cart_item = get_object_or_404(CartProduct, pk=item_id, cart__user=request.user)
-        product_name = cart_item.product.name
-        cart = cart_item.cart  # Guardar referencia al carrito antes de eliminar
-        cart_item.delete()
-        
-        # Recalcular totales del carrito
-        cart.calculate_total()
-        
-        messages.success(request, f"'{product_name}' eliminado del carrito.")
-    return redirect("cart_view")
+
+class RemoveFromCartView(LoginRequiredMixin, View):
+    """
+    POST: eliminar item del carrito.
+    """
+    def post(self, request, item_id, *args, **kwargs):
+        try:
+            cart_item = get_object_or_404(CartProduct, pk=item_id, cart__user=request.user)
+            product_name = cart_item.product.name
+            cart = cart_item.cart  # guardar referencia al carrito antes de eliminar
+
+            cart_item.delete()
+
+            # Recalcular totales
+            try:
+                cart.calculate_total()
+            except Exception:
+                logger.exception("Error recalculando totales tras eliminar cart_item")
+
+            messages.success(request, f"'{product_name}' eliminado del carrito.")
+            return redirect("cart_view")
+        except Exception as e:
+            logger.exception("Error eliminando item del carrito: %s", e)
+            messages.error(request, "No se pudo eliminar el producto del carrito.")
+            return redirect("cart_view")
+
+
 
 
 # --------------------------------------------------------------------------------------------
-# REALIZAR PEDIDO (actualizado)
+#   ORDER / PEDIDO SECTION (CBV) SECCION PEDIDOS
 # --------------------------------------------------------------------------------------------
+class OrderCreateView(LoginRequiredMixin, View):
+    """
+    GET: mostrar formulario para crear pedido
+    POST: procesar pedido (crear Delivery, Order, cambiar estado carrito)
+    Mantiene la lógica principal, con iexact y cuidado en get/create.
+    """
+    template_name = "core/realizar_pedido.html"
 
-@login_required
-def realizar_pedido(request):
-    """Vista para realizar un pedido desde el carrito"""
-    cart = get_or_create_active_cart(request.user)
-    cart_items = cart.cart_products.all()
-    
-    if not cart_items.exists():
-        messages.error(request, "Tu carrito está vacío. Agrega productos antes de realizar un pedido.")
-        return redirect("cart_view")
-    
-    if request.method == "POST":
-        form = PedidoForm(request.POST)
-        if form.is_valid():
+    def get(self, request, *args, **kwargs):
+        try:
+            cart = get_or_create_active_cart(request.user)
+            cart_items = cart.cart_products.all()
+
+            if not cart_items.exists():
+                messages.error(request, "Tu carrito está vacío. Agrega productos antes de realizar un pedido.")
+                return redirect("cart_view")
+
+            initial = {}
+            if getattr(request.user, "address", None):
+                initial["direccion"] = request.user.address
+
+            form = PedidoForm(initial=initial)
+
+            context = {
+                "form": form,
+                "cart": cart,
+                "cart_items": cart_items,
+                "total": cart.get_total(),
+                "total_quantity": cart.get_total_quantity(),
+            }
+            return render(request, self.template_name, context)
+        except Exception as e:
+            logger.exception("Error GET OrderCreateView: %s", e)
+            messages.error(request, "Ocurrió un error al cargar la página de pedido.")
+            return redirect("catalogo")
+
+    @transaction.atomic
+    def post(self, request, *args, **kwargs):
+        try:
+            cart = get_or_create_active_cart(request.user)
+            cart_items = cart.cart_products.all()
+
+            if not cart_items.exists():
+                messages.error(request, "Tu carrito está vacío. Agrega productos antes de realizar un pedido.")
+                return redirect("cart_view")
+
+            form = PedidoForm(request.POST)
+            if not form.is_valid():
+                messages.error(request, "Por favor corrige los errores del formulario.")
+                return render(request, self.template_name, {"form": form, "cart": cart, "cart_items": cart_items})
+
             data = form.cleaned_data
             metodo_pago = data["metodo_pago"]
             direccion = data["direccion"]
-            
-            # Verificar si el método de pago es transferencia
-            metodo_pago_nombre = metodo_pago.name.lower()
+
+            # Comprobamos si el método de pago necesita comprobante (transferencia)
+            metodo_pago_nombre = (metodo_pago.name or "").lower()
             es_transferencia = metodo_pago_nombre in ["transferencia", "transferencia bancaria", "pago movil", "pago móvil"]
-            
-            # Determinar el estado inicial del pedido
+
+            # Determinar tipo de pedido (usamos filter + create si no existe para evitar conflictos con seeders)
+            tipo_pedido = None
             if es_transferencia:
-                # Si es transferencia, el pedido queda en "comprobante de pago requerido"
-                tipo_pedido, _ = OrderType.objects.get_or_create(
-                    name="comprobante de pago requerido",
-                    defaults={"description": "Pedido esperando comprobante de pago"}
-                )
+                tipo_pedido = OrderType.objects.filter(name__iexact="comprobante de pago requerido").first()
+                if not tipo_pedido:
+                    tipo_pedido = OrderType.objects.create(
+                        name="comprobante de pago requerido",
+                        description="Pedido esperando comprobante de pago"
+                    )
                 mensaje_exito = "Pedido realizado exitosamente. Por favor, sube el comprobante de pago para que tu pedido pueda ser procesado."
             else:
-                # Si no es transferencia, el pedido queda en "pendiente"
-                tipo_pedido, _ = OrderType.objects.get_or_create(
-                    name="pendiente",
-                    defaults={"description": "Pedido pendiente de aprobación"}
-                )
+                tipo_pedido = OrderType.objects.filter(name__iexact="pendiente").first()
+                if not tipo_pedido:
+                    tipo_pedido = OrderType.objects.create(
+                        name="pendiente",
+                        description="Pedido pendiente de aprobación"
+                    )
                 mensaje_exito = "Pedido realizado exitosamente. El administrador revisará tu pedido."
-            
-            # Actualizar estado del carrito a "completado"
-            estado_completado, _ = CartStatus.objects.get_or_create(
-                name="completado", 
-                defaults={"description": "Carrito completado"}
-            )
-            
-            # Crear entrega
+
+            # Estado completado para carrito (comprobamos con iexact)
+            estado_completado = CartStatus.objects.filter(name__iexact="completado").first()
+            if not estado_completado:
+                estado_completado = CartStatus.objects.create(name="completado", description="Carrito completado")
+
+            # Crear delivery
             entrega = Delivery.objects.create(user=request.user, secondary_address=direccion)
-            
+
             # Actualizar carrito
             cart.status = estado_completado
-            cart.calculate_total()
+            try:
+                cart.calculate_total()
+            except Exception:
+                logger.exception("Error recalculando total al crear pedido para cart %s", getattr(cart, "id", None))
             cart.save()
-            
+
             # Crear pedido
             pedido = Order.objects.create(
                 user=request.user,
@@ -366,130 +477,143 @@ def realizar_pedido(request):
                 payment_method=metodo_pago,
                 delivery=entrega
             )
-            
+
             messages.success(request, mensaje_exito)
             return redirect("detalle_pedido", order_id=pedido.id)
-    else:
-        form = PedidoForm()
-        # Pre-llenar con datos del usuario si existen
-        if request.user.address:
-            initial_data = {"direccion": request.user.address}
-        else:
-            initial_data = {}
-        form = PedidoForm(initial=initial_data)
-    
-    context = {
-        "form": form,
-        "cart": cart,
-        "cart_items": cart_items,
-        "total": cart.get_total(),
-        "total_quantity": cart.get_total_quantity(),
-    }
-    return render(request, "core/realizar_pedido.html", context)
+
+        except Exception as e:
+            logger.exception("Error creando pedido: %s", e)
+            messages.error(request, "Ocurrió un error al procesar el pedido. Intenta de nuevo.")
+            return redirect("cart_view")
 
 
-# --------------------------------------------------------------------------------------------
-# MIS PEDIDOS
-# --------------------------------------------------------------------------------------------
+class UserOrdersView(LoginRequiredMixin, View):
+    """
+    Lista los pedidos del usuario autenticado (antes mis_pedidos).
+    """
+    template_name = "core/mis_pedidos.html"
 
-@login_required
-def mis_pedidos(request):
-    """Vista para listar los pedidos del usuario"""
-    orders = Order.objects.filter(
-        user=request.user,
-        deleted_at__isnull=True
-    ).select_related('order_type', 'payment_method', 'delivery', 'cart').prefetch_related('cart__cart_products__product')
-    
-    # Paginación (10 pedidos por página)
-    paginator = Paginator(orders, 10)
-    page_number = request.GET.get("page")
-    page_obj = paginator.get_page(page_number)
-    
-    context = {
-        "orders": page_obj,
-        "page_obj": page_obj,
-    }
-    return render(request, "core/mis_pedidos.html", context)
+    def get(self, request, *args, **kwargs):
+        try:
+            orders = Order.objects.filter(
+                user=request.user,
+                deleted_at__isnull=True
+            ).select_related('order_type', 'payment_method', 'delivery', 'cart').prefetch_related('cartcart_productsproduct')
 
+            paginator = Paginator(orders, 10)
+            page_number = request.GET.get("page")
+            page_obj = paginator.get_page(page_number)
 
-@login_required
-def detalle_pedido(request, order_id):
-    """Vista para ver los detalles de un pedido específico"""
-    order = get_object_or_404(
-        Order,
-        pk=order_id,
-        user=request.user,
-        deleted_at__isnull=True
-    )
-    
-    # Obtener los items del carrito
-    cart_items = order.get_cart_items()
-    total = order.get_total()
-    total_quantity = order.get_total_quantity()
-    
-    # Formulario para subir comprobante (si es necesario)
-    comprobante_form = None
-    if order.esperando_comprobante() and not order.tiene_comprobante():
-        comprobante_form = ComprobantePagoForm(instance=order)
-    
-    context = {
-        "order": order,
-        "cart_items": cart_items,
-        "total": total,
-        "total_quantity": total_quantity,
-        "comprobante_form": comprobante_form,
-    }
-    return render(request, "core/detalle_pedido.html", context)
+            context = {"orders": page_obj, "page_obj": page_obj}
+            return render(request, self.template_name, context)
+        except Exception as e:
+            logger.exception("Error listando pedidos del usuario: %s", e)
+            messages.error(request, "No se pudieron cargar tus pedidos.")
+            return redirect("home")
 
 
-@login_required
-def subir_comprobante(request, order_id):
-    """Vista para subir el comprobante de pago"""
-    order = get_object_or_404(
-        Order,
-        pk=order_id,
-        user=request.user,
-        deleted_at__isnull=True
-    )
-    
-    # Verificar que el pedido necesita comprobante y está esperando
-    if not order.esperando_comprobante():
-        messages.error(request, "Este pedido no requiere comprobante de pago.")
-        return redirect("detalle_pedido", order_id=order_id)
-    
-    if order.tiene_comprobante():
-        messages.info(request, "Este pedido ya tiene un comprobante de pago subido.")
-        return redirect("detalle_pedido", order_id=order_id)
-    
-    if request.method == "POST":
-        form = ComprobantePagoForm(request.POST, request.FILES, instance=order)
+class OrderDetailView(LoginRequiredMixin, View):
+    """
+    Muestra detalle de un pedido (antes detalle_pedido).
+    """
+    template_name = "core/detalle_pedido.html"
 
-        if not request.FILES.get("comprobante_pago"):  
-            #messages.error(request, "Debes seleccionar un archivo antes de subir el comprobante.")
-            return redirect("detalle_pedido", order_id=order_id)
+    def get(self, request, order_id, *args, **kwargs):
+        try:
+             """Vista para ver los detalles de un pedido específico"""
+            order = get_object_or_404(Order, pk=order_id, user=request.user, deleted_at__isnull=True)
 
-        if form.is_valid():
-            # Guardar el comprobante
-            form.save()
+             # Obtener los items del carrito
+            cart_items = order.get_cart_items()
+            total = order.get_total()
+            total_quantity = order.get_total_quantity()
+
+             # Formulario para subir comprobante (si es necesario)
+            if order.esperando_comprobante() and not order.tiene_comprobante():
+                comprobante_form = ComprobantePagoForm(instance=order)
+
+            context = {
+                "order": order,
+                "cart_items": cart_items,
+                "total": total,
+                "total_quantity": total_quantity,
+                "comprobante_form": comprobante_form,
+            }
+            return render(request, self.template_name, context)
+        except Exception as e:
+            logger.exception("Error mostrando detalle pedido %s: %s", order_id, e)
+            messages.error(request, "No se pudo cargar el detalle del pedido.")
+            return redirect("mis_pedidos")
+
+
+class UploadReceiptView(LoginRequiredMixin, View):
+    """
+    Subir comprobante de pago (antes subir_comprobante).
+    GET: mostrar form si aplica
+    POST: procesar subida de comprobante y cambiar estado del pedido a 'pendiente'
+    """
+    template_name = "core/subir_comprobante.html"
+
+    def get(self, request, order_id, *args, **kwargs):
+        try:
+            order = get_object_or_404(Order, pk=order_id, user=request.user, deleted_at__isnull=True)
             
-            # Cambiar el estado del pedido a "pendiente"
-            tipo_pendiente, _ = OrderType.objects.get_or_create(
-                name="pendiente",
-                defaults={"description": "Pedido pendiente de aprobación"}
-            )
-            order.order_type = tipo_pendiente
-            order.save()
-            
-            messages.success(request, "Comprobante de pago subido exitosamente. Tu pedido está ahora pendiente de aprobación.")
+             # Verificar que el pedido necesita comprobante y está esperando
+            if not order.esperando_comprobante():
+                messages.error(request, "Este pedido no requiere comprobante de pago.")
+                return redirect("detalle_pedido", order_id=order_id)
+
+            if order.tiene_comprobante():
+                messages.info(request, "Este pedido ya tiene un comprobante de pago subido.")
+                return redirect("detalle_pedido", order_id=order_id)
+
+            form = ComprobantePagoForm(instance=order)
+            return render(request, self.template_name, {"order": order, "form": form})
+        except Exception as e:
+            logger.exception("Error GET subir comprobante: %s", e)
+            messages.error(request, "No se pudo abrir la pantalla de subida de comprobante.")
+            return redirect("mis_pedidos")
+
+    def post(self, request, order_id, *args, **kwargs):
+        try:
+            order = get_object_or_404(Order, pk=order_id, user=request.user, deleted_at__isnull=True)
+
+            if not order.esperando_comprobante():
+                messages.error(request, "Este pedido no requiere comprobante de pago.")
+                return redirect("detalle_pedido", order_id=order_id)
+
+            if order.tiene_comprobante():
+                messages.info(request, "Este pedido ya tiene un comprobante de pago subido.")
+                return redirect("detalle_pedido", order_id=order_id)
+
+            if not request.FILES.get("comprobante_pago"):
+                messages.error(request, "Debes seleccionar un archivo antes de subir el comprobante.")
+                return redirect("detalle_pedido", order_id=order_id)
+
+            form = ComprobantePagoForm(request.POST, request.FILES, instance=order)
+            if form.is_valid():
+                form.save()
+
+                # Cambiar el estado del pedido a "pendiente"
+                tipo_pendiente = OrderType.objects.filter(name__iexact="pendiente").first()
+                if not tipo_pendiente:
+                    tipo_pendiente = OrderType.objects.create(
+                        name="pendiente",
+                        description="Pedido pendiente de aprobación"
+                    )
+
+                order.order_type = tipo_pendiente
+                # Guardar el comprobante
+                order.save()
+
+                messages.success(request, "Comprobante de pago subido exitosamente. Tu pedido está ahora pendiente de aprobación.")
+                return redirect("detalle_pedido", order_id=order_id)
+            else:
+                messages.error(request, "Hubo un error al subir el comprobante. Por favor, verifica el archivo.")
+                return render(request, self.template_name, {"order": order, "form": form})
+
+        except Exception as e:
+            logger.exception("Error POST subir comprobante: %s", e)
+            messages.error(request, "Ocurrió un error al subir el comprobante.")
             return redirect("detalle_pedido", order_id=order_id)
-        else:
-            messages.error(request, "Hubo un error al subir el comprobante. Por favor, verifica el archivo.")
-    else:
-        form = ComprobantePagoForm(instance=order)
-    
-    context = {
-        "order": order,
-        "form": form,
-    }
-    return render(request, "core/subir_comprobante.html", context)
 

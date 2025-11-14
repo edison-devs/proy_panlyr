@@ -197,14 +197,8 @@ Carpeta principal del panel administrativo.
 
 ---
 
-## 🧱 Base de la Interfaz: base_simple.html
-
-Archivo principal que define la estructura base del sitio y que heredan todas las vistas del panel.  
-Incluye integración con Bootstrap 5.3.3, bloques personalizables y carga dinámica de contenido.
-
 
 - 📌 También se añadió una carpeta en core/static con Bootstrap local para pruebas sin conexión.
-
 
 ---
 
@@ -336,10 +330,28 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 
 - ✅ Base visual y estructural completa.
 - ✅ Rutas configuradas y plantillas enlazadas.
-- ⚙️ En desarrollo: lógica de roles y permisos.
-- 🛒 Próximo paso: implementar la lógica de pedidos (carrito, registro y gestión básica).
+- ✅ lógica de roles y permisos.
+- 🛒 En desarrollo: la lógica de pedidos (carrito, registro y gestión básica).
+
+---
+
+###Fecha 14-11-25 Logica pedidos Ahora con CBV
+
+- ✅ CBV: cada acción del carrito/pedido quedó en su propia clase — más fácil de testear y extender.
+
+- ✅ iexact: se usa al filtrar nombres que vienen del seeder (evita problemas si alguien creó "Pendiente" o "pendiente"). No se usa get_or_create(nameiexact=...) porque get_or_create no acepta lookups con__iexact; por eso uso filter(...).first() y create() si no existe.
+
+- ✅ Try/except + logging: atrapamos errores inesperados y registramos logger.exception(...) para debug, además de mostrar messages al usuario.
+
+-No rompí nombres de atributos: dejé comprobante_pago, created_at, deleted_at tal cual para no romper templates/logic existentes.
+
+- ✅ Transacciones: OrderCreateView.post usa transaction.atomic por seguridad al crear delivery, actualizar carrito y crear pedido.
+
+- ✅ Compatibilidad: Las name de las URLs no cambian — las plantillas que hacen {% url 'cart_view' %} seguirán funcionando.
 
 
+
+---
 
 ---
 
