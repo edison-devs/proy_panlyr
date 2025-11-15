@@ -362,6 +362,155 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 
 ---
 
+### 🛠️ Avance Actual
+
+📦 Lógica de Pedidos y Carrito – Documentación Técnica
+
+Esta sección explica la implementación usada en el sistema para gestionar:
+
+-Carrito del usuario
+
+-Creación de pedidos
+
+-Gestión del comprobante de pago
+
+-Visualización de pedidos del cliente
+
+-Estructura y funcionamiento del flujo completo
+
+
+Fue desarrollada inicialmente por un colaborador y posteriormente optimizada para mejorar consistencia, limpieza y buenas prácticas sin romper la lógica existente.
+
+
+---
+
+🛒 1. Carrito de Compras (Cart & CartProduct)
+
+✔️ Estructura utilizada
+
+-Cart: representa un carrito perteneciente a un usuario.
+
+-CartProduct: relación entre carrito y productos.
+
+-CartStatus: permite controlar estados como Pendiente, Activo, Cancelado.
+
+
+Los métodos clave incluyen:
+
+-cart.calculate_total(): recalcula totales.
+
+-cart.get_total() y cart.get_total_quantity(): totales sin modificar la BD.
+
+-cart.cart_products: items actuales dentro del carrito.
+
+
+✔️ Acciones implementadas
+
+-Agregar productos al carrito
+
+-Actualizar cantidades
+
+-Eliminar productos
+
+-Validación para evitar duplicados usando unique_together
+
+
+La lógica fue conservada pero organizada, eliminando redundancias y agregando validaciones seguras.
+
+
+---
+
+📦 2. Creación de un Pedido (Order)
+
+Cuando el usuario confirma un pedido:
+
+-Se verifica el carrito activo del usuario.
+
+-Se asigna un OrderType dependiendo del tipo de pedido.
+
+-Se asigna el método de pago.
+
+-Se crea un registro en Delivery para almacenar dirección secundaria.
+
+-Se genera un registro Order enlazado al carrito final.
+
+
+Se conservaron los métodos ya existentes del modelo, agregando mejoras de validación:
+
+is_pendiente()
+
+is_aprobado()
+
+necesita_comprobante()
+
+tiene_comprobante()
+
+esperando_comprobante()
+
+
+Estos métodos se estandarizaron para compatibilidad con la plantilla.
+
+
+---
+
+📄 3. Subida de Comprobante de Pago
+
+Si el cliente selecciona un método de pago que requiere comprobante (ej. transferencia), entonces:
+
+-El pedido queda en estado “Comprobante requerido”
+
+-El cliente debe subir una imagen o PDF
+
+Una vez subido, el pedido queda “Pendiente de revisión”
+
+
+Esta parte fue mejorada para evitar fallos por variables no definidas e inconsistencias.
+
+
+---
+
+👀 4. Vista “Mis Pedidos”
+
+Se creó la clase:
+
+UserOrdersView
+
+Con estas mejoras:
+
+✔️ Optimización de consultas
+
+Reemplazo de funciones duplicadas por select_related + prefetch_related
+
+Uso correcto de la relación: cart__cart_products__product
+
+
+✔️ Paginar pedidos
+
+Se añadió paginación con 10 pedidos por página.
+
+
+✔️ Compatibilidad con la plantilla
+
+La información expuesta por la vista coincide con lo esperado por mis_pedidos.html:
+
+-Total
+
+-Fecha
+
+-Número de items
+
+-Método de pago
+
+-Estado del pedido
+
+-Tipo de pedido
+
+
+Todo sin romper la estructura creada por el Colaborador2 quien hizo la mayoria de la lógica. Solo la reorganice.
+
+
+---
+
 
 
 ### 🛠️ Avance Anterior
@@ -377,15 +526,6 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 📌 ¿Qué es un include? Es una forma de insertar un bloque HTML en múltiples templates sin duplicar código.
 
 - ✅ Se creó la carpeta admin/ dentro de core/templates y core/static para personalizar el panel de Django.
-
-
-
----
-
----
-
-
-### 🛠️ Avance anterior
 
 - ✅ Se creó el template de inicio (home.html) dentro de la app core, con diseño inicial.
 
@@ -415,36 +555,17 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 
 [x] Personalización visual del Django Admin
 
-[x] Borrado suave en modelo User
+[x] Borrado suave en modelo User solo en admin(Django)
 
-[x] Íconos personalizados en el admin
+[x] Íconos personalizados en el admin 
 
 [x] Base de datos migrada a MySQL
 
+[x] Lógica de borrado suave para productos solo en admin(Django)
 
-🧁 Cosas por hacer
+[x] Lógica de pedidos (crear, listar, cancelar)
 
-[ ] Desarrollar lógica de borrado suave para productos
-
-[ ] Implementar lógica de pedidos (crear, listar, cancelar)
-
-[ ] Desarrollar lógica del carrito (agregar, eliminar, confirmar)
-
-[ ] Estilizar el Django Admin con la paleta de colores de PanLyR
-
-[ ] Crear lógica para desactivar permisos según el rol (checkbox dinámico en el admin)
-
-
-📌 Prioridades sugeridas
-
-🛒 Lógica del carrito (flujo de compra)
-
-📦 Lógica de pedidos (gestión y visualización)
-
-🧹 Borrado suave para productos
-
-🎨 Estilizar el Django Admin con colores PanLyR
-
+[x] Lógica del carrito (agregar, eliminar, confirmar)
 
 
 ---
