@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse #obtener URLs desde su nombre codigo
 from django.db import transaction
 from django.db.models import Q
-from django.contrib.auth.mixins import LoginRequiredMixin #Para autenticacion de usuario
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin #Para autenticacion de usuario
 from django.contrib.auth import authenticate,login, get_user_model,logout
 from django.contrib.auth.decorators import login_required
 from django.views import View
@@ -559,8 +559,9 @@ class OrderDetailView(LoginRequiredMixin, View):
                 "cart_items": cart_items,
                 "total": total,
                 "total_quantity": total_quantity,
-                "comprobante_form": comprobante_form,
+                "comprobante_form": locals().get("comprobante_form"),
             }
+
             return render(request, self.template_name, context)
         except Exception as e:
             logger.exception("Error mostrando detalle pedido %s: %s", order_id, e)
@@ -639,3 +640,152 @@ class UploadReceiptView(LoginRequiredMixin, View):
             messages.error(request, "Ocurrió un error al subir el comprobante.")
             return redirect("detalle_pedido", order_id=order_id)
 
+
+
+# --------------------------------------------------------------------------------------------
+#   SECCION VER PEDIDOS EN EL PANEL (DASHBOARD)
+# --------------------------------------------------------------------------------------------
+class DashboardOrdersListView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    Lista todos los pedidos para el panel de administración.
+    Solo admin (o roles permitidos) pueden acceder.
+    """
+    template_name = "core/sidebar/orders/index.html"
+
+    def test_func(self):
+        """
+        Autorización:
+        - Solo admin tiene control total.
+        - Puedes incluir empleados si deseas.
+        """
+        return (
+            self.request.user.is_superuser or 
+            self.request.user.groups.filter(name__in=["admin", "employed"]).exists()
+        )
+
+    def handle_no_permission(self):
+        messages.error(self.request, "No tienes permisos para acceder a esta sección.")
+        return redirect("home")
+
+    def get(self, request):
+        try:
+            # Optimiza las relaciones FK e inversas
+            orders = (
+                Order.objects.filter(deleted_at__isnull=True)
+                .select_related("user", "order_type", "delivery", "payment_method", "cart")
+                .prefetch_related("cart__cart_products__product")
+                .order_by("-created_at")
+            )
+
+            paginator = Paginator(orders, 10)
+            page_number = request.GET.get("page")
+            page_obj = paginator.get_page(page_number)
+
+            context = {
+                "orders": page_obj,
+                "page_obj": page_obj,
+            }
+            return render(request, self.template_name, context)
+
+        except Exception as e:
+            messages.error(request, "No se pudieron cargar los pedidos.")
+            return redirect("home")
+
+
+
+
+class DashboardOrderDetailView(LoginRequiredMixin, UserPassesTestMixin, View):
+    """
+    Vista detallada de un pedido.
+    Muestra todos los datos y permite que el admin cambie estados.
+    """
+    template_name = "core/sidebar/orders/detail.html"
+
+    def test_func(self):
+        # Solo admin o empleados pueden acceder
+        return (
+            self.request.user.is_superuser or
+            self.request.user.groups.filter(name__in=["admin", "employed"]).exists()
+        )
+
+    def handle_no_permission(self):
+        messages.error(self.request, "No tienes permiso para ver este pedido.")
+        return redirect("dashboard-orders")
+
+    def get(self, request, pk, *args, **kwargs):
+        """
+        Renderiza el detalle del pedido con toda la información necesaria.
+        """
+        order = get_object_or_404(
+            Order.objects.select_related(
+                "user",
+                "cart",
+                "delivery",
+                "order_type",
+                "payment_method"
+            ).prefetch_related(
+                "cart__cart_products__product"
+            ),
+            pk=pk,
+            deleted_at__isnull=True
+        )
+
+        # Lista de estados disponibles para DeliveryStatus
+        delivery_statuses = DeliveryStatus.objects.all().order_by("name")
+
+        context = {
+            "order": order,
+            "delivery_statuses": delivery_statuses,
+        }
+        return render(request, self.template_name, context)
+
+
+
+    def post(self, request, pk, *args, **kwargs):
+        """
+        Procesa cambios: estado de entrega o aprobar/rechazar pedido.
+        """
+        order = get_object_or_404(Order, pk=pk, deleted_at__isnull=True)
+        action = request.POST.get("action")
+
+        try:
+            with transaction.atomic():
+
+                # Cambiar estado de entrega
+                if action == "change_delivery_status":
+                    status_id = request.POST.get("delivery_status_id")
+                    new_status = get_object_or_404(DeliveryStatus, id=status_id)
+
+                    order.delivery.status = new_status
+                    order.delivery.save()
+
+                    messages.success(request, "Estado de entrega actualizado.")
+                    return redirect("dashboard-order-detail", pk=order.id)
+
+                # Aprobar pedido (requiere comprobante)
+                if action == "approve_order":
+                    if not order.comprobante_pago:
+                        messages.error(request, "El pedido no tiene comprobante. No puede aprobarse.")
+                        return redirect("dashboard-order-detail", pk=order.id)
+
+                    approved_type = OrderType.objects.filter(name__iexact="Aprobado").first()
+                    if approved_type:
+                        order.order_type = approved_type
+                        order.save()
+
+                    messages.success(request, "Pedido aprobado correctamente.")
+                    return redirect("dashboard-order-detail", pk=order.id)
+
+                # Rechazar pedido
+                if action == "reject_order":
+                    rejected_type = OrderType.objects.filter(name__iexact="Rechazado").first()
+                    if rejected_type:
+                        order.order_type = rejected_type
+                        order.save()
+
+                    messages.warning(request, "Pedido rechazado.")
+                    return redirect("dashboard-order-detail", pk=order.id)
+
+        except Exception:
+            messages.error(request, "No se pudo completar la acción.")
+            return redirect("dashboard-order-detail", pk=order.id)

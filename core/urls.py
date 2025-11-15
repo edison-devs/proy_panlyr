@@ -36,4 +36,9 @@ urlpatterns = [
     
     #Panel de administación principal
     path('dashboard/', views.dashboard, name='dashboard'),
+
+    #VISTA DE PEDIDOS REALIZADOS desde el panel dashboard
+    path("pedidos/", DashboardOrdersListView.as_view(), name="dashboard-orders"),
+    path("pedidos/<int:pk>/", DashboardOrderDetailView.as_view(), name="dashboard-order-detail"),
+    
 ]

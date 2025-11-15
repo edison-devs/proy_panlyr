@@ -161,6 +161,14 @@ class Payment(TimestampedMixin, SoftDeleteMixin, models.Model):
 class Delivery(TimestampedMixin, SoftDeleteMixin, models.Model):
     user = models.ForeignKey(User, on_delete=models.PROTECT, verbose_name="Usuario")
     secondary_address = models.CharField(max_length=255, blank=True, verbose_name="Dirección secundaria")
+    status = models.ForeignKey(
+    DeliveryStatus,
+    on_delete=models.PROTECT,
+    related_name="deliveries",
+    null=True,
+    blank=True,
+    verbose_name="Estado de entrega"
+    )
 
     class Meta:
         db_table = "deliveries"

@@ -1,0 +1,112 @@
+{% extends 'core/layout.html' %}
+{% block title %}Pedido #{{ order.id }}{% endblock %}
+
+{% block dashboard_content %}
+<h2 class="mb-4">Detalle del Pedido #{{ order.id }}</h2>
+
+<div class="card mb-4">
+  <div class="card-header bg-dark text-white">
+    Información general
+  </div>
+  <div class="card-body">
+    <p><strong>Cliente:</strong> {{ order.user.username }}</p>
+    <p><strong>Fecha:</strong> {{ order.created_at|date:"d/m/Y h:i A" }}</p>
+    <p><strong>Total:</strong> ${{ order.get_total }}</p>
+    <p><strong>Método de pago:</strong> {{ order.payment_method.name }}</p>
+    <p><strong>Dirección:</strong> {{ order.delivery.secondary_address }}</p>
+
+
+    {% if order.comprobante_pago %}
+      <p>
+        <strong>Comprobante:</strong>
+        <a href="{{ order.comprobante_pago.url }}" target="_blank" class="btn btn-sm btn-info">
+        Ver comprobante
+        </a>
+      </p>
+
+    {% else %}
+      <p class="text-danger"><strong>Comprobante:</strong> No cargado</p>
+    {% endif %}
+
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header bg-warning">
+    Estado actual
+  </div>
+  <div class="card-body">
+    <p><strong>Estado de pedido:</strong> {{ order.order_type.name }}</p>
+    <p><strong>Estado de entrega:</strong> {{ order.delivery.status.name }}</p>
+
+    <hr>
+
+    <!-- Cambiar estado de entrega -->
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="change_delivery_status">
+
+      <label class="form-label">Cambiar estado de entrega:</label>
+      <select name="delivery_status_id" class="form-select">
+        {% for s in delivery_statuses %}
+          <option value="{{ s.id }}" {% if order.delivery.status.id == s.id %}selected{% endif %}>
+            {{ s.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <button class="btn btn-primary mt-3">Actualizar estado</button>
+    </form>
+  </div>
+</div>
+
+<div class="card mb-4">
+  <div class="card-header bg-info">
+    Productos del pedido
+  </div>
+  <div class="card-body">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in order.get_cart_items %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>${{ item.get_subtotal }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Acciones admin -->
+<div class="d-flex gap-3">
+
+     <!-- Aprobar -->
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="approve_order">
+      <button class="btn btn-success">Aprobar Pedido</button>
+    </form>
+
+    <!-- Rechazar -->
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="reject_order">
+      <button class="btn btn-danger">Rechazar</button>
+    </form>
+
+   
+
+    <a href="{% url 'dashboard-orders' %}" class="btn btn-secondary">Volver</a>
+
+</div>
+
+{% endblock %}
