@@ -488,7 +488,6 @@ class OrderCreateView(LoginRequiredMixin, View):
             return redirect("cart_view")
 
 
-############################
 class UserOrdersView(LoginRequiredMixin, View):
     """
     Lista los pedidos del usuario autenticado (mis pedidos).
@@ -533,7 +532,6 @@ class UserOrdersView(LoginRequiredMixin, View):
             logger.exception("Error listando pedidos del usuario: %s", e)
             messages.error(request, "No se pudieron cargar tus pedidos.")
             return redirect("home")
-###############################
 
 
 class OrderDetailView(LoginRequiredMixin, View):
