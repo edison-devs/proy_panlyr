@@ -762,13 +762,13 @@ class DashboardOrderDetailView(LoginRequiredMixin, UserPassesTestMixin, View):
                     messages.success(request, "Estado de entrega actualizado.")
                     return redirect("dashboard-order-detail", pk=order.id)
 
-                # Aprobar pedido (requiere comprobante)
+                # Aprobar pedido (requiere comprobante) 
                 if action == "approve_order":
                     if not order.comprobante_pago:
                         messages.error(request, "El pedido no tiene comprobante. No puede aprobarse.")
                         return redirect("dashboard-order-detail", pk=order.id)
 
-                    approved_type = OrderType.objects.filter(name__iexact="Aprobado").first()
+                    approved_type = OrderType.objects.filter(name__iexact="entregado").first()
                     if approved_type:
                         order.order_type = approved_type
                         order.save()
@@ -778,7 +778,7 @@ class DashboardOrderDetailView(LoginRequiredMixin, UserPassesTestMixin, View):
 
                 # Rechazar pedido
                 if action == "reject_order":
-                    rejected_type = OrderType.objects.filter(name__iexact="Rechazado").first()
+                    rejected_type = OrderType.objects.filter(name__iexact="pendiente").first()
                     if rejected_type:
                         order.order_type = rejected_type
                         order.save()

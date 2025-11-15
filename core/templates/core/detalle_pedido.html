@@ -186,7 +186,7 @@
         <div class="card-body">
           <div class="info-section">
             <p class="mb-2"><strong>Fecha de pedido:</strong></p>
-            <p class="mb-3">{{ order.created_at|date:"d/m/Y H:i" }}</p>
+            <p class="mb-3">{{ order.created_at|date:"d/m/Y h:i A" }}</p>
             
             <p class="mb-2"><strong>Método de pago:</strong></p>
             <p class="mb-3">{{ order.payment_method.name }}</p>
@@ -197,7 +197,7 @@
 
           <div class="info-section">
             <p class="mb-2"><strong>Total de productos:</strong></p>
-            <p class="mb-3">{{ total_quantity }} item(s)</p>
+            <p class="mb-3">{{ total_quantity }} unidades</p>
             
             <p class="mb-2"><strong>Total a pagar:</strong></p>
             <h4 class="text-success mb-0">${{ total }}</h4>

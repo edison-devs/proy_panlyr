@@ -108,7 +108,7 @@
           <div class="row mb-3">
             <div class="col-6">
               <small class="text-muted">Fecha:</small>
-              <p class="mb-0"><strong>{{ order.created_at|date:"d/m/Y H:i" }}</strong></p>
+              <p class="mb-0"><strong>{{ order.created_at|date:"d/m/Y h:i A" }}</strong></p>
             </div>
             <div class="col-6">
               <small class="text-muted">Total:</small>
@@ -119,7 +119,7 @@
           <div class="row mb-3">
             <div class="col-6">
               <small class="text-muted">Productos:</small>
-              <p class="mb-0"><strong>{{ order.get_total_quantity }} item(s)</strong></p>
+              <p class="mb-0"><strong>{{ order.get_total_quantity }} unidades</strong></p>
             </div>
             <div class="col-6">
               <small class="text-muted">Método de pago:</small>
