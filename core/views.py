@@ -488,29 +488,52 @@ class OrderCreateView(LoginRequiredMixin, View):
             return redirect("cart_view")
 
 
+############################
 class UserOrdersView(LoginRequiredMixin, View):
     """
-    Lista los pedidos del usuario autenticado (antes mis_pedidos).
+    Lista los pedidos del usuario autenticado (mis pedidos).
     """
     template_name = "core/mis_pedidos.html"
 
     def get(self, request, *args, **kwargs):
         try:
-            orders = Order.objects.filter(
-                user=request.user,
-                deleted_at__isnull=True
-            ).select_related('order_type', 'payment_method', 'delivery', 'cart').prefetch_related('cartcart_productsproduct')
+            # Se obtienen los pedidos del usuario
+            # select_related → optimiza relaciones FK de 1 a 1
+            # prefetch_related → optimiza relaciones inversas o de muchos a muchos
+            orders = (
+                Order.objects.filter(
+                    user=request.user,
+                    deleted_at__isnull=True
+                )
+                .select_related(
+                    "order_type",
+                    "payment_method",
+                    "delivery",
+                    "cart"
+                )
+                .prefetch_related(
+                    "cart__cart_products__product"  # correcta relación inversa
+                )
+            )
 
+            # 🔹 Paginación
             paginator = Paginator(orders, 10)
             page_number = request.GET.get("page")
             page_obj = paginator.get_page(page_number)
 
-            context = {"orders": page_obj, "page_obj": page_obj}
+            # 🔹 Contexto al template
+            context = {
+                "orders": page_obj,
+                "page_obj": page_obj,
+            }
+
             return render(request, self.template_name, context)
+
         except Exception as e:
             logger.exception("Error listando pedidos del usuario: %s", e)
             messages.error(request, "No se pudieron cargar tus pedidos.")
             return redirect("home")
+###############################
 
 
 class OrderDetailView(LoginRequiredMixin, View):
