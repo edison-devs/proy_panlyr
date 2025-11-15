@@ -506,7 +506,7 @@ La información expuesta por la vista coincide con lo esperado por mis_pedidos.h
 -Tipo de pedido
 
 
-Todo sin romper la estructura creada por el Colaborador2 quien hizo la mayoria de la lógica. Solo la reorganice.
+**Todo sin romper la estructura creada por el Colaborador2 quien hizo la mayoria de la lógica. Solo la reorganice.**
 
 
 ---
