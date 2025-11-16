@@ -16,17 +16,16 @@
     <p><strong>Dirección:</strong> {{ order.delivery.secondary_address }}</p>
 
 
-    {% if order.comprobante_pago %}
-      <p>
-        <strong>Comprobante:</strong>
+    {% if requires_receipt %}
+      {% if order.comprobante_pago %}
         <a href="{{ order.comprobante_pago.url }}" target="_blank" class="btn btn-sm btn-info">
-        Ver comprobante
+            Ver comprobante
         </a>
-      </p>
-
-    {% else %}
-      <p class="text-danger"><strong>Comprobante:</strong> No cargado</p>
+      {% else %}
+        <p class="text-danger"><strong>Comprobante:</strong> No cargado</p>
+      {% endif %}
     {% endif %}
+
 
   </div>
 </div>

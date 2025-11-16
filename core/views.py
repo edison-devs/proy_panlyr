@@ -36,7 +36,12 @@ def render_home(request):
 #Logica para redirigir al panel de administración
 @login_required
 def dashboard(request):
-        return render(request, 'core/sidebar/index.html')
+    return render(request, 'core/sidebar/index.html', {
+        "show_dashboard_messages": True
+    })
+
+
+
 
 # --------------------------------------------------------------------------------------------
 # INDEX PRODUCT
@@ -64,6 +69,7 @@ class ProductListView(View):
 
         context = {
             "page_obj": page_obj,
+            "show_dashboard_messages": True,
             "query": query,
             "result_count": products.count()
         }
@@ -79,7 +85,10 @@ class ProductCreateView(View):
 
     def get(self, request):
         form = ProductForm()
-        return render(request, self.template_name, {"form": form})
+        return render(request, self.template_name, {
+            "form": form,  
+            "show_dashboard_messages": True,
+            })
 
     def post(self, request):
         form = ProductForm(request.POST, request.FILES)
@@ -89,7 +98,10 @@ class ProductCreateView(View):
                 return redirect("product-create")
         except Exception as e:
             messages.error(request, f"Ocurrió un error al crear el producto: {e}")
-        return render(request, self.template_name, {"form": form})
+        return render(request, self.template_name, {
+            "form": form, 
+            "show_dashboard_messages": True,
+            })
 
 
 # --------------------------------------------------------------------------------------------
@@ -102,7 +114,10 @@ class ProductUpdateView(View):
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
         form = ProductForm(instance=product)
-        return render(request, self.template_name, {"form": form})
+        return render(request, self.template_name, {
+            "form": form,
+            "show_dashboard_messages": True,
+            })
 
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
@@ -114,23 +129,30 @@ class ProductUpdateView(View):
                 return redirect("product-index")
         except Exception as e:
             messages.error(request, f"Ocurrió un error al actualizar: {e}")
-        return render(request, self.template_name, {"form": form})
+        return render(request, self.template_name, {
+            "form": form,
+            "show_dashboard_messages": True,
+            })
 
 
 # --------------------------------------------------------------------------------------------
 # DELETE PRODUCT
 # --------------------------------------------------------------------------------------------
-
 class ProductDeleteView(LoginRequiredMixin, View):
     template_name = "core/confirm_delete.html"
 
     def get(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
-        return render(request, self.template_name, {"product": product})
+        return render(request, self.template_name, {
+            "product": product,
+            "show_dashboard_messages": True,  # Mostrar mensajes en dashboard
+        })
 
     def post(self, request, pk):
         product = get_object_or_404(Product, pk=pk)
+        product_name = product.name  # Guardar para mostrarlo en el mensaje
         product.delete()
+        messages.warning(request, f"El producto '{product_name}' fue eliminado correctamente.")
         return redirect("product-index")
 
 
@@ -684,6 +706,7 @@ class DashboardOrdersListView(LoginRequiredMixin, UserPassesTestMixin, View):
             context = {
                 "orders": page_obj,
                 "page_obj": page_obj,
+                "show_dashboard_messages": True,
             }
             return render(request, self.template_name, context)
 
@@ -692,17 +715,14 @@ class DashboardOrdersListView(LoginRequiredMixin, UserPassesTestMixin, View):
             return redirect("home")
 
 
-
-
+ 
 class DashboardOrderDetailView(LoginRequiredMixin, UserPassesTestMixin, View):
-    """
-    Vista detallada de un pedido.
-    Muestra todos los datos y permite que el admin cambie estados.
-    """
-    template_name = "core/sidebar/orders/detail.html"
+    """Vista detallada de un pedido. Muestra todos los datos y permite que el admin cambie estados."""
 
+    template_name = "core/sidebar/orders/detail.html"
+    
+    # Solo admin o empleados pueden acceder
     def test_func(self):
-        # Solo admin o empleados pueden acceder
         return (
             self.request.user.is_superuser or
             self.request.user.groups.filter(name__in=["admin", "employed"]).exists()
@@ -711,6 +731,10 @@ class DashboardOrderDetailView(LoginRequiredMixin, UserPassesTestMixin, View):
     def handle_no_permission(self):
         messages.error(self.request, "No tienes permiso para ver este pedido.")
         return redirect("dashboard-orders")
+
+    def _requires_receipt(self, order):
+        """Devuelve True si el método de pago requiere comprobante (transferencia)."""
+        return order.payment_method and order.payment_method.name.lower() == "transferencia"
 
     def get(self, request, pk, *args, **kwargs):
         """
@@ -736,10 +760,10 @@ class DashboardOrderDetailView(LoginRequiredMixin, UserPassesTestMixin, View):
         context = {
             "order": order,
             "delivery_statuses": delivery_statuses,
+            "show_dashboard_messages": True,
+            "requires_receipt": self._requires_receipt(order),  # <-- usado en template si lo deseas
         }
         return render(request, self.template_name, context)
-
-
 
     def post(self, request, pk, *args, **kwargs):
         """
@@ -755,17 +779,15 @@ class DashboardOrderDetailView(LoginRequiredMixin, UserPassesTestMixin, View):
                 if action == "change_delivery_status":
                     status_id = request.POST.get("delivery_status_id")
                     new_status = get_object_or_404(DeliveryStatus, id=status_id)
-
                     order.delivery.status = new_status
                     order.delivery.save()
-
                     messages.success(request, "Estado de entrega actualizado.")
                     return redirect("dashboard-order-detail", pk=order.id)
 
-                # Aprobar pedido (requiere comprobante) 
+                # Aprobar pedido (solo si requiere comprobante y lo tiene)
                 if action == "approve_order":
-                    if not order.comprobante_pago:
-                        messages.error(request, "El pedido no tiene comprobante. No puede aprobarse.")
+                    if self._requires_receipt(order) and not order.comprobante_pago:
+                        messages.error(request, "Este pedido requiere comprobante para poder aprobarse.")
                         return redirect("dashboard-order-detail", pk=order.id)
 
                     approved_type = OrderType.objects.filter(name__iexact="entregado").first()
@@ -776,14 +798,19 @@ class DashboardOrderDetailView(LoginRequiredMixin, UserPassesTestMixin, View):
                     messages.success(request, "Pedido aprobado correctamente.")
                     return redirect("dashboard-order-detail", pk=order.id)
 
-                # Rechazar pedido
+                # Rechazar pedido (estado → rechazado)
                 if action == "reject_order":
-                    rejected_type = OrderType.objects.filter(name__iexact="pendiente").first()
-                    if rejected_type:
-                        order.order_type = rejected_type
-                        order.save()
+                    rejected_type = OrderType.objects.filter(name__iexact="rechazado").first()
+                    if not rejected_type:
+                        rejected_type = OrderType.objects.create(
+                            name="rechazado",
+                            description="Pedido rechazado por el administrador"
+                        )
 
-                    messages.warning(request, "Pedido rechazado.")
+                    order.order_type = rejected_type
+                    order.save()
+
+                    messages.warning(request, "Pedido rechazado. ")
                     return redirect("dashboard-order-detail", pk=order.id)
 
         except Exception:
