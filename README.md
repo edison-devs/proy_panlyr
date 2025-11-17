@@ -333,6 +333,8 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 - ✅ lógica de roles y permisos.
 - 🛒 En desarrollo: la lógica de pedidos (carrito, registro y gestión básica).
 
+- **FALTA ACOMODAR EL FILTRADO DE CATALOGO DESDE LA VISTA CLIENTE (NO FUNCIONA POR AHORA)**
+
 ---
 
 ###Fecha 14-11-25 Logica pedidos Ahora con CBV
