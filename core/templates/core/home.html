@@ -1,533 +1,652 @@
-{% extends 'core/base.html' %}
 {% load static %}
+<link rel="stylesheet" href="{% static 'core/css/home.css' %}">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Panificadora Dorada - Productos artesanales de panadería y pastelería desde 1985">
+    <meta name="keywords" content="panadería, pastelería, pan artesanal, tortas, bollería">
+    <title>Panificadora Dorada - Panadería Artesanal</title>
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍞</text></svg>">
+    
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Personalizado -->
+    <link rel="stylesheet" href="{% static 'core/css/home.css' %}?v=1.1">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg sticky-top">
+        <div class="container">
+            <a class="navbar-brand" href="javascript:void(0)">
+                <i class="fas fa-bread-slice me-2"></i>
+                Panificadora PanLYR
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#inicio">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                       <a class="nav-link" href="{% url 'product_catalog' %}">Catálogo</a> 
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'pedidos' %}">pedidos</a> 
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contacto">Contacto</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a href="/auth_users/login/" class="btn btn-gold">Login</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <a href="/auth_users/register/" class="btn btn-gold">Registrarse</a>
+                    </li>
+                    <li class="nav-item ms-2">
+                        <button class="btn btn-gold" id="cart-button">
+                            <i class="fas fa-shopping-cart"></i>
+                            <span class="badge rounded-pill cart-badge" id="cart-count">0</span>
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-{% block extra_css %}
-  <link rel="stylesheet" href="{% static 'core/css/styles1.css' %}">
-{% endblock %}
+    <!-- Hero Section -->
+    <section class="hero-section text-center" id="inicio">
+        <div class="container">
+            <h1 class="display-4 fw-bold mb-4">Delicias artesanales horneadas con amor</h1>
+            <p class="lead mb-5">Descubre nuestros panes y pasteles elaborados con recetas tradicionales e ingredientes frescos</p>
+            <a href="{% url 'product_catalog' %}" class="btn btn-gold btn-lg px-4 py-2 me-2">Ver Catálogo</a> 
+            <a href="{% url 'pedidos' %}" class="btn btn-outline-light btn-lg px-4 py-2">Realizar Pedido</a>
+        </div>
+    </section>
 
-{% block header %}
-<nav class="navbar navbar-expand-lg navbar-light" style="background-color: #f8e1c1;">
-  <div class="container-fluid">
-    <!-- Marca -->
-    <a class="navbar-brand fw-bold text-brown" href="#inicio">PanLyR</a>
+    <!-- Featured Products -->
+    <section class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-4">Nuestras especialidades</h2>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="https://cdn.pixabay.com/photo/2016/03/27/21/59/bread-1284438_1280.jpg" class="card-img-top" alt="Pan de masa madre">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Pan de masa madre</h5>
+                            <p class="card-text">Nuestro pan estrella, con una corteza crujiente y miga alveolada.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="https://images.unsplash.com/photo-1700915704616-b455b3679024?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NjkwMjR8MHwxfHNlYXJjaHwzfHxDcm9pc3NhbnRzfGVufDB8fHx8MTc1OTAyNTY1M3ww&ixlib=rb-4.1.0&q=80&w=1080" class="card-img-top" alt="Croissants">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Croissants artesanales</h5>
+                            <p class="card-text">Horneados diariamente, con una textura hojaldrada perfecta.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="card h-100 border-0 shadow-sm">
+                        <img src="https://cdn.pixabay.com/photo/2016/11/29/11/38/cake-1869227_1280.jpg" class="card-img-top" alt="Torta de chocolate">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">Torta de chocolate</h5>
+                            <p class="card-text">Esponjosa y con el balance perfecto de dulzura.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- Contacto -->
+    <section class="py-5" id="contacto">
+        <div class="container">
+            <h2 class="section-title text-center">Contacto</h2>
+            <div class="row">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h5 class="mb-3">Información de Contacto</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-3">
+                            <i class="fas fa-map-marker-alt text-gold me-2"></i> Av. Principal 123, Ciudad
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-phone text-gold me-2"></i> (123) 456-7890
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-envelope text-gold me-2"></i> info@panificadoradorada.com
+                        </li>
+                        <li class="mb-3">
+                            <i class="fas fa-clock text-gold me-2"></i> Lun-Sáb: 7:00 AM - 8:00 PM | Dom: 8:00 AM - 2:00 PM
+                        </li>
+                    </ul>
+                    <div class="mt-4">
+                        <h5 class="mb-3">Síguenos en Redes Sociales</h5>
+                        <a href="javascript:void(0)" class="text-decoration-none me-3">
+                            <i class="fab fa-facebook fa-2x text-brown"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-decoration-none me-3">
+                            <i class="fab fa-instagram fa-2x text-brown"></i>
+                        </a>
+                        <a href="javascript:void(0)" class="text-decoration-none">
+                            <i class="fab fa-twitter fa-2x text-brown"></i>
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow">
+                        <div class="card-body p-4">
+                            <h5 class="mb-3">Envíanos un Mensaje</h5>
+                            <form id="contact-form">
+                                <div class="mb-3">
+                                    <label for="contact-name" class="form-label">Nombre</label>
+                                    <input type="text" class="form-control" id="contact-name" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contact-email" class="form-label">Correo electrónico</label>
+                                    <input type="email" class="form-control" id="contact-email" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contact-subject" class="form-label">Asunto</label>
+                                    <input type="text" class="form-control" id="contact-subject">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="contact-message" class="form-label">Mensaje</label>
+                                    <textarea class="form-control" id="contact-message" rows="4" required></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-gold">Enviar Mensaje</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Botón hamburguesa (visible en móviles) -->
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarPanlyr"
-            aria-controls="navbarPanlyr" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <!-- Menú -->
-    <div class="collapse navbar-collapse" id="navbarPanlyr">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="#inicio">Inicio</a></li>
-        <li class="nav-item"><a class="nav-link" href="#catalogo">Catálogo</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contacto">Contacto</a></li>
-        <li class="nav-item"><a class="nav-link" href="#nosotros">Sobre Nosotros</a></li>
-        {% if user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href="#perfil">Perfil</a></li>
-        {% endif %}
-      </ul>
-
-      <!-- Botones derecha -->
-      <div class="d-flex align-items-center">
-        {% if user.is_authenticated %}
-          <span class="me-3 fw-semibold text-dark">Hola, {{ user.username }}</span>
-          <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-dark">Cerrar sesión</a>
-        {% else %}
-          <a href="{% url 'login' %}" class="btn btn-sm btn-warning me-2">Iniciar sesión</a>
-          <a href="{% url 'register' %}" class="btn btn-sm btn-outline-secondary">Registrarse</a>
-        {% endif %}
-      </div>
+    <!-- Footer -->
+    <footer class="py-4">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-gold">Panificadora Dorada</h5>
+                    <p>Elaboramos productos de panadería y pastelería artesanal desde 1985, manteniendo la tradición y calidad en cada uno de nuestros productos.</p>
+                </div>
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-gold">Enlaces Rápidos</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="{% url 'product_catalog' %}">Catálogo</a></li>
+                        <li><a href="#pedidos">Pedidos</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4">
+                    <h5 class="text-gold">Suscríbete a nuestro boletín</h5>
+                    <p>Recibe nuestras novedades y promociones directamente en tu correo.</p>
+                    <form id="subscribe-form">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control" placeholder="Tu correo electrónico" required>
+                            <button class="btn btn-gold" type="submit">Suscribirse</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="border-top border-secondary mt-4 pt-4 text-center">
+                <p class="mb-0">&copy; 2025 Panificadora Dorada. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Carrito Sidebar -->
+    <div id="cart-sidebar">
+        <div class="p-3 border-bottom d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Tu Pedido</h5>
+            <button class="btn-close" id="close-cart"></button>
+        </div>
+        <div id="cart-sidebar-items" class="p-3">
+            <p class="text-muted text-center">No hay productos en tu carrito</p>
+        </div>
+        <div class="p-3 border-top">
+            <div class="d-flex justify-content-between mb-3">
+                <span class="fw-bold">Total:</span>
+                <span class="fw-bold" id="cart-sidebar-total">$0.00</span>
+            </div>
+            <a href="#pedidos" class="btn btn-gold w-100">Realizar Pedido</a>
+        </div>
     </div>
-  </div>
-</nav>
-{% endblock %}
+    
+    <div class="overlay" id="cart-overlay"></div>
+    
+    <!-- Formulario de Reseña (Modal) -->
+    <div class="modal fade" id="review-modal" tabindex="-1" aria-labelledby="reviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="reviewModalLabel">Escribir una Reseña</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="review-form">
+                        <div class="mb-3">
+                            <label for="review-name" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="review-name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Calificación</label>
+                            <div class="star-rating-input mb-2">
+                                <i class="far fa-star star-rating-clickable" data-rating="1"></i>
+                                <i class="far fa-star star-rating-clickable" data-rating="2"></i>
+                                <i class="far fa-star star-rating-clickable" data-rating="3"></i>
+                                <i class="far fa-star star-rating-clickable" data-rating="4"></i>
+                                <i class="far fa-star star-rating-clickable" data-rating="5"></i>
+                            </div>
+                            <input type="hidden" id="review-rating" value="0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="review-comment" class="form-label">Comentario</label>
+                            <textarea class="form-control" id="review-comment" rows="4" required></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-gold" id="submit-review">Enviar Reseña</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Confirmación de Pedido (Modal) -->
+    <div class="modal fade" id="order-confirmation-modal" tabindex="-1" aria-labelledby="orderConfirmationLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title" id="orderConfirmationLabel">¡Pedido recibido!</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <i class="fas fa-check-circle text-success fa-4x mb-3"></i>
+                    <h4>¡Gracias por tu pedido!</h4>
+                    <p>Hemos recibido tu solicitud correctamente. Te contactaremos pronto para confirmar los detalles.</p>
+                    <p class="mb-0"><strong>Número de pedido:</strong> <span id="order-number"></span></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-
-
-{%block content %} 
-<section class="banner">
-	<div class="content-banner">
-		<p>Deliciosos Postres</p>
-		<h2>100% Natural <br /> con gran variedad</h2>
-		<a href="#">Ir al catalogo</a>
-	</div>
-</section>
-
-<main class="main-content">
-	
-
-	<section class="container top-categories">
-		<h1 class="heading-1">Mejores Categorías</h1>
-		<div class="container-categories">
-			<div class="card-category category-galleta">
-				<p>Galletas</p>
-				<span>Ver más</span>
-			</div>
-			<div class="card-category category-torta">
-				<p>Tortas</p>
-				<span>Ver más</span>
-			</div>
-			<div class="card-category category-pan">
-				<p>Pan</p>
-				<span>Ver más</span>
-			</div>
-		</div>
-	</section>
-
-	<section class="container top-products">
-		<h1 class="heading-1">Mejores Productos</h1>
-
-		<div class="container-options">
-			<span class="active">Destacados</span>
-			<span>Más recientes</span>
-			
-		</div>
-
-		<div class="container-products">
-		{# -- Producto 1 -- #}
-		<div class="card-product">
-			<div class="container-img">
-				<img src="{% static 'core/img/golfeados2.jpg' %}" alt="Golfeados" />
-				<span class="discount">-13%</span>
-				<div class="button-group">
-					<span>
-					<i class="fa-regular fa-eye"></i>
-					</span>
-					<span>
-					<i class="fa-regular fa-heart"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-code-compare"></i>
-					</span>
-				</div>
-			</div>
-			
-			<div class="content-card-product">
-				<div class="stars">
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-regular fa-star"></i>
-				</div>
-				<h3>Golfeados</h3>
-				<span class="add-cart">
-				<i class="fa-solid fa-basket-shopping"></i>
-				</span>
-				<p class="price">1305 <span>cop1500</span></p>
-			</div>
-		</div>
-					
-		{# -- Producto 2 -- #}
-		<div class="card-product">
-			<div class="container-img">
-				<img src="{% static 'core/img/torta_maiz.jpg' %}" alt="Torta de jojoto.jpg"/>
-				<span class="discount">-10%</span>
-				<div class="button-group">
-					<span>
-					<i class="fa-regular fa-eye">	</i>
-					</span>
-					<span>
-					<i class="fa-regular fa-heart"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-code-compare"></i>
-					</span>
-				</div>
-			</div>
-			
-			<div class="content-card-product">
-				<div class="stars">
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-regular fa-star"></i>
-					<i class="fa-regular fa-star"></i>
-				</div>
-				
-				<h3>Torta Jojoto</h3>
-				<span class="add-cart">
-				<i class="fa-solid fa-basket-shopping"></i>
-				</span>
-				<p class="price">18000 
-				<span>cop20000</span></p>
-			</div>
-		</div>
-		
-
-		{# <!--  --> #}
-		<div class="card-product">
-			<div class="container-img">
-				<img src="{% static 'core/img/almojabanas2.jpg' %}"
-				alt="Almojabanas"/>
-				<div class="button-group">
-					<span>
-					<i class="fa-regular fa-eye"></i>
-					</span>
-					<span>
-					<i class="fa-regular fa-heart"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-code-compare"></i>
-					</span>
-				</div>
-			</div>
-			
-			<div class="content-card-product">
-				<div class="stars">
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-				</div>
-				
-				<h3>Almojabanas</h3>
-				<span class="add-cart">
-				<i class="fa-solid fa-basket-shopping"></i>
-				</span>
-				<p class="price">cop 1000</p>
-			</div>
-			
-		</div>
-			
-		{# --  -- #}
-		<div class="card-product">
-			<div class="container-img">
-				<img src="{% static 'core/img/pan_tajado.jpg' %}" alt="Pan tajado" />
-				<div class="button-group">
-					<span>
-					<i class="fa-regular fa-eye"></i>
-					</span>
-					<span>
-					<i class="fa-regular fa-heart"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-code-compare"></i>
-					</span>
-				</div>
-			</div>
-			
-			<div class="content-card-product">
-				<div class="stars">
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-regular fa-star"></i>
-				</div>
-				
-				<h3>Pan tajado</h3>
-				<span class="add-cart">
-				<i class="fa-solid fa-basket-shopping"></i>
-				</span>
-				<p class="price">cop 12000</p>
-			</div>
-		</div>
-	</div>
-</section>
-
-<section class="gallery">
-	<img 
-		src="{% static 'core/img/torta_con_fresas.jpg' %}" alt="Gallery Img1" class="gallery-img-1"/>
-	<img 
-		src="{% static 'core/img/torta_fria.jpg' %}" alt="Gallery Img2" class="gallery-img-2"/>
-	<img 
-		src="{% static 'core/img/torta_porcion2.jpg' %}" alt="Gallery Img3" class="gallery-img-3"/>
-	<img
-		src="{% static 'core/img/torta_pina.jpg' %}" alt="Gallery Img4"class="gallery-img-4"/>
-	<img
-		src="{% static 'core/img/pan2.jpg' %}" alt="Gallery Img5" class="gallery-img-5"/>
-</section>
-
-<section class="container specials">
-	<h1 class="heading-1">Especiales</h1>
-
-	<div class="container-products">
-	{# -- Producto 1 -- #}
-		<div class="card-product">
-			<div class="container-img">
-				<img src="{% static 'core/img/torta_chocolate.jpg' %}" alt="Torta de chocolate" />
-				<span class="discount">-10%</span>
-				<div class="button-group">
-					<span>
-					<i class="fa-regular fa-eye"></i>
-					</span>
-					<span>
-					<i class="fa-regular fa-heart"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-code-compare"></i>
-					</span>
-				</div>
-			</div>
-			
-			<div class="content-card-product">
-				<div class="stars">
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-regular fa-star"></i>
-				</div>
-				<h3>Torta de chocolate</h3>
-				<span class="add-cart">
-				<i class="fa-solid fa-basket-shopping"></i>
-				</span>
-				<p class="price">cop 20000 <span>cop22000</span></p>
-			</div>
-		</div>
-		
-		{# -- Producto 2 -- #}
-		<div class="card-product">
-			<div class="container-img">
-				<img src="{% static 'core/img/torta_porcion.jpg' %}" alt="Torta porción"/>
-				<span class="discount">-20%</span>
-				<div class="button-group">
-					<span>
-					<i class="fa-regular fa-eye"></i>
-					</span>
-					<span>
-					<i class="fa-regular fa-heart"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-code-compare"></i>
-					</span>
-				</div>
-			</div>
-			
-			<div class="content-card-product">
-				<div class="stars">
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-regular fa-star"></i>
-					<i class="fa-regular fa-star"></i>
-				</div>
-				
-				<h3>Torta Porción</h3>
-				<span class="add-cart">
-				<i class="fa-solid fa-basket-shopping"></i>
-				</span>
-				<p class="price">cop 3000 <span>cop 4000</span></p>
-			</div>
-		</div>
-		
-		{# --  -- #}
-		<div class="card-product">
-			<div class="container-img">
-				<img src="{% static 'core/img/pan1.jpg' %}" alt="Pan de arequipe" />
-				<span class="discount">-30%</span>
-				<div class="button-group">
-				<span>
-					<i class="fa-regular fa-eye"></i>
-					</span>
-					<span>
-					<i class="fa-regular fa-heart"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-code-compare"></i>
-					</span>
-				</div>
-			</div>
-			
-			<div class="content-card-product">
-				<div class="stars">
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-				</div>
-				
-				<h3>Pan de arequipe</h3>
-				<span class="add-cart">
-				<i class="fa-solid fa-basket-shopping"></i>
-				</span>
-				<p class="price">cop 8400 <span>cop12000</span></p>
-			</div>
-		</div>
-		{# --  --> #}
-		
-		<div class="card-product">
-			<div class="container-img">
-				<img src="{% static 'core/img/golfeados.jpg' %}" alt="Golfeados con queso" />
-				<div class="button-group">
-					<span>
-					<i class="fa-regular fa-eye"></i>
-					</span>
-					<span>
-					<i class="fa-regular fa-heart"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-code-compare"></i>
-					</span>
-				</div>
-			</div>
-						
-			<div class="content-card-product">
-				<div class="stars">
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-solid fa-star"></i>
-					<i class="fa-regular fa-star"></i>
-				</div>
-			
-				<h3>Golfeados con queso</h3>
-				<span class="add-cart">
-				<i class="fa-solid fa-basket-shopping"></i>
-				</span>
-				<p class="price">2000 cop</p>
-			</div>
-		</div>
-	</div>
-</section>
-
-<section class="container blogs">
-	<h1 class="heading-1">Sobre nosotros</h1>
-
-	<div class="container-blogs">
-		<div class="card-blog">
-			<div class="container-img">
-				<img src="{% static 'core/img/arepas_de_trigo.jpg' %}" alt="Imagen Blog 1" />
-				<div class="button-group-blog">
-					<span>
-					<i class="fa-solid fa-magnifying-glass"></i>
-					</span>
-					<span>
-					<i class="fa-solid fa-link"></i>
-					</span>
-				</div>
-			</div>
-			
-			<div class="content-blog">
-				<h3>Lorem, ipsum dolor sit</h3>
-				<span>20 Agosto 2025</span>
-				<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing
-				elit. Iste, molestiae! Ratione et, dolore ipsum
-				quaerat iure illum reprehenderit non maxime amet dolor voluptas facilis corporis, consequatur eius est sunt suscipit?
-				</p>
-				
-				<div class="btn-read-more">Leer más</div>
-			</div>
-		</div>
-		<div class="card-blog">
-			<div class="container-img">
-				<img src="{% static 'core/img/almojabanas1.jpg' %}" alt="Imagen Blog 2" />
-				<div class="button-group-blog">
-				<span>
-				<i class="fa-solid fa-magnifying-glass"></i>
-				</span>
-				<span>
-				<i class="fa-solid fa-link"></i>
-				</span>
-			</div>
-		</div>
-		<div class="content-blog">
-			<h3>Lorem, ipsum dolor sit</h3>
-			<span>3 septiembre 2025</span>
-			<p>
-				Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, molestiae! Ratione et, dolore ipsum quaerat iure illum reprehenderit non maxime amet dolor voluptas facilis corporis, consequatur eius est sunt suscipit?
-			</p>
-			<div class="btn-read-more">Leer más</div>
-		</div>
-	</div>
-	
-	<div class="card-blog">
-		<div class="container-img">
-		<img src="{% static 'core/img/pan_tajado.jpg' %}" alt="Imagen Blog 3" />
-		<div class="button-group-blog">
-			<span>
-			<i class="fa-solid fa-magnifying-glass"></i>
-			</span>
-			<span>
-			<i class="fa-solid fa-link"></i>
-			</span>
-		</div>
-	</div>
-	
-	<div class="content-blog">
-		<h3>Lorem, ipsum dolor sit</h3>
-		<span>4 septiembre 2025</span>
-		<p>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Iste, molestiae! Ratione et, dolore ipsum quaerat iure illum reprehenderit non maxime amet dolor voluptas facilis corporis, consequatur eius est sunt suscipit?
-		</p>
-		<div class="btn-read-more">Leer más</div>
-		</div>
-		</div>
-	</div>
-	</section>
-</main>
-
-{% endblock%}
-
-
-{% block footer %}
-<footer class="footer">
-	<div class="container container-footer">
-		<div class="menu-footer">
-			<div class="contact-info">
-				<p class="title-footer">Información de Contacto</p>
-				<ul>
-					<li>
-					Dirección: Alberto Grimaldo Bramon municipio Junín
-					</li>
-					<li>Teléfono: 123-456-7890</li>
-					<li>EmaiL: panlyr@support.com</li>
-				</ul>
-				<div class="social-icons">
-					<span class="facebook">
-					<i class="fa-brands fa-facebook-f"></i>
-					</span>
-					<span class="twitter">
-					<i class="fa-brands fa-twitter"></i>
-					</span>
-					<span class="youtube">
-					<i class="fa-brands fa-youtube"></i>
-					</span>
-					<span class="pinterest">
-					<i class="fa-brands fa-pinterest-p"></i>
-					</span>
-					<span class="instagram">
-						<i class="fa-brands fa-instagram"></i>
-					</span>
-				</div>
-			</div>
-
-			<div class="information">
-				<p class="title-footer">Información</p>
-				<ul>
-					<li><a href="#">Acerca de Nosotros</a></li>
-					<li><a href="#">Información Delivery</a></li>
-					<li><a href="#">Politicas de Privacidad</a></li>
-					<li><a href="#">Términos y condiciones</a></li>
-					<li><a href="#">Contactános</a></li>
-				</ul>
-			</div>
-
-			<div class="my-account">
-				<p class="title-footer">Mi cuenta</p>
-
-				<ul>
-					<li><a href="#">Mi cuenta</a></li>
-					
-				</ul>
-			</div>
-
-			
-		</div>
-
-		<div class="copyright">
-			<p>
-			Desarrollado por estudiantes de la universidad UPTAI sede Rubio &copy; 2025
-			</p>
-
-			
-		</div>
-	</div>
-</footer>
-{% endblock %}
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script id="app-script">
+        document.addEventListener('DOMContentLoaded', function() {
+            // Carrito de compras
+            let cart = JSON.parse(localStorage.getItem('cart')) || [];
+            updateCartDisplay();
+            
+            // Event listeners
+            document.querySelectorAll('.add-to-cart').forEach(button => {
+                button.addEventListener('click', function() {
+                    const id = this.getAttribute('data-id');
+                    const name = this.getAttribute('data-name');
+                    const price = parseFloat(this.getAttribute('data-price'));
+                    
+                    // Comprobar si el producto ya está en el carrito
+                    const existingItem = cart.find(item => item.id === id);
+                    
+                    if (existingItem) {
+                        existingItem.quantity += 1;
+                    } else {
+                        cart.push({
+                            id: id,
+                            name: name,
+                            price: price,
+                            quantity: 1
+                        });
+                    }
+                    
+                    saveCart();
+                    updateCartDisplay();
+                    showCartSidebar();
+                    
+                    // Mostrar notificación
+                    const toastContainer = document.createElement('div');
+                    toastContainer.className = 'position-fixed bottom-0 end-0 p-3';
+                    toastContainer.style.zIndex = '5';
+                    
+                    toastContainer.innerHTML = `
+                        <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true">
+                            <div class="toast-header">
+                                <strong class="me-auto">Producto añadido</strong>
+                                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                            </div>
+                            <div class="toast-body">
+                                ${name} se ha añadido a tu pedido.
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(toastContainer);
+                    
+                    // Eliminar la notificación después de 3 segundos
+                    setTimeout(() => {
+                        document.body.removeChild(toastContainer);
+                    }, 3000);
+                });
+            });
+            
+            // Botón de carrito
+            document.getElementById('cart-button').addEventListener('click', showCartSidebar);
+            
+            // Cerrar carrito
+            document.getElementById('close-cart').addEventListener('click', hideCartSidebar);
+            document.getElementById('cart-overlay').addEventListener('click', hideCartSidebar);
+            
+            // Formulario de pedido
+            document.getElementById('order-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (cart.length === 0) {
+                    alert('Por favor, añade productos a tu pedido antes de continuar.');
+                    return;
+                }
+                
+                // Mostrar spinner de carga
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.disabled = true;
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Procesando...';
+                
+                // Simulación de envío (en una aplicación real, aquí iría la llamada a la API)
+                setTimeout(() => {
+                    // Generar número de pedido aleatorio
+                    const orderNumber = 'ORD-' + Math.floor(100000 + Math.random() * 900000);
+                    document.getElementById('order-number').textContent = orderNumber;
+                    
+                    // Mostrar confirmación
+                    const orderModal = new bootstrap.Modal(document.getElementById('order-confirmation-modal'));
+                    orderModal.show();
+                    
+                    // Limpiar carrito
+                    cart = [];
+                    saveCart();
+                    updateCartDisplay();
+                    
+                    // Restaurar botón
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                    
+                    // Limpiar formulario
+                    document.getElementById('order-form').reset();
+                }, 1500);
+            });
+            
+            // Formulario de reseñas
+            document.getElementById('show-review-form').addEventListener('click', function() {
+                const reviewModal = new bootstrap.Modal(document.getElementById('review-modal'));
+                reviewModal.show();
+            });
+            
+            // Calificación por estrellas
+            document.querySelectorAll('.star-rating-clickable').forEach(star => {
+                star.addEventListener('click', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    document.getElementById('review-rating').value = rating;
+                    
+                    // Actualizar visualización de estrellas
+                    document.querySelectorAll('.star-rating-clickable').forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.remove('far');
+                            s.classList.add('fas');
+                        } else {
+                            s.classList.remove('fas');
+                            s.classList.add('far');
+                        }
+                    });
+                });
+                
+                // Efecto hover
+                star.addEventListener('mouseover', function() {
+                    const rating = parseInt(this.getAttribute('data-rating'));
+                    
+                    document.querySelectorAll('.star-rating-clickable').forEach((s, index) => {
+                        if (index < rating) {
+                            s.classList.remove('far');
+                            s.classList.add('fas');
+                        }
+                    });
+                });
+                
+                star.addEventListener('mouseout', function() {
+                    const selectedRating = parseInt(document.getElementById('review-rating').value);
+                    
+                    document.querySelectorAll('.star-rating-clickable').forEach((s, index) => {
+                        if (index < selectedRating) {
+                            s.classList.remove('far');
+                            s.classList.add('fas');
+                        } else {
+                            s.classList.remove('fas');
+                            s.classList.add('far');
+                        }
+                    });
+                });
+            });
+            
+            // Enviar reseña
+            document.getElementById('submit-review').addEventListener('click', function() {
+                const name = document.getElementById('review-name').value;
+                const rating = document.getElementById('review-rating').value;
+                const comment = document.getElementById('review-comment').value;
+                
+                if (!name || rating === '0' || !comment) {
+                    alert('Por favor, complete todos los campos y seleccione una calificación.');
+                    return;
+                }
+                
+                // En una aplicación real, aquí se enviaría la reseña a la API
+                // Por ahora, solo mostramos un mensaje y cerramos el modal
+                
+                alert('¡Gracias por tu reseña! Será publicada después de ser revisada.');
+                
+                const reviewModal = bootstrap.Modal.getInstance(document.getElementById('review-modal'));
+                reviewModal.hide();
+                
+                // Limpiar formulario
+                document.getElementById('review-form').reset();
+                document.querySelectorAll('.star-rating-clickable').forEach(s => {
+                    s.classList.remove('fas');
+                    s.classList.add('far');
+                });
+                document.getElementById('review-rating').value = '0';
+            });
+            
+            // Formulario de contacto
+            document.getElementById('contact-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // En una aplicación real, aquí se enviaría el mensaje a la API
+                alert('¡Gracias por tu mensaje! Te responderemos lo antes posible.');
+                
+                // Limpiar formulario
+                this.reset();
+            });
+            
+            // Formulario de suscripción
+            document.getElementById('subscribe-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                // En una aplicación real, aquí se enviaría la suscripción a la API
+                alert('¡Gracias por suscribirte a nuestro boletín!');
+                
+                // Limpiar formulario
+                this.reset();
+            });
+            
+            // Scroll suave
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Si hay un menú de navegación móvil abierto, cerrarlo
+                        const navbarCollapse = document.getElementById('navbarNav');
+                        if (navbarCollapse && navbarCollapse.classList.contains('show')) {
+                            bootstrap.Collapse.getInstance(navbarCollapse).hide();
+                        }
+                    }
+                });
+            });
+            
+            // Funciones auxiliares
+            function saveCart() {
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+            
+            function updateCartDisplay() {
+                // Actualizar contador de carrito
+                const cartCount = document.getElementById('cart-count');
+                const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
+                cartCount.textContent = totalItems;
+                
+                // Actualizar lista de carrito en el sidebar
+                const cartSidebarItems = document.getElementById('cart-sidebar-items');
+                const cartTotal = cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+                
+                if (cart.length === 0) {
+                    cartSidebarItems.innerHTML = '<p class="text-muted text-center">No hay productos en tu carrito</p>';
+                } else {
+                    let html = '';
+                    
+                    cart.forEach(item => {
+                        html += `
+                            <div class="cart-item">
+                                <div class="d-flex justify-content-between">
+                                    <h6 class="mb-1">${item.name}</h6>
+                                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-sm btn-outline-secondary decrease-quantity" data-id="${item.id}">-</button>
+                                        <span class="mx-2">${item.quantity}</span>
+                                        <button class="btn btn-sm btn-outline-secondary increase-quantity" data-id="${item.id}">+</button>
+                                    </div>
+                                    <button class="btn btn-sm text-danger remove-item" data-id="${item.id}">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    cartSidebarItems.innerHTML = html;
+                    
+                    // Agregar event listeners para los botones de carrito
+                    document.querySelectorAll('.decrease-quantity').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            const item = cart.find(item => item.id === id);
+                            
+                            if (item && item.quantity > 1) {
+                                item.quantity--;
+                            } else {
+                                cart = cart.filter(item => item.id !== id);
+                            }
+                            
+                            saveCart();
+                            updateCartDisplay();
+                        });
+                    });
+                    
+                    document.querySelectorAll('.increase-quantity').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            const item = cart.find(item => item.id === id);
+                            
+                            if (item) {
+                                item.quantity++;
+                                saveCart();
+                                updateCartDisplay();
+                            }
+                        });
+                    });
+                    
+                    document.querySelectorAll('.remove-item').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const id = this.getAttribute('data-id');
+                            cart = cart.filter(item => item.id !== id);
+                            saveCart();
+                            updateCartDisplay();
+                        });
+                    });
+                }
+                
+                // Actualizar total en el sidebar
+                document.getElementById('cart-sidebar-total').textContent = `$${cartTotal.toFixed(2)}`;
+                
+                // Actualizar la lista de carrito en el formulario de pedidos
+                const cartItemsList = document.getElementById('cart-items-list');
+                const cartTotalElement = document.getElementById('cart-total');
+                
+                if (cart.length === 0) {
+                    cartItemsList.innerHTML = '<p class="text-muted fst-italic">No hay productos en tu pedido. Agrega algunos desde nuestro catálogo.</p>';
+                } else {
+                    let html = '<ul class="list-group">';
+                    
+                    cart.forEach(item => {
+                        html += `
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h6 class="mb-0">${item.name}</h6>
+                                    <small class="text-muted">$${item.price.toFixed(2)} x ${item.quantity}</small>
+                                </div>
+                                <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                            </li>
+                        `;
+                    });
+                    
+                    html += '</ul>';
+                    cartItemsList.innerHTML = html;
+                }
+                
+                cartTotalElement.textContent = `$${cartTotal.toFixed(2)}`;
+            }
+            
+            function showCartSidebar() {
+                document.getElementById('cart-sidebar').classList.add('show');
+                document.getElementById('cart-overlay').classList.add('show');
+            }
+            
+            function hideCartSidebar() {
+                document.getElementById('cart-sidebar').classList.remove('show');
+                document.getElementById('cart-overlay').classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html> 

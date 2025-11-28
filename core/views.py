@@ -9,6 +9,9 @@ from django.core.paginator import Paginator
 from django.contrib import messages                      # <- necesario para mostrar mensajes
 from .models import *
 from .forms import ProductForm
+from django.shortcuts import render
+
+
 
 # Create your views here.
 
@@ -73,14 +76,23 @@ def render_home(request):
         # Aún devolvemos la misma plantilla para no romper la navegación
         return render(request, 'core/home.html')
 
+def pedidos_view(request):
+    return render(request, 'core/pedidos.html')    
 
-def render_home1(request):
+def catalogo_view(request):
+    return render(request, 'catalogo.html')
+
+def product_list(request):
+    return render(request, 'products.html')    
+
+def render_home(request):
     try:
-        return render(request, 'core/home1.html')
+        return render(request, 'core/home.html')
     except Exception as e:
         messages.error(request, f'Error al cargar la página principal: {e}')
         # Aún devolvemos la misma plantilla para no romper la navegación
-        return render(request, 'core/home1.html')
+        return render(request, 'core/home.html')
+
 
 
 

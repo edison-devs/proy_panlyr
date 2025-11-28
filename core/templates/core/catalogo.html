@@ -1,82 +1,150 @@
-{% extends 'core/base.html' %}
+<!doctype html>
 {% load static %}
+<link rel="stylesheet" href="{% static 'core/css/catalogo.css' %}">
 
-{% block title %}Catálogo de Productos{% endblock %}
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <title>Módulo Catálogo – PanLYR</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="core/css/catalogo.css">
+</head>
+<body>
+  <section class="catalogo" id="catalogo">
+    <div class="container">
+      <h2 class="catalogo__titulo">Nuestro Catálogo</h2>
 
-{% block header %}
-  {% include 'core/includes/navbar_crud.html' %}
-{% endblock %}
+      <!-- PESTAÑAS -->
+      <ul class="nav nav-pills mb-4 justify-content-center" id="catalogoTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="panes-tab" data-bs-toggle="pill" data-bs-target="#panes" type="button">Panes</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="pasteles-tab" data-bs-toggle="pill" data-bs-target="#pasteles" type="button">Pasteles</button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="bolleria-tab" data-bs-toggle="pill" data-bs-target="#bolleria" type="button">Bollería</button>
+        </li>
+      </ul>
 
-{% block content %}
-<div class="container my-4">
-  
-  {% if not user.is_authenticated %}
-    <script>window.location.href = "{% url 'home' %}";</script>
-  {% endif %}
-
-
-  <!-- Barra de búsqueda -->
-  <form method="get" class="d-flex justify-content-end mb-3">
-    <input type="text" name="q" class="form-control w-25 me-2" placeholder="Buscar productos o categorías..." value="{{ query }}">
-    <button class="btn btn-outline-dark" type="submit"><i class="fa fa-search"></i></button>
-  </form>
-
-  <!-- Productos -->
-  <div class="row">
-    {% if query %}
-      <div class="alert alert-light border text-center">
-        Resultados para "<strong>{{ query }}</strong>": {{ result_count }}
-      </div>
-    {% endif %}
-
-    {% for product in page_obj %}
-    <div class="col-md-4 mb-4">
-      <div class="card shadow-sm h-100">
-        {% if product.image %}
-        <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-        {% else %}
-        <img src="{% static 'core/img/default.png' %}" class="card-img-top" alt="Sin imagen">
-        {% endif %}
-
-        <div class="card-body">
-          <h5 class="card-title">{{ product.name }}</h5>
-          <p class="card-text text-muted">{{ product.category.name }}</p>
-          <p class="fw-bold text-brown">${{ product.price }}</p>
-          <p class="small">{{ product.description|truncatewords:15 }}</p>
+      <!-- CONTENIDO DE PESTAÑAS -->
+      <div class="tab-content" id="catalogoTabsContent">
+        <!-- PANES -->
+        <div class="tab-pane fade show active" id="panes" role="tabpanel">
+          <div class="row g-4">
+            <!-- Producto 1 -->
+            <div class="col-md-4 col-sm-6">
+              <article class="tarjeta">
+                <div class="tarjeta__img">
+                  <img src="https://images.unsplash.com/photo-1609889132708-e31330e6c7a4?auto=format&fit=crop&w=800&q=60" alt="Pan de campo">
+                </div>
+                <div class="tarjeta__body">
+                  <h5 class="tarjeta__titulo">Pan de campo</h5>
+                  <p>Pan rústico con corteza crujiente y miga esponjosa.</p>
+                  <div class="tarjeta__footer">
+                    <span class="tarjeta__precio">\$3.50</span>
+                    <button class="tarjeta__btn"
+                            data-id="1"
+                            data-name="Pan de campo"
+                            data-price="3.50">Agregar al pedido</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <!-- Producto 2 -->
+            <div class="col-md-4 col-sm-6">
+              <article class="tarjeta">
+                <div class="tarjeta__img">
+                  <img src="https://images.unsplash.com/photo-1568471173242-461f0a730452?auto=format&fit=crop&w=800&q=60" alt="Baguette">
+                </div>
+                <div class="tarjeta__body">
+                  <h5 class="tarjeta__titulo">Baguette tradicional</h5>
+                  <p>Elaborada con harina de trigo de alta calidad.</p>
+                  <div class="tarjeta__footer">
+                    <span class="tarjeta__precio">\$2.75</span>
+                    <button class="tarjeta__btn"
+                            data-id="2"
+                            data-name="Baguette tradicional"
+                            data-price="2.75">Agregar al pedido</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <!-- Producto 3 -->
+            <div class="col-md-4 col-sm-6">
+              <article class="tarjeta">
+                <div class="tarjeta__img">
+                  <img src="https://images.unsplash.com/photo-1679224105686-af8294e7e94d?auto=format&fit=crop&w=800&q=60" alt="Pan integral">
+                </div>
+                <div class="tarjeta__body">
+                  <h5 class="tarjeta__titulo">Pan integral multicereal</h5>
+                  <p>Con semillas de girasol, lino y sésamo.</p>
+                  <div class="tarjeta__footer">
+                    <span class="tarjeta__precio">\$4.25</span>
+                    <button class="tarjeta__btn"
+                            data-id="3"
+                            data-name="Pan integral multicereal"
+                            data-price="4.25">Agregar al pedido</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
         </div>
 
-        <div class="card-footer d-flex justify-content-between">
-            <a href="{% url 'product_update' product.pk %}" class="btn btn-sm btn-warning"><i class="fa fa-edit"></i></a>
-            
-            <a href="{% url 'product_delete' product.pk %}" class="btn btn-sm btn-danger">
-            <i class="fa fa-trash"></i>
-            </a>
+        <!-- PASTELES -->
+        <div class="tab-pane fade" id="pasteles" role="tabpanel">
+          <div class="row g-4">
+            <div class="col-md-4 col-sm-6">
+              <article class="tarjeta">
+                <div class="tarjeta__img">
+                  <img src="https://cdn.pixabay.com/photo/2016/11/22/18/52/cake-1850011_1280.jpg" alt="Tarta de frutas">
+                </div>
+                <div class="tarjeta__body">
+                  <h5 class="tarjeta__titulo">Tarta de frutas</h5>
+                  <p>Base de masa quebrada y crema pastelera con frutas de temporada.</p>
+                  <div class="tarjeta__footer">
+                    <span class="tarjeta__precio">\$18.50</span>
+                    <button class="tarjeta__btn"
+                            data-id="4"
+                            data-name="Tarta de frutas"
+                            data-price="18.50">Agregar al pedido</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
 
-          </form>
+        <!-- BOLLERÍA -->
+        <div class="tab-pane fade" id="bolleria" role="tabpanel">
+          <div class="row g-4">
+            <div class="col-md-4 col-sm-6">
+              <article class="tarjeta">
+                <div class="tarjeta__img">
+                  <img src="https://images.unsplash.com/photo-1700915704616-b455b3679024?auto=format&fit=crop&w=800&q=60" alt="Croissants">
+                </div>
+                <div class="tarjeta__body">
+                  <h5 class="tarjeta__titulo">Croissant clásico</h5>
+                  <p>Hojaldre crujiente elaborado con mantequilla de primera calidad.</p>
+                  <div class="tarjeta__footer">
+                    <span class="tarjeta__precio">\$2.25</span>
+                    <button class="tarjeta__btn"
+                            data-id="7"
+                            data-name="Croissant clásico"
+                            data-price="2.25">Agregar al pedido</button>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    {% empty %}
-    <p class="text-center text-muted">No se encontraron productos.</p>
-    {% endfor %}
-  </div>
+  </section>
 
-  <!-- Paginación -->
-  <nav>
-    <ul class="pagination justify-content-center">
-      {% if page_obj.has_previous %}
-      <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}">Anterior</a></li>
-      {% endif %}
-
-      <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
-
-      {% if page_obj.has_next %}
-      <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}">Siguiente</a></li>
-      {% endif %}
-    </ul>
-  </nav>
-
-
-</div>
-{% endblock %}
-
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="catalogo.js"></script>
+</body>
+</html>
