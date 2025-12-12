@@ -9,8 +9,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('panel/', panel_view, name='panel'),
     path('panel/superadmin/', superadmin_dashboard, name='superadmin_dashboard'),
-	path('panel/admin/', admin_dashboard, name='admin_dashboard'),
-	path('panel/cliente/', client_dashboard, name='client_dashboard'),
+	  path('panel/admin/', admin_dashboard, name='admin_dashboard'),
+	  path('panel/cliente/', client_dashboard, name='client_dashboard'),
     path('', render_home, name='home'),
     path('home1', render_home, name='home1'),
     path('products/', ProductListView.as_view(), name='product_catalog'),
@@ -22,7 +22,6 @@ urlpatterns = [
     path('products/', views.catalogo_view, name='product_catalog'),
     path('pedidos/',views.pedidos_view, name='pedidos'),
     path('papelera/',papelera, name='papelera'),
-    path('carrito/', carrito, name='carrito'),
     path('mis-pedidos/', mis_pedidos, name='mis_pedidos'),
     path('reportes/', reportes, name='reportes'),
       # otras rutas existentes... 

@@ -83,7 +83,7 @@ def catalogo_view(request):
     return render(request, 'catalogo.html')
 
 def product_list(request):
-    return render(request, 'products.html')    
+    return render(request, 'products.html')
 
 def render_home(request):
     try:
