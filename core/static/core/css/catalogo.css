@@ -1,0 +1,160 @@
+  /* Variables locales al módulo */
+:root {
+  --cd-gold: #d4a574;
+  --cd-dark-gold: #b88a5c;
+  --cd-brown: #8b6f47;
+  --cd-light: #fef9f3;
+  --cd-radius: 12px;
+  --cd-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --cd-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.12);
+  --cd-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Contenedor principal */
+.catalogo {
+  padding: 5rem 0;
+  background-color: var(--cd-light);
+}
+
+.catalogo__titulo {
+  font-family: 'Playfair Display', serif;
+  font-size: 2.8rem;
+  text-align: center;
+  margin-bottom: 3rem;
+  position: relative;
+}
+.catalogo__titulo::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100px;
+  height: 4px;
+  background: linear-gradient(90deg, var(--cd-gold), var(--cd-brown));
+  border-radius: 2px;
+}
+
+/* Pills personalizadas */
+#catalogoTabs .nav-link {
+  border: 2px solid var(--cd-gold);
+  color: var(--cd-brown);
+  font-weight: 600;
+  padding: 0.6rem 2rem;
+  border-radius: 50px;
+  transition: var(--cd-transition);
+  background: transparent;
+}
+#catalogoTabs .nav-link:hover,
+#catalogoTabs .nav-link.active {
+  background: var(--cd-gold);
+  color: #fff;
+  transform: translateY(-3px);
+  box-shadow: var(--cd-shadow);
+}
+
+/* Tarjeta de producto */
+.tarjeta {
+  background: #fff;
+  border-radius: var(--cd-radius);
+  overflow: hidden;
+  box-shadow: var(--cd-shadow);
+  transition: var(--cd-transition);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+.tarjeta:hover {
+  transform: translateY(-8px);
+  box-shadow: var(--cd-shadow-hover);
+}
+
+.tarjeta__img {
+  width: 100%;
+  height: 280px;
+  overflow: hidden;
+}
+.tarjeta__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: var(--cd-transition);
+}
+.tarjeta:hover .tarjeta__img img {
+  transform: scale(1.1);
+}
+
+.tarjeta__body {
+  padding: 1.5rem;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+}
+.tarjeta__titulo {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.tarjeta__footer {
+  margin-top: auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.tarjeta__precio {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--cd-gold);
+}
+
+.tarjeta__btn {
+  background: linear-gradient(135deg, var(--cd-gold), var(--cd-dark-gold));
+  color: #fff;
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 50px;
+  font-weight: 600;
+  transition: var(--cd-transition);
+  cursor: pointer;
+}
+.tarjeta__btn:hover {
+  background: linear-gradient(135deg, var(--cd-dark-gold), var(--cd-brown));
+  transform: scale(1.05);
+}
+
+/* Responsive rápido */
+@media (max-width: 576px) {
+  .catalogo__titulo { font-size: 2rem; }
+  .tarjeta__img { height: 220px; }
+}
+
+/* =========================
+   BOTONES CATEGORÍAS PANLYR
+========================= */
+
+.btn-panlyr {
+  background-color: var(--cd-gold); /* marrón PanLyR */
+  color: #fff;
+  border-radius: 20px;
+  padding: 10px 35px;
+  font-weight: 500;
+  border: none;
+  text-decoration: none;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+/* Hover elegante */
+.btn-panlyr:hover {
+  background-color: #6f451f;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(139, 90, 43, 0.6); /* glow */
+  transform: translateY(-2px);
+}
+
+/* Categoría activa */
+.btn-panlyr.active {
+  box-shadow: 0 0 14px rgba(139, 90, 43, 0.9);
+}

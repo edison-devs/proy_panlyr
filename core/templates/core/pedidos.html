@@ -1,0 +1,95 @@
+{% extends 'core/base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'core/css/pedidos.css' %}">
+{% endblock %}
+
+
+{% block content %}
+<!-- =====  MÓDULO / SECCIÓN PEDIDOS  ===== -->
+<section class="py-5" id="pedidos">
+  <div class="container">
+    <h2 class="section-title text-center">Realiza tu pedido</h2>
+
+    <!-- Resumen del carrito -->
+    <div class="row mb-4">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="card border-0 shadow">
+          <div class="card-body p-4">
+            <h5 class="mb-3">Productos seleccionados</h5>
+            <div id="cart-items-list">
+              <!-- JS insertará aquí la lista del carrito -->
+              <p class="text-muted fst-italic">
+                No hay productos en tu pedido. Agrégalos desde nuestro catálogo.
+              </p>
+            </div>
+            <div class="d-flex justify-content-between mt-3">
+              <span class="fw-bold">Total:</span>
+              <span class="fw-bold" id="cart-total">\$0.00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formulario de pedido -->
+    <div class="row">
+      <div class="col-lg-8 offset-lg-2">
+        <div class="order-form-container">
+          <form id="order-form">
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="order-name" class="form-label">Nombre completo *</label>
+                <input type="text" class="form-control" id="order-name" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="order-phone" class="form-label">Teléfono *</label>
+                <input type="tel" class="form-control" id="order-phone" required>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="order-email" class="form-label">Correo electrónico *</label>
+              <input type="email" class="form-control" id="order-email" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="order-address" class="form-label">Dirección de entrega *</label>
+              <textarea class="form-control" id="order-address" rows="2" required></textarea>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="order-date" class="form-label">Fecha de entrega *</label>
+                <input type="date" class="form-control" id="order-date" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="order-time" class="form-label">Franja horaria *</label>
+                <select class="form-select" id="order-time" required>
+                  <option value="">Seleccione franja</option>
+                  <option value="mañana">Mañana (8:00 - 12:00)</option>
+                  <option value="tarde">Tarde (12:00 - 18:00)</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="order-notes" class="form-label">Notas adicionales</label>
+              <textarea class="form-control" id="order-notes" rows="3"
+                        placeholder="Ej. Alergias, indicaciones de entrega, etc."></textarea>
+            </div>
+
+            <div class="text-center">
+              <button type="submit" class="btn btn-gold btn-lg">
+                Realizar pedido
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

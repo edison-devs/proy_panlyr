@@ -15,7 +15,6 @@ from .forms import ProductForm, PedidoForm, ComprobantePagoForm
 
 
 
-
 """ Atrapar la excepción, registrar el error y mostrar un mensaje amigable al usuario"""
 logger = logging.getLogger(__name__)
 
@@ -31,6 +30,8 @@ def render_home(request):
         # Aún devolvemos la misma plantilla para no romper la navegación
         return render(request, 'core/home.html')
 
+"""def pedidos_view(request):
+    return render(request, 'core/pedidos.html') """   
 
 
 #Logica para redirigir al panel de administración
@@ -39,6 +40,23 @@ def dashboard(request):
     return render(request, 'core/sidebar/index.html', {
         "show_dashboard_messages": True
     })
+
+"""=======
+def catalogo_view(request):
+    return render(request, 'catalogo.html')
+
+def product_list(request):
+    return render(request, 'products.html')    
+
+def render_home(request):
+    try:
+        return render(request, 'core/home.html')
+    except Exception as e:
+        messages.error(request, f'Error al cargar la página principal: {e}')
+        # Aún devolvemos la misma plantilla para no romper la navegación
+        return render(request, 'core/home.html')
+
+>>>>>>> origin/release-andres"""
 
 
 

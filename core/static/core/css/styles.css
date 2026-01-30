@@ -1,35 +1,3 @@
- ===============================
-   🌄 Fondo con overlay y blur
-   =============================== */
-.login-section, .register-section {
-  min-height: 100vh;
-  background-size: cover;
-  background-position: center;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f5e1c0; /* respaldo si no carga imagen */
-}
-
-/* Overlay cálido */
-.login-section::before,
-.register-section::before {
-  content: "";
-  position: absolute;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(111, 78, 55, 0.6); /* marrón semitransparente */
-  backdrop-filter: blur(3px);
-  z-index: 1;
-}
-
-/* Para que el contenido quede encima del overlay */
-.login-section > *,
-.register-section > * {
-  position: relative;
-  z-index: 2;
-}
-
 /* ===============================
    📝 Formularios
    =============================== */
@@ -65,33 +33,6 @@
   font-weight: 500;
   font-size: 0.95rem;
   margin-top: 0.5rem;
-}
-
-/* ===============================
-   📸 Imagen lateral
-   =============================== */
-.login-image img,
-.register-image img {
-  max-height: 400px;
-  object-fit: cover;
-  border-radius: 0.75rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-}
-
-/* ===============================
-   🌊 Header y Footer efecto agua
-   =============================== */
-.header-water, .footer-water {
-  background: linear-gradient(270deg, #6f4e37, #b5651d, #6f4e37) !important;
-  background-size: 600% 600%;
-  animation: waterFlow 12s ease infinite;
-  color: #fff;
-}
-
-@keyframes waterFlow {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
 }
 
 
@@ -208,3 +149,166 @@
 .toast.bg-info .toast-body {
     border-radius: .35rem;
 }
+
+
+/*estilos personalizados crud productos
+*/
+
+/* Marrón cálido */
+.text-brown {
+  color: #6f4e37;
+}
+
+/* Botón marrón */
+.btn-brown {
+  background-color: #6f4e37;
+  color: white;
+}
+
+.btn-brown:hover {
+  background-color: #5a3e2b;
+  color: #fff;
+}
+
+
+/* Borde marrón para inputs */
+.border-brown {
+  border: 1px solid #6f4e37;
+}
+
+/* Textos y botones en marrón */
+.text-brown {
+  color: #6f4e37;
+}
+
+.btn-brown {
+  background-color: #6f4e37;
+  color: #fff;
+}
+
+.btn-brown:hover {
+  background-color: #5a3e2b;
+  color: #fff;
+}
+
+.tooltip-btn {
+  position: relative;
+  display: inline-block;
+  }
+  
+  .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: 220px;
+  background-color: #dc3545; /* rojo estilo error */
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* encima del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.3s;
+  font-size: 1.2rem;
+  }
+  
+  .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* flecha hacia abajo */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: #dc3545 transparent transparent transparent;
+  }
+  
+  .tooltip-btn.show-tooltip .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  }
+  
+
+/* ********************************** */
+/*  estilos personalizados CRUD productos  */
+/* ********************************** */
+
+
+/* Marrón cálido */
+.text-brown {
+  color: #6f4e37;
+}
+
+/* Botón marrón */
+.btn-brown {
+  background-color: #6f4e37;
+  color: white;
+}
+
+.btn-brown:hover {
+  background-color: #5a3e2b;
+  color: #fff;
+}
+
+
+/* Borde marrón para inputs */
+.border-brown {
+  border: 1px solid #6f4e37;
+}
+
+/* Textos y botones en marrón */
+.text-brown {
+  color: #6f4e37;
+}
+
+.btn-brown {
+  background-color: #6f4e37;
+  color: #fff;
+}
+
+.btn-brown:hover {
+  background-color: #5a3e2b;
+  color: #fff;
+}
+
+.tooltip-btn {
+  position: relative;
+  display: inline-block;
+  }
+  
+  .tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  width: 220px;
+  background-color: #dc3545; /* rojo estilo error */
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 8px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%; /* encima del botón */
+  left: 50%;
+  transform: translateX(-50%);
+  transition: opacity 0.3s;
+  font-size: 1.2rem;
+  }
+  
+  .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* flecha hacia abajo */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 6px;
+  border-style: solid;
+  border-color: #dc3545 transparent transparent transparent;
+  }
+  
+  .tooltip-btn.show-tooltip .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+  }
+  
