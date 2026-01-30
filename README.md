@@ -333,6 +333,10 @@ Se añadió una carpeta partials para componentes reutilizables que mejoran la o
 - ✅ lógica de roles y permisos.
 - 🛒 En desarrollo: la lógica de pedidos (carrito, registro y gestión básica).
 
+- ✅ Se integraron los estilos del colaborador FRONTEND (se resolvieron unos pequeños conflictos entre ramas) y se sincronizaron con el backend. *Recomendaciones futuras mantener la rama de trabajo siempre actualizada*
+
+-**NO ELIMINAR styles.css** el archivo contiene estilos personalizados de algunos templates.Lo ideal es usar un solo archivo de estilos, es lo recomendable por rendimiento pero se dejaran los estilos tal cual el colaborador frontend los organizo. ¨**PARA LOS SIGUIENTES ESTILOS PERSONALIZADOS USAR styles.css** .
+
 - **FALTA ACOMODAR EL FILTRADO DE CATALOGO DESDE LA VISTA CLIENTE (NO FUNCIONA POR AHORA)**
 
 ---
